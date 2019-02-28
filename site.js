@@ -11,7 +11,7 @@ var response;
 var con = mysql.createConnection({
   host: "localhost",
   user: "website",
-  password: "aabbcc112233",
+  password: "abc123",
   database: "geekbook"
 });
 
@@ -51,10 +51,9 @@ String.prototype.replaceAll = function(str1, str2, ignore) {
   );
 };
 
-fs.readFile("./index.html", function(err, html) {
+/*fs.readFile("./index.html", function(err, html) {
   if (err) throw err;
-  http
-    .createServer(function(request, response) {
+  http.createServer(function(request, response) {
       if (request.method === "POST") {
         let body = "";
         request.on("data", chunk => {
@@ -92,10 +91,29 @@ fs.readFile("./index.html", function(err, html) {
           }, 1000);
         });
       } else {
-        response.writeHeader(200, { "Content-Type": "text/html" });
+        //response.writeHeader(200, { "Content-Type": "text/html" });
         response.write(html);
         response.end();
       }
     })
     .listen(port);
-});
+});*/
+
+http.createServer(function (req,res){
+  console.log("url: " + req.url);
+  if(req.url === '/index.html' || req.url === '/') {
+    fs.readFile('./index.html',function(err,data){
+      res.writeHead(200,{'Content-Type': 'text/html'});
+      res.write(data);
+      res.end();
+    });
+  }
+  else if(req.url === '/css/bookstyle.css') {
+    fs.readFile('./css/bookstyle.css',function(err,data){
+      res.writeHead(200,{"Content-Type": "text/css"});
+      res.write(data);
+      res.end();
+    });
+  }
+
+}).listen(port); 
