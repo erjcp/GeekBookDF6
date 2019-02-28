@@ -1,0 +1,14 @@
+.navbar {
+    margin-bottom: 50px;
+}
+
+.header{
+    margin-bottom: 50px;
+}
+
+.header h1{
+    display: inline-block;
+}
+.header form{
+    float: right;
+}
