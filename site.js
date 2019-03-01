@@ -115,5 +115,12 @@ http.createServer(function (req,res){
       res.end();
     });
   }
+  else if(req.url === '/cart.html' || req.url === '/') {
+    fs.readFile('./cart.html',function(err,data){
+      res.writeHead(200,{'Content-Type': 'text/html'});
+      res.write(data);
+      res.end();
+    });
+  }
 
 }).listen(port); 
