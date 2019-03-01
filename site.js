@@ -123,4 +123,36 @@ http.createServer(function (req,res){
     });
   }
 
+  else if(req.url === '/details.html' || req.url === '/') {
+    fs.readFile('./details.html',function(err,data){
+      res.writeHead(200,{'Content-Type': 'text/html'});
+      res.write(data);
+      res.end();
+    });
+  }
+
+  else if(req.url === '/login.html' || req.url === '/') {
+    fs.readFile('./login.html',function(err,data){
+      res.writeHead(200,{'Content-Type': 'text/html'});
+      res.write(data);
+      res.end();
+    });
+  }
+
+  else if(req.url === '/editprofile.html' || req.url === '/') {
+    fs.readFile('./editprofile.html',function(err,data){
+      res.writeHead(200,{'Content-Type': 'text/html'});
+      res.write(data);
+      res.end();
+    });
+  }
+
+  else if(req.url === '/logout.html' || req.url === '/') {
+    fs.readFile('./logout.html',function(err,data){
+      res.writeHead(200,{'Content-Type': 'text/html'});
+      res.write(data);
+      res.end();
+    });
+  }
+
 }).listen(port); 
