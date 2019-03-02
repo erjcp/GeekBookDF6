@@ -99,60 +99,75 @@ String.prototype.replaceAll = function(str1, str2, ignore) {
     .listen(port);
 });*/
 
-http.createServer(function (req,res){
-  console.log("url: " + req.url);
-  if(req.url === '/index.html' || req.url === '/') {
+http.createServer(function (request,response){
+  console.log("url: " + request.url);
+  let req_url = request.url.toString();
+
+  if (request.method === "POST") {
+    let body = "";
+    request.on("data", chunk => {
+      body += chunk.toString();
+      getS(body);
+      //console.log(body);
+      pQuery = pQuery.replaceAll("~", "=");
+      console.log("parsed: " + pQuery);
+
+      //con.connect(function(err)
+      //{
+      //if (err) throw err;
+      //console.log("Connected to mySQL server.");
+      //con.query("SELECT * FROM Book", function(err, result, fields)
+      //{
+      //    if(err) throw err;
+      //    console.log(result);
+      //});
+      con.query(pQuery, function(err, result, fields) {
+        if (err) throw err;
+        completeResult = result;
+        console.log(result);
+        globalResponse = response;
+      });
+      //});
+    });
+    request.on("end", () => {
+      console.log("test");
+      setTimeout(function() {
+        var JSONx = JSON.stringify(completeResult);
+        response.write(JSONx);
+        console.log("test2");
+        response.end();
+        console.log("test3");
+      }, 1000);
+    });
+  } else if (request.url === '/') {
     fs.readFile('./index.html',function(err,data){
-      res.writeHead(200,{'Content-Type': 'text/html'});
-      res.write(data);
-      res.end();
+      response.writeHead(200,{'Content-Type': 'text/html'});
+      response.write(data);
+      response.end();
     });
   }
-  else if(req.url === '/css/bookstyle.css') {
-    fs.readFile('./css/bookstyle.css',function(err,data){
-      res.writeHead(200,{"Content-Type": "text/css"});
-      res.write(data);
-      res.end();
-    });
-  }
-  else if(req.url === '/cart.html' || req.url === '/') {
-    fs.readFile('./cart.html',function(err,data){
-      res.writeHead(200,{'Content-Type': 'text/html'});
-      res.write(data);
-      res.end();
-    });
-  }
+  else if(req_url.endsWith(".css")) {
+    let res_url = ".";
+    res_url += request.url.toString();
+    console.log("res_url = " + res_url);
 
-  else if(req.url === '/details.html' || req.url === '/') {
-    fs.readFile('./details.html',function(err,data){
-      res.writeHead(200,{'Content-Type': 'text/html'});
-      res.write(data);
-      res.end();
-    });
-  }
+    fs.readFile(res_url, function(err, data){
+      if (err) throw err;
+      response.writeHead(200,{'Content-Type': 'text/css'});
+      response.write(data);
+      response.end();
+    })  
+  } 
+  else if(req_url.endsWith(".html")){
+    let res_url = ".";
+    res_url += request.url.toString();
+    console.log("res_url = " + res_url);
 
-  else if(req.url === '/login.html' || req.url === '/') {
-    fs.readFile('./login.html',function(err,data){
-      res.writeHead(200,{'Content-Type': 'text/html'});
-      res.write(data);
-      res.end();
-    });
+    fs.readFile(res_url, function(err, data){
+      if (err) throw err;
+      response.writeHead(200,{'Content-Type': 'text/html'});
+      response.write(data);
+      response.end();
+    })  
   }
-
-  else if(req.url === '/editprofile.html' || req.url === '/') {
-    fs.readFile('./editprofile.html',function(err,data){
-      res.writeHead(200,{'Content-Type': 'text/html'});
-      res.write(data);
-      res.end();
-    });
-  }
-
-  else if(req.url === '/logout.html' || req.url === '/') {
-    fs.readFile('./logout.html',function(err,data){
-      res.writeHead(200,{'Content-Type': 'text/html'});
-      res.write(data);
-      res.end();
-    });
-  }
-
 }).listen(port); 
