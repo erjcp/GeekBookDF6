@@ -101,6 +101,8 @@ String.prototype.replaceAll = function(str1, str2, ignore) {
 
 http.createServer(function (request,response){
   console.log("url: " + request.url);
+  console.log("method: " + request.method);
+
   let req_url = request.url.toString();
 
   if (request.method === "POST") {
@@ -139,6 +141,7 @@ http.createServer(function (request,response){
         console.log("test3");
       }, 1000);
     });
+
   } else if (request.url === '/') {
     fs.readFile('./index.html',function(err,data){
       response.writeHead(200,{'Content-Type': 'text/html'});
@@ -169,5 +172,8 @@ http.createServer(function (request,response){
       response.write(data);
       response.end();
     })  
-  }
+  } /*else {
+    console.log("END RESPONSE");
+    response.end();
+  }*/
 }).listen(port); 
