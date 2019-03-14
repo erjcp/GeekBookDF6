@@ -5,7 +5,6 @@ CREATE TABLE Cart
 (customerId CHAR(12) PRIMARY KEY,
 /*registered*/
 paymentType CHAR(6),
-total DECIMAL (8,2),
 constraint custom
     foreign key (customerId) references Customer(id)
 );
@@ -24,27 +23,27 @@ constraint customorder
 
 INSERT INTO Cart
 VALUES
-('0000' ,'DEBIT', 0.00);
+('0000' ,'DEBIT');
 
 INSERT INTO Cart
 VALUES
-('0001' ,'CREDIT', 0.00);
+('0001' ,'CREDIT');
 
 INSERT INTO CartItem
 VALUES
-('0000' ,'2281', 0, 1);
+('0000' ,'2226', 0, 1);
 
 INSERT INTO CartItem
 VALUES
-('0000' ,'9627', 1, 1);
+('0000' ,'6328', 1, 1);
 
 INSERT INTO CartItem
 VALUES
-('0001' ,'9882', 0, 1);
+('0001' ,'7443', 0, 1);
 
 INSERT INTO CartItem
 VALUES
-('0001' ,'9883', 1, 1);
+('0001' ,'2226', 1, 1);
 
 
 
