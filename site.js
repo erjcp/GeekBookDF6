@@ -36,9 +36,9 @@ function getS(str) {
   Table = str.substring(str.indexOf("=") + 1, str.indexOf("&"));
   pQuery = str.substring(str.lastIndexOf("=") + 1);
   Query = pQuery + " " + Table;
-  console.log("getS table: " + Table);
+  //console.log("getS table: " + Table);
   //console.log("getS Query: " + pQuery);
-  //console.log("getS Result Query: " + Query);
+  console.log("getS Result Query: " + Query);
 }
 
 String.prototype.replaceAll = function(str1, str2, ignore) {
