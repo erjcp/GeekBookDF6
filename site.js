@@ -51,54 +51,6 @@ String.prototype.replaceAll = function(str1, str2, ignore) {
   );
 };
 
-/*fs.readFile("./index.html", function(err, html) {
-  if (err) throw err;
-  http.createServer(function(request, response) {
-      if (request.method === "POST") {
-        let body = "";
-        request.on("data", chunk => {
-          body += chunk.toString();
-          getS(body);
-          //console.log(body);
-          pQuery = pQuery.replaceAll("~", "=");
-          console.log("parsed: " + pQuery);
-
-          //con.connect(function(err)
-          //{
-          //if (err) throw err;
-          //console.log("Connected to mySQL server.");
-          //con.query("SELECT * FROM Book", function(err, result, fields)
-          //{
-          //    if(err) throw err;
-          //    console.log(result);
-          //});
-          con.query(pQuery, function(err, result, fields) {
-            if (err) throw err;
-            completeResult = result;
-            console.log(result);
-            globalResponse = response;
-          });
-          //});
-        });
-        request.on("end", () => {
-          console.log("test");
-          setTimeout(function() {
-            var JSONx = JSON.stringify(completeResult);
-            response.write(JSONx);
-            console.log("test2");
-            response.end();
-            console.log("test3");
-          }, 1000);
-        });
-      } else {
-        //response.writeHeader(200, { "Content-Type": "text/html" });
-        response.write(html);
-        response.end();
-      }
-    })
-    .listen(port);
-});*/
-
 http.createServer(function (request,response){
   console.log("url: " + request.url);
   console.log("method: " + request.method);
@@ -114,15 +66,6 @@ http.createServer(function (request,response){
       pQuery = pQuery.replaceAll("~", "=");
       console.log("parsed: " + pQuery);
 
-      //con.connect(function(err)
-      //{
-      //if (err) throw err;
-      //console.log("Connected to mySQL server.");
-      //con.query("SELECT * FROM Book", function(err, result, fields)
-      //{
-      //    if(err) throw err;
-      //    console.log(result);
-      //});
       con.query(pQuery, function(err, result, fields) {
         if (err) throw err;
         completeResult = result;
@@ -172,8 +115,5 @@ http.createServer(function (request,response){
       response.write(data);
       response.end();
     })  
-  } /*else {
-    console.log("END RESPONSE");
-    response.end();
-  }*/
+  } 
 }).listen(port); 
