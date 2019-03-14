@@ -55,15 +55,6 @@
                 <th scope="col">Availability</th>
               </tr>
             </thead>
-            <tbody>          
-              <tr class="clickable-row" data-href="">
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>available</td>
-              </tr>
-            </tbody>
         </table>
       </div>
 
@@ -110,10 +101,6 @@
       function displayTable1(partialOrFullTitle) {
             var parentDiv = document.getElementById("logicDiv");
             let table = document.getElementById("tableBrowse");
-            //table.className = "altrowstable";
-            //table.id = "searchTable";
-            //parentDiv.appendChild(table);
-            //console.log(table);
 
             let query = getSearchQuery1(partialOrFullTitle);
             let url = "localhost";
@@ -127,27 +114,6 @@
                     var finalQueryResult = xhr.responseText;
                     console.log(finalQueryResult);
                     var myJsonObject = JSON.parse(finalQueryResult);
-  
-  
-                    //while (table.hasChildNodes()) {
-                    //    table.removeChild(table.firstChild);
-                    //}
-
-                    //var row = table.insertRow(-1);
-                    //row.className = "clickable-row";
-                    //var cell0 = row.insertCell(0);
-                    //var cell1 = row.insertCell(1);
-                    //var cell2 = row.insertCell(2);
-                    //var cell3 = row.insertCell(3);
-                    //var cell4 = row.insertCell(4);
-  
-                    //cell1.innerHTML = "title".bold();
-                    //cell2.innerHTML = "availability".bold();
-                    //cell5.innerHTML = "authorFirst".bold();
-                    //cell6.innerHTML = "authorLast".bold();
-                    //cell7.innerHTML = "publisherCode".bold();
-                    //cell8.innerHTML = "publisherName".bold();
-                    //cell9.innerHTML = "city".bold();
                     for (var i = 0; i < myJsonObject.length; i++) {
                         populateTable1(myJsonObject[i], "searchResult", i);
                     }
@@ -168,7 +134,6 @@
     </script>
     <script>
 
-
         function Go() {
             clearLogicOperationDiv();
             var operation = getOperationSelected();
@@ -182,20 +147,6 @@
   
         function getOperationSelected() {
             var radioButtonValue;
-            /*
-            if (document.getElementById("r1").checked) {
-                radioButtonValue = document.getElementById("r1").value;
-            } else if (document.getElementById("r2").checked) {
-                radioButtonValue = document.getElementById("r2").value;
-            } else if (document.getElementById("r3").checked) {
-                radioButtonValue = document.getElementById("r3").value;
-            } else if (document.getElementById("r4").checked) {
-                radioButtonValue = document.getElementById("r4").value;
-            } else {
-                console.log("error at getOperationSelected(), radio stuff");
-                radioButtonValue = "";
-            }
-            */
             radioButtonValue = "Search";
   
             return radioButtonValue;
@@ -333,218 +284,7 @@
           return element;
         }
   
-        function createGUIforInsert() {
-          var elementList = [];
-          var sqltable = document.getElementById("table").value;
-  
-          var OpLogicDiv = document.getElementById("logicDiv");
-          if (sqltable == "author") {
-            var authNum = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 1,
-              "authorNum: ",
-              ""
-            );
-            var first = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "authorLast: ",
-              ""
-            );
-            var last = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "authorFirst: ",
-              ""
-            );
-            elementList.push(authNum);
-            elementList.push(first);
-            elementList.push(last);
-            console.log(JSON.stringify(elementList));
-            console.log(authNum.value);
-          } else if (sqltable == "book") {
-            var bookCode = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 1,
-              "bookCode: ",
-              ""
-            );
-            var title = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "title: ",
-              ""
-            );
-            var publisherCode = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "publisherCode: ",
-              ""
-            );
-            var type = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "type: ",
-              ""
-            );
-            var paperback = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "paperback: ",
-              ""
-            );
-            elementList.push(bookCode);
-            elementList.push(title);
-            elementList.push(publisherCode);
-            elementList.push(type);
-            elementList.push(paperback);
-          } else if (sqltable == "copy") {
-            var bookCode = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 1,
-              "bookCode: ",
-              ""
-            );
-            var branchNum = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "branchNum: ",
-              ""
-            );
-            var copyNum = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "copyNum: ",
-              ""
-            );
-            var quality = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "quality: ",
-              ""
-            );
-            var price = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "price: ",
-              ""
-            );
-            elementList.push(bookCode);
-            elementList.push(branchNum);
-            elementList.push(copyNum);
-            elementList.push(quality);
-            elementList.push(price);
-          } else if (sqltable == "publisher") {
-            var publisherCode = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 1,
-              "publisherCode: ",
-              ""
-            );
-            var publisherName = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "publisherName: ",
-              ""
-            );
-            var city = createTextBox(OpLogicDiv, sqltable + "_" + 2, "city: ");
-            elementList.push(publisherCode);
-            elementList.push(publisherName);
-            elementList.push(city);
-          } else if (sqltable == "wrote") {
-            var bookCode = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 1,
-              "bookCode: ",
-              ""
-            );
-            var authorNum = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "authorNum: ",
-              ""
-            );
-            var sequence = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "sequence: ",
-              ""
-            );
-            elementList.push(bookCode);
-            elementList.push(authorNum);
-            elementList.push(sequence);
-          } else if (sqltable == "inventory") {
-            var BookCode = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 1,
-              "BookCode: ",
-              ""
-            );
-            var BranchNum = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "BranchNum: ",
-              ""
-            );
-            var OnHand = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "OnHand: ",
-              ""
-            );
-            elementList.push(BookCode);
-            elementList.push(BranchNum);
-            elementList.push(OnHand);
-          } else if (sqltable == "branch") {
-            var branchNum = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 1,
-              "branchNum: ",
-              ""
-            );
-            var branchName = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "branchName: ",
-              ""
-            );
-            var branchLocation = createTextBox(
-              OpLogicDiv,
-              sqltable + "_" + 2,
-              "branchLocation: ",
-              ""
-            );
-            elementList.push(branchNum);
-            elementList.push(branchName);
-            elementList.push(branchLocation);
-          } else {
-            console.log("Error at createGUIforInsert()");
-          }
-          var button = document.createElement("button");
-          button.innerHTML = "Submit";
-          OpLogicDiv.appendChild(button);
-          INSERT_query = "";
-          var s = "";
-          s = "(";
-          button.addEventListener("click", function () {
-            for (var i = 0; i < elementList.length; i++) {
-              var text = elementList[i].value;
-              console.log(s);
-  
-              if (i == elementList.length - 1) {
-                s += "'" + text + "'";
-              } else {
-                s += "'" + text + "'" + ",";
-              }
-            }
-            s += ")";
-            INSERT_query = s;
-            console.log("insert String:" + s);
-            addTuple();
-            clearLogicOperationDiv();
-            displayTable();
-          });
-        }
+        
   
         function populateTable(json, tablesql, i) {
           var table = document.getElementById("myTable");
@@ -572,145 +312,8 @@
             cell7.innerHTML = json.publisherCode;
             cell8.innerHTML = json.publisherName;
             cell9.innerHTML = json.city;
-          } else if (tablesql === "author") {
-            var row = table.insertRow(-1);
-            var cell0 = row.insertCell(0);
-            var cell1 = row.insertCell(1);
-            var cell2 = row.insertCell(2);
-            var cell3 = row.insertCell(3);
-            cell0.appendChild(
-              createCheckBox({
-                  authorNum: json.authorNum,
-                  authorLast: json.authorLast + "",
-                  authorFirst: json.authorFirst + ""
-                },
-                i
-              )
-            );
-            cell1.innerHTML = json.authorNum;
-            cell2.innerHTML = json.authorLast;
-            cell3.innerHTML = json.authorFirst;
-          } else if (tablesql == "book") {
-            var row = table.insertRow(-1);
-            var cell0 = row.insertCell(0);
-            var cell1 = row.insertCell(1);
-            var cell2 = row.insertCell(2);
-            var cell3 = row.insertCell(3);
-            var cell4 = row.insertCell(4);
-            var cell5 = row.insertCell(5);
-            cell0.appendChild(
-              createCheckBox({
-                  bookCode: json.bookCode + "",
-                  title: json.title + "",
-                  publisherCode: json.publisherCode + "",
-                  type: json.type + "",
-                  paperback: json.paperback + ""
-                },
-                i
-              )
-            );
-            cell1.innerHTML = json.bookCode;
-            cell2.innerHTML = json.title;
-            cell3.innerHTML = json.publisherCode;
-            cell4.innerHTML = json.type;
-            cell5.innerHTML = json.paperback;
-          } else if (tablesql == "copy") {
-            var row = table.insertRow(-1);
-            var cell0 = row.insertCell(0);
-            var cell1 = row.insertCell(1);
-            var cell2 = row.insertCell(2);
-            var cell3 = row.insertCell(3);
-            var cell4 = row.insertCell(4);
-            var cell5 = row.insertCell(5);
-            cell0.appendChild(
-              createCheckBox({
-                  bookCode: json.bookCode + "",
-                  branchNum: json.branchNum,
-                  copyNum: json.copyNum,
-                  quality: json.quality + "",
-                  price: json.price
-                },
-                i
-              )
-            );
-            cell1.innerHTML = json.bookCode;
-            cell2.innerHTML = json.branchNum;
-            cell3.innerHTML = json.copyNum;
-            cell4.innerHTML = json.quality;
-            cell5.innerHTML = json.price;
-          } else if (tablesql == "publisher") {
-            var row = table.insertRow(-1);
-            var cell0 = row.insertCell(0);
-            var cell1 = row.insertCell(1);
-            var cell2 = row.insertCell(2);
-            var cell3 = row.insertCell(3);
-            cell0.appendChild(
-              createCheckBox({
-                  publisherCode: json.publisherCode + "",
-                  publisherName: json.publisherName + "",
-                  city: json.city + ""
-                },
-                i
-              )
-            );
-            cell1.innerHTML = json.publisherCode;
-            cell2.innerHTML = json.publisherName;
-            cell3.innerHTML = json.city;
-          } else if (tablesql == "wrote") {
-            var row = table.insertRow(-1);
-            var cell0 = row.insertCell(0);
-            var cell1 = row.insertCell(1);
-            var cell2 = row.insertCell(2);
-            var cell3 = row.insertCell(3);
-            cell0.appendChild(
-              createCheckBox({
-                  bookCode: json.bookCode + "",
-                  authorNum: json.authorNum,
-                  sequence: json.sequence
-                },
-                i
-              )
-            );
-            cell1.innerHTML = json.bookCode;
-            cell2.innerHTML = json.authorNum;
-            cell3.innerHTML = json.sequence;
-          } else if (tablesql == "inventory") {
-            var row = table.insertRow(-1);
-            var cell0 = row.insertCell(0);
-            var cell1 = row.insertCell(1);
-            var cell2 = row.insertCell(2);
-            var cell3 = row.insertCell(3);
-            cell0.appendChild(
-              createCheckBox({
-                  BookCode: json.BookCode + "",
-                  BranchNum: json.BranchNum,
-                  OnHand: json.OnHand
-                },
-                i
-              )
-            );
-            cell1.innerHTML = json.BookCode;
-            cell2.innerHTML = json.BranchNum;
-            cell3.innerHTML = json.OnHand;
-          } else if (tablesql == "branch") {
-            var row = table.insertRow(-1);
-            var cell0 = row.insertCell(0);
-            var cell1 = row.insertCell(1);
-            var cell2 = row.insertCell(2);
-            var cell3 = row.insertCell(3);
-            cell0.appendChild(
-              createCheckBox({
-                  branchNum: json.branchNum,
-                  branchName: json.branchName + "",
-                  branchLocation: json.branchLocation + ""
-                },
-                i
-              )
-            );
-            cell1.innerHTML = json.branchNum;
-            cell2.innerHTML = json.branchName;
-            cell3.innerHTML = json.branchLocation;
-          } else {
+          } 
+           else {
             console.log("Error at populateTable");
           }
         }
