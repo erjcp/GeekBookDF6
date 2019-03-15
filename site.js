@@ -1,4 +1,53 @@
-var http = require("http");
+const express = require('express');
+const app = express();
+app.set('view engine', 'pug');
+var mysql = require("mysql");
+app.use(express.static(__dirname + '/public'));
+
+var db = mysql.createConnection({
+  host: "localhost",
+  user: "website",
+  password: "abc123",
+  database: "geekbook"
+});
+
+db.connect((err) => {
+  if (err) throw err;
+  console.log("Connected to mySQL server.");
+});
+
+
+app.get('/', (req, res) => {
+  res.render('index');
+})
+
+app.get('/login', (req, res) => {
+  res.render('login');
+})
+
+app.get('/logout', (req, res) => {
+  res.render('logout');
+})
+
+app.get('/profile', (req, res) => {
+  res.render('profile');
+})
+
+app.get('/cart', (req, res) => {
+  res.render('cart');
+})
+
+app.get('/details', (req, res) => {
+  res.render('details');
+})
+
+app.listen(5656, () => {
+  console.log('Server started on port 5656 ')
+})
+
+
+
+/*var http = require("http");
 var fs = require("fs");
 const port = 6117;
 var mysql = require("mysql");
@@ -116,4 +165,4 @@ http.createServer(function (request,response){
       response.end();
     })  
   } 
-}).listen(port); 
+}).listen(port); */

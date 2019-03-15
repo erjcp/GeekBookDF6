@@ -1,0 +1,40 @@
+extends layout.pug
+
+block content
+  .container
+  ul
+    li(style='list-style-type: none;')
+      .card
+        .card-header
+          h3  Cart book
+        .card-body
+          p.card-text
+            span(style='color: grey;') AUTHOR:
+            |  Author
+          p.card-text
+            span(style='color: grey;') COST:
+            |  Cost
+          a.btn.btn-primary(href='#') Remove
+          a.btn.btn-primary(href='#') Save for later
+          div(style='float: right')
+            form
+              p Quantity
+              input(type='number', min='1', max='100')
+  #payment.container
+    h3  Subtotal
+  .container
+    h3 Saved for later
+    ul
+      li(style='list-style-type: none;')
+        .card
+          .card-header
+            h3  Saved book
+          .card-body
+            p.card-text
+              span(style='color: grey;') AUTHOR:
+              |  Author
+            p.card-text
+              span(style='color: grey;') COST:
+              |  Cost
+            a.btn.btn-primary(href='#') Remove
+            a.btn.btn-primary(href='#') Add to Cart

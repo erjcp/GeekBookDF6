@@ -1,0 +1,105 @@
+ extends layout.pug
+
+ block content 
+  .panel-heading.text-center
+    h4 RSVP
+  .container-fluid.mx-auto(style='width: 500px;')
+    .panel-body
+      form.p-a-1(asp-action='CustomerList', method='post')
+        div(asp-validation-summary='All')
+        .form-group
+          label(asp-for='UserName') Your User Name:
+          input.form-control(asp-for='UserName')
+        .form-group
+          label(asp-for='Email') Email:
+          input.form-control(asp-for='Email')
+        .form-group
+          label(asp-for='FirstName') First Name:
+          input.form-control(asp-for='FirstName')
+        .form-group
+          label(asp-for='LastName') Last Name:
+          input.form-control(asp-for='LastName')
+        .form-group
+          label(asp-for='Street') Street Address:
+          input.form-control(asp-for='Street')
+        .form-group
+          label(asp-for='City') City:
+          input.form-control(asp-for='City')
+        .form-group
+          label(asp-for='County') County:
+          input.form-control(asp-for='County')
+        .form-group
+          label(asp-for='State') State:
+          input.form-control(asp-for='State')
+        .form-group
+          label(asp-for='Zipcode') Zip Code:
+          input.form-control(asp-for='Zipcode')
+        .form-group
+          label(asp-for='Country') Country:
+          input.form-control(asp-for='Country')
+        .form-group
+          label Payment Method
+          select.form-control(asp-for='PaymentMethod')
+            option(value='') Choose an option
+            option(value='true') Visa
+            option(value='false') Master Card
+        .form-group
+          label(asp-for='CreditCardNum') Credit Card Number:
+          input.form-control(asp-for='CreditCardNum')
+        .form-group
+          label(asp-for='Country') Country:
+          input.form-control(asp-for='Country')
+        .text-center
+          button.btn.btn-primary(type='submit')
+            | Submit Information
+        .container
+          form.form-horizontal(role='form')
+            fieldset
+              legend Credit Registration
+              .form-group
+                label.col-sm-3.control-label(for='card-holder-name') Name on Card
+                .col-sm-9
+                  input#card-holder-name.form-control(type='text', name='card-holder-name', placeholder="Card Holder's Name")
+              .form-group
+                label.col-sm-3.control-label(for='card-number') Card Number
+                .col-sm-9
+                  input#card-number.form-control(type='text', name='card-number', placeholder='Debit/Credit Card Number')
+              .form-group
+                label.col-sm-3.control-label(for='expiry-month') Expiration Date
+                .col-sm-9
+                  .row
+                    .col-xs-4
+                      select#expiry-month.form-control.col-sm-2(name='expiry-month')
+                        option(value='') Choose an option
+                        option(value='01') Jan (01)
+                        option(value='02') Feb (02)
+                        option(value='03') Mar (03)
+                        option(value='04') Apr (04)
+                        option(value='05') May (05)
+                        option(value='06') June (06)
+                        option(value='07') July (07)
+                        option(value='08') Aug (08)
+                        option(value='09') Sep (09)
+                        option(value='10') Oct (10)
+                        option(value='11') Nov (11)
+                        option(value='12') Dec (12)
+                    .col-xs-3
+                      select.form-control(name='expiry-year')
+                        option(value='13') 2013
+                        option(value='14') 2014
+                        option(value='15') 2015
+                        option(value='16') 2016
+                        option(value='17') 2017
+                        option(value='18') 2018
+                        option(value='19') 2019
+                        option(value='20') 2020
+                        option(value='21') 2021
+                        option(value='22') 2022
+                        option(value='23') 2023
+              .form-group
+                label.col-sm-3.control-label(for='cvv') Card CVV
+                .col-sm-3
+                  input#cvv.form-control(type='text', name='cvv', placeholder='Security Code')
+              .form-group
+                .col-sm-offset-3.col-sm-9
+                  button.btn.btn-success(type='button') Pay Now
