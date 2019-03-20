@@ -1,8 +1,14 @@
 const express = require('express');
-const app = express();
-app.set('view engine', 'pug');
+const bodyparser = require('body-parser');
 var mysql = require("mysql");
+
+const app = express();
+
+app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
+
+app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.json());
 
 var db = mysql.createConnection({
   host: "localhost",
@@ -44,6 +50,24 @@ app.get('/details', (req, res) => {
 app.listen(5656, () => {
   console.log('Server started on port 5656 ')
 })
+
+app.post('/', function (req, res){
+  var like = req.body.like;
+  var col = req.body.col;
+
+  let sql = `select B.title, B.numCopies, A.authorNum,A.authorLast,A.authorFirst,P.publisherCode,P.publisherName,P.city from book B, author A,publisher P, wrote W where (B.publisherCode = P.publisherCode and A.authorNum = W.authorNum and W.bookCode = B.bookCode) and B.title LIKE '%${like}%'`;
+  let query = db.query(sql, (err, results) => {
+    if (err) {
+      console.log(sql);
+    }
+    
+
+    console.log(results);
+
+    console.log(results[0]);
+    res.send(results);
+  });
+});
 
 
 

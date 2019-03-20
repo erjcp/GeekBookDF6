@@ -1,16 +1,34 @@
-
-
-
-
-
-
 document.getElementById("btn-search").addEventListener("click", function () {
   var textBox = document.getElementById("input-search");
-  var partialOrFullTitle = textBox.value;
-  console.log("partial or full title String:" + partialOrFullTitle);
-  clearLogicOperationDiv();
-  displayTable1(partialOrFullTitle);
+  var searchVal = textBox.value;
+  console.log("partial or full title String:" + searchVal);
+  //clearLogicOperationDiv();
+  makeRequest(searchVal);
 });
+
+
+function makeRequest(searchVal) {
+    const xhttp = new XMLHttpRequest();
+    const url = "http://localhost:5656/" 
+
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader(
+        "Content-type",
+        "application/x-www-form-urlencoded"
+    );
+    xhttp.send("like=" + searchVal + "&col=title" );
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var finalQueryResult = xhttp.responseText;
+            console.log(finalQueryResult);
+            var myJsonObject = JSON.parse(finalQueryResult);
+            for (var i = 0; i < myJsonObject.length; i++) {
+                populateTable1(myJsonObject[i], "searchResult", i);
+            }
+        };
+    };
+};
 
 
 function populateTable1(json, tablesql, i) {
@@ -29,40 +47,46 @@ function populateTable1(json, tablesql, i) {
     cell4.innerHTML = json.numCopies;
   }
 
-
-
-
+/*
 function displayTable1(partialOrFullTitle) {
-      var parentDiv = document.getElementById("logicDiv");
-      let table = document.getElementById("tableBrowse");
+    var parentDiv = document.getElementById("logicDiv");
+    let table = document.getElementById("tableBrowse");
 
-      let query = getSearchQuery1(partialOrFullTitle);
-      let url = "localhost";
-      let params = "table=" + "search" + "&query=" + query;
+    let query = getSearchQuery1(partialOrFullTitle);
+    let url = "localhost";
+    let params = "table=" + "search" + "&query=" + query;
 
-      console.log("Search query:" + query);
+    console.log("Search query:" + query);
 
-      var xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-              var finalQueryResult = xhr.responseText;
-              console.log(finalQueryResult);
-              var myJsonObject = JSON.parse(finalQueryResult);
-              for (var i = 0; i < myJsonObject.length; i++) {
-                  populateTable1(myJsonObject[i], "searchResult", i);
-              }
-          }
-      };
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            var finalQueryResult = xhr.responseText;
+            console.log(finalQueryResult);
+            var myJsonObject = JSON.parse(finalQueryResult);
+            for (var i = 0; i < myJsonObject.length; i++) {
+                populateTable1(myJsonObject[i], "searchResult", i);
+            }
+        }
+    };
 
-      xhr.open("POST", url, true);
+    xhr.open("POST", url, true);
 
-      xhr.setRequestHeader(
-          "Content-type",
-          "application/x-www-form-urlencoded"
-      );
+    xhr.setRequestHeader(
+        "Content-type",
+        "application/x-www-form-urlencoded"
+    );
 
-      xhr.send(params);
-  }
+    xhr.send(params);
+}
+
+
+
+
+
+
+
+
 
 
   function Go() {
@@ -247,4 +271,4 @@ function populateTable(json, tablesql, i) {
    else {
     console.log("Error at populateTable");
   }
-}
+}*/
