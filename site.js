@@ -1,11 +1,16 @@
 const express = require('express');
 const bodyparser = require('body-parser');
 var mysql = require("mysql");
+var path = require('path');
 
+//set express
 const app = express();
-
+//set pug as view renderer
 app.set('view engine', 'pug');
-app.use(express.static(__dirname + '/public'));
+
+//set the path for static files
+app.use(express.static(path.join(__dirname + '/public')));
+app.use('/details', express.static(path.join(__dirname + '/public')));
 
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
@@ -24,7 +29,9 @@ db.connect((err) => {
 
 
 app.get('/', (req, res) => {
-  res.render('index');
+  res.render('index', {
+    page: 'browse'
+  });
 })
 
 app.get('/login', (req, res) => {
@@ -43,8 +50,31 @@ app.get('/cart', (req, res) => {
   res.render('cart');
 })
 
-app.get('/details', (req, res) => {
-  res.render('details');
+app.get('/details/:id', (req, res) => {
+  var bookCode = req.params.id;
+  bookCode = bookCode.replace(':','');
+
+  let sql = `select B.bookCode, B.title, B.numCopies, A.authorNum, A.authorLast, A.authorFirst, P.publisherCode, P.publisherName from book B, author A,publisher P, wrote W where (B.publisherCode = P.publisherCode and A.authorNum = W.authorNum and W.bookCode = B.bookCode) and B.bookCode = ${bookCode}`;
+  let query = db.query(sql, (err, results) => {
+    if (err) {
+      console.log(sql);
+    }
+    console.log(results);
+
+    res.render('details', {
+      title : results[0].title,
+      author : results[0].authorFirst +" "+ results[0].authorLast,
+      publisher : results[0].publisherName,
+      price : 'test',
+      stock : 'test',
+      rating : 'test',
+      summary : 'publisher code is ' + results[0].publisherCode
+    });
+  });
+  
+  console.log("the booKCode is " + bookCode);
+
+
 })
 
 app.listen(5656, () => {
@@ -55,7 +85,7 @@ app.post('/', function (req, res){
   var like = req.body.like;
   var col = req.body.col;
 
-  let sql = `select B.title, B.numCopies, A.authorNum,A.authorLast,A.authorFirst,P.publisherCode,P.publisherName,P.city from book B, author A,publisher P, wrote W where (B.publisherCode = P.publisherCode and A.authorNum = W.authorNum and W.bookCode = B.bookCode) and B.title LIKE '%${like}%'`;
+  let sql = `select B.bookCode, B.title, B.numCopies, A.authorNum,A.authorLast,A.authorFirst,P.publisherCode,P.publisherName,P.city from book B, author A,publisher P, wrote W where (B.publisherCode = P.publisherCode and A.authorNum = W.authorNum and W.bookCode = B.bookCode) and B.title LIKE '%${like}%'`;
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);

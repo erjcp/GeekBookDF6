@@ -3,11 +3,23 @@ document.getElementById("btn-search").addEventListener("click", function () {
   var searchVal = textBox.value;
   console.log("partial or full title String:" + searchVal);
   //clearLogicOperationDiv();
-  makeRequest(searchVal);
+  makeTableRequest(searchVal);
 });
 
 
-function makeRequest(searchVal) {
+jQuery(document).on('click','.clickableRow',function(){
+    window.location = $(this).data("href");
+});
+
+jQuery(document).ready(function($) {
+    $(".clickableRow").on("click", function () {
+        console.log("clickable");
+        window.location = $(this).data("href");
+    });
+});
+
+
+function makeTableRequest(searchVal) {
     const xhttp = new XMLHttpRequest();
     const url = "http://localhost:5656/" 
 
@@ -23,29 +35,48 @@ function makeRequest(searchVal) {
             var finalQueryResult = xhttp.responseText;
             console.log(finalQueryResult);
             var myJsonObject = JSON.parse(finalQueryResult);
-            for (var i = 0; i < myJsonObject.length; i++) {
-                populateTable1(myJsonObject[i], "searchResult", i);
-            }
+
+            clearTable();
+            populateTable(myJsonObject, myJsonObject.length);     
         };
     };
 };
 
+function clearTable() {
+    let count = $('#tableBrowseBody tr').length;
+    //console.log("count is " + count);
+    let i;
+    for(i = 0; i < count; i++){
+        //console.log("delete " + i)
+        document.getElementById("tableBrowseBody").deleteRow(-1);
+    }
+}
 
-function populateTable1(json, tablesql, i) {
-    var table = document.getElementById("tableBrowse");
+function populateTable(json, length) {
+    for (var i = 0; i < length; i++) {
+        insertRow(json[i], i)
+    } 
+}
+
+function insertRow(rowData, num){
+    var table = document.getElementById("tableBrowseBody");
     var row = table.insertRow(-1);
+    row.className = "clickableRow";
+    row.setAttribute('data-href', '/details/:'+ rowData.bookCode)
     var cell0 = row.insertCell(0);
     var cell1 = row.insertCell(1);
     var cell2 = row.insertCell(2);
     var cell3 = row.insertCell(3);
     var cell4 = row.insertCell(4);
 
-    cell0.innerHTML = i;
-    cell1.innerHTML = json.title;
-    cell2.innerHTML = json.authorFirst + " "+ json.authorLast;
-    cell3.innerHTML = json.publisherName;
-    cell4.innerHTML = json.numCopies;
-  }
+    cell0.innerHTML = num;
+    cell1.innerHTML = rowData.title;
+    cell2.innerHTML = rowData.authorFirst + " "+ rowData.authorLast;
+    cell3.innerHTML = rowData.publisherName;
+    cell4.innerHTML = rowData.numCopies;
+}
+
+
 
 /*
 function displayTable1(partialOrFullTitle) {
@@ -79,14 +110,6 @@ function displayTable1(partialOrFullTitle) {
 
     xhr.send(params);
 }
-
-
-
-
-
-
-
-
 
 
   function Go() {

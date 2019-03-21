@@ -4,7 +4,7 @@ html
   head
     title BookStore - #{title}
     link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
-    link(rel='stylesheet', tyoe='text/css', href='css/bookstyle.css')
+    link(rel='stylesheet', type='text/css', href='css/bookstyle.css')
 
   body
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
@@ -13,14 +13,14 @@ html
         span.navbar-toggler-icon
       #navbarNavDropdown.collapse.navbar-collapse
         ul.navbar-nav
-          li.nav-item.active
+          li.nav-item
             a.nav-link(href='/')
               | Browse 
               span.sr-only (current)
           li.nav-item
             a.nav-link(href='details') Details
           li.nav-item
-            a.nav-link(href='cart') Shopping Cart
+            a.nav-link(href='cart', id='nav-shoppingCart') Shopping Cart
           li.nav-item.dropdown
             a#navbarDropdownMenuLink.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
               | Profile

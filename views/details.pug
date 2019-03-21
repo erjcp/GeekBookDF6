@@ -3,3 +3,39 @@ extends layout.pug
 block content
   container.header
     h1 Details
+  
+  container
+    .row
+      .col-4
+        img(src='https://upload.wikimedia.org/wikipedia/en/a/a0/Cien_a%C3%B1os_de_soledad_%28book_cover%2C_1967%29.jpg', alt='Italian Trulli')
+       
+      .col-8
+        form
+          fieldset
+            .row
+              .col-6
+                .form-group
+                  label Title
+                  input.form-control(type='text', placeholder=title, Disabled='')
+                .form-group
+                  label Author
+                  input.form-control(type='text', placeholder=author, Disabled='')
+                .form-group
+                  label Publisher
+                  input.form-control(type='text', placeholder=publisher, Disabled='')
+              .col-6
+                .form-group
+                  label Price
+                  input.form-control(type='text', placeholder=price, Disabled='')
+                .form-group
+                  label In Stock
+                  input.form-control(type='text', placeholder=stock, Disabled='')
+                .form-group
+                  label Rating
+                  input.form-control(type='text', placeholder=rating, Disabled='')
+            .row
+              .col-12
+                .form-group
+                  label Summary
+                  textarea.form-control(placeholder=summary, Disabled='')
+            button.btn.btn-primary.d-none(type='submit') Submit

@@ -12,3 +12,10 @@
 .header form{
     float: right;
 }
+
+#input-search, #btn-search{
+    display: inline-block;
+    width: auto;
+}
+
+
