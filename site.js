@@ -85,7 +85,11 @@ app.post('/', function (req, res){
   var like = req.body.like;
   var col = req.body.col;
 
-  let sql = `select B.bookCode, B.title, B.numCopies, A.authorNum,A.authorLast,A.authorFirst,P.publisherCode,P.publisherName,P.city from book B, author A,publisher P, wrote W where (B.publisherCode = P.publisherCode and A.authorNum = W.authorNum and W.bookCode = B.bookCode) and B.title LIKE '%${like}%'`;
+  let sql = `SELECT title, authorFirst, authorLast, Publisher.publisherName, numCopies, ROUND(AVG(score),2) as Average
+  FROM Book, Wrote, Author, Publisher, Review
+  WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode) 
+  AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
+  GROUP BY bookId;`;
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
