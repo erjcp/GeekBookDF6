@@ -77,19 +77,20 @@ app.get('/details/:id', (req, res) => {
 
 })
 
+
 app.listen(5656, () => {
   console.log('Server started on port 5656 ')
 })
 
 app.post('/', function (req, res){
   var like = req.body.like;
-  var col = req.body.col;
-
-  let sql = `SELECT title, authorFirst, authorLast, Publisher.publisherName, numCopies, ROUND(AVG(score),2) as Average
+  var sort = req.body.col;
+  console.log("like is: " + like + " and col is: " + sort);
+  let sql = `(SELECT title, authorFirst, authorLast, Publisher.publisherName, numCopies, ROUND(AVG(score),2) as Average
   FROM Book, Wrote, Author, Publisher, Review
   WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode) 
   AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
-  GROUP BY bookId;`;
+  GROUP BY bookId)`;// ORDER BY %${sort}$%';
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);

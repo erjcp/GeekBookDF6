@@ -6,6 +6,11 @@ block content
     div.search
       input#input-search.form-control.mr-sm-2(type='search', placeholder='Search', aria-label='Search')
       button#btn-search.btn.btn-outline-success.my-2.my-sm-0 Search
+      select#select-sort
+        option(value='title') Titles A-Z
+        option(value='authorLast') Authors A-Z
+        option(value='Average') Reviews Hi-Lo
+        option(value='price') Price Lo-Hi
   table#tableBrowse.table
     thead.thead-dark
       tr

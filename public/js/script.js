@@ -1,9 +1,12 @@
 document.getElementById("btn-search").addEventListener("click", function () {
   var textBox = document.getElementById("input-search");
   var searchVal = textBox.value;
+  var sortBox = document.getElementById("select-sort");
+  var sortVal = sortBox.value;
   console.log("partial or full title String:" + searchVal);
   //clearLogicOperationDiv();
-  makeTableRequest(searchVal);
+  makeTableRequest(searchVal, sortVal);
+
 });
 
 
@@ -19,7 +22,7 @@ jQuery(document).ready(function($) {
 });
 
 
-function makeTableRequest(searchVal) {
+function makeTableRequest(searchVal, sortVal) {
     const xhttp = new XMLHttpRequest();
     const url = "http://localhost:5656/" 
 
@@ -28,7 +31,9 @@ function makeTableRequest(searchVal) {
         "Content-type",
         "application/x-www-form-urlencoded"
     );
-    xhttp.send("like=" + searchVal + "&col=title" );
+
+    
+    xhttp.send("like=" + searchVal + "col=" + sortVal );
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
