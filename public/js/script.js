@@ -33,7 +33,7 @@ function makeTableRequest(searchVal, sortVal) {
     );
 
     
-    xhttp.send("like=" + searchVal + "col=" + sortVal );
+    xhttp.send("like=" + searchVal + "&col=" + sortVal );
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {

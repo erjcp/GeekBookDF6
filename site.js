@@ -90,13 +90,14 @@ app.post('/', function (req, res){
   FROM Book, Wrote, Author, Publisher, Review
   WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode) 
   AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
-  GROUP BY bookId)`;// ORDER BY %${sort}$%';
+  GROUP BY bookId) ORDER BY ${sort}`;
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
     }
     
-
+    //delete
+    console.log(sql);
     console.log(results);
 
     console.log(results[0]);
