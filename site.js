@@ -86,7 +86,7 @@ app.post('/', function (req, res){
   var like = req.body.like;
   var sort = req.body.col;
   console.log("like is: " + like + " and col is: " + sort);
-  let sql = `(SELECT title, authorFirst, authorLast, Publisher.publisherName, numCopies, ROUND(AVG(score),2) as Average
+  let sql = `(SELECT title, authorFirst, authorLast, Publisher.publisherName, price, ROUND(AVG(score),2) as Average, numCopies
   FROM Book, Wrote, Author, Publisher, Review
   WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode) 
   AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')

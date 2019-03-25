@@ -9,7 +9,7 @@ block content
       select#select-sort
         option(value='title') Titles A-Z
         option(value='authorLast') Authors A-Z
-        option(value='Average') Reviews Hi-Lo
+        option(value='Average DESC') Reviews Hi-Lo
         option(value='price') Price Lo-Hi
   table#tableBrowse.table
     thead.thead-dark
@@ -18,6 +18,8 @@ block content
         th(scope='col') Title
         th(scope='col') Author
         th(scope='col') Publisher
+        th(scope='col') Price
+        th(scope='col') Rating
         th(scope='col') Availability
     tbody#tableBrowseBody
   div#test

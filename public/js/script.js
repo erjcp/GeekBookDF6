@@ -73,12 +73,16 @@ function insertRow(rowData, num){
     var cell2 = row.insertCell(2);
     var cell3 = row.insertCell(3);
     var cell4 = row.insertCell(4);
+    var cell5 = row.insertCell(5);
+    var cell6 = row.insertCell(6);
 
     cell0.innerHTML = num;
     cell1.innerHTML = rowData.title;
     cell2.innerHTML = rowData.authorFirst + " "+ rowData.authorLast;
     cell3.innerHTML = rowData.publisherName;
-    cell4.innerHTML = rowData.numCopies;
+    cell4.innerHTML = rowData.price;
+    cell5.innerHTML = rowData.Average
+    cell6.innerHTML = rowData.numCopies;
 }
 
 
