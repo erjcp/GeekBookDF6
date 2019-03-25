@@ -11,6 +11,7 @@ app.set('view engine', 'pug');
 //set the path for static files
 app.use(express.static(path.join(__dirname + '/public')));
 app.use('/details', express.static(path.join(__dirname + '/public')));
+app.use('/cart', express.static(path.join(__dirname + '/public')))
 
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
@@ -47,7 +48,22 @@ app.get('/profile', (req, res) => {
 })
 
 app.get('/cart', (req, res) => {
-  res.render('cart');
+  var customerId = req.params.id;
+
+  let sql = `select b.title, b.price, c.customerId from Book b, Cart c, CartItem ci where (ci.orderId = c.customerId and ci.bookId = b.bookCode and ci.cartType = 1)`;
+  let query = db.query(sql, (err, results) => {
+    if (err) {
+      console.log(sql);
+    }
+    console.log(results);
+    res.render('cart', {
+      "results": results,
+      title: results[1].title
+    });
+  
+  });
+  
+  console.log("the customerId is " + customerId);
 })
 
 app.get('/details/:id', (req, res) => {
