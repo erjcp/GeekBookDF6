@@ -48,22 +48,33 @@ app.get('/profile', (req, res) => {
 })
 
 app.get('/cart', (req, res) => {
-  var customerId = req.params.id;
+  var cartList = [];
+  var saveLaterList = [];
 
-  let sql = `select b.title, b.price, c.customerId from Book b, Cart c, CartItem ci where (ci.orderId = c.customerId and ci.bookId = b.bookCode and ci.cartType = 1)`;
-  let query = db.query(sql, (err, results) => {
+  let sql = `select b.title, b.price, c.customerId, ci.cartType from Book b, Cart c, CartItem ci where (ci.orderId = c.customerId and ci.bookId = b.bookCode)`;
+  let query = db.query(sql, (err, rows, results) => {
     if (err) {
       console.log(sql);
     }
-    console.log(results);
-    res.render('cart', {
-      "results": results,
-      title: results[1].title
-    });
-  
+    for(var i = 0; i < rows.length; i++){
+      var item = {
+      title : rows[i].title,
+      price : rows[i].price,
+      customerId : rows[i].customerId,
+      cartType : rows[i].cartType
+      }
+      if(item.cartType == 1){
+        cartList.push(item);
+      }
+      else{saveLaterList.push(item);}
+        
+      console.log(item);
+    }
+    res.render('cart', {"cartList": cartList, "saveLaterList" : saveLaterList});
   });
-  
-  console.log("the customerId is " + customerId);
+  for(var j = 0; j < cartList; j++){
+    console.log(cartList[i]);
+  }
 })
 
 app.get('/details/:id', (req, res) => {
