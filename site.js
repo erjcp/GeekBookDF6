@@ -86,11 +86,19 @@ app.post('/', function (req, res){
   var like = req.body.like;
   var sort = req.body.col;
   console.log("like is: " + like + " and col is: " + sort);
-  let sql = `(SELECT title, authorFirst, authorLast, Publisher.publisherName, price, ROUND(AVG(score),2) as Average, numCopies
+  let sql = `SELECT title, authorFirst, authorLast, genre, Publisher.publisherName, price, ROUND(AVG(score),1) as Average, numCopies
   FROM Book, Wrote, Author, Publisher, Review
-  WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode) 
+  WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode)
   AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
-  GROUP BY bookId) ORDER BY ${sort}`;
+  GROUP BY Book.bookCode
+  UNION
+  SELECT title, authorFirst, authorLast, genre, Publisher.publisherName, price, NULL as Average, numCopies
+  FROM Book, Wrote, Author, Publisher
+  WHERE NOT exists (SELECT * FROM Review WHERE Book.bookCode = bookId) 
+  AND (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode)
+  AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
+  ORDER BY ${sort};`;
+  
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);

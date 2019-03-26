@@ -6,7 +6,7 @@ block content
     div.search
       input#input-search.form-control.mr-sm-2(type='search', placeholder='Search', aria-label='Search')
       button#btn-search.btn.btn-outline-success.my-2.my-sm-0 Search
-      select#select-sort
+      select#select-sort(style='margin-left: 6px')
         option(value='title') Titles A-Z
         option(value='authorLast') Authors A-Z
         option(value='Average DESC') Reviews Hi-Lo
@@ -17,6 +17,7 @@ block content
         th(scope='col') #
         th(scope='col') Title
         th(scope='col') Author
+        th(scope='col') Genre
         th(scope='col') Publisher
         th(scope='col') Price
         th(scope='col') Rating

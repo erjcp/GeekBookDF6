@@ -75,14 +75,19 @@ function insertRow(rowData, num){
     var cell4 = row.insertCell(4);
     var cell5 = row.insertCell(5);
     var cell6 = row.insertCell(6);
+    var cell7 = row.insertCell(7);
 
     cell0.innerHTML = num;
     cell1.innerHTML = rowData.title;
     cell2.innerHTML = rowData.authorFirst + " "+ rowData.authorLast;
-    cell3.innerHTML = rowData.publisherName;
-    cell4.innerHTML = rowData.price;
-    cell5.innerHTML = rowData.Average
-    cell6.innerHTML = rowData.numCopies;
+    cell3.innerHTML = rowData.genre
+    cell4.innerHTML = rowData.publisherName;
+    cell5.innerHTML = "$" + rowData.price.toFixed(2); // Two decimal places
+    if(rowData.Average == null)
+        {cell6.innerHTML = "N/A"}
+    else
+        {cell6.innerHTML = rowData.Average.toFixed(1)}; // One decimal place
+    cell7.innerHTML = rowData.numCopies;
 }
 
 
