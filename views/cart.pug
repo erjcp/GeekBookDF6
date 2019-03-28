@@ -1,40 +1,98 @@
 extends layout.pug
 
 block content
-  .container
-  ul
-    li(style='list-style-type: none;')
-      .card
-        .card-header
-          h3  Cart book
-        .card-body
-          p.card-text
-            span(style='color: grey;') AUTHOR:
-            |  Author
-          p.card-text
-            span(style='color: grey;') COST:
-            |  Cost
-          a.btn.btn-primary(href='#') Remove
-          a.btn.btn-primary(href='#') Save for later
-          div(style='float: right')
-            form
-              p Quantity
-              input(type='number', min='1', max='100')
-  #payment.container
-    h3  Subtotal
-  .container
-    h3 Saved for later
-    ul
-      li(style='list-style-type: none;')
-        .card
-          .card-header
-            h3  Saved book
-          .card-body
-            p.card-text
-              span(style='color: grey;') AUTHOR:
-              |  Author
-            p.card-text
-              span(style='color: grey;') COST:
-              |  Cost
-            a.btn.btn-primary(href='#') Remove
-            a.btn.btn-primary(href='#') Add to Cart
+  container.header
+    h1 Shopping Cart
+
+  container
+    table
+      thead
+        tr
+          th(style='width:50%') Product
+          th(style='width:10%') Price
+          th(style='width:8%') Quantity
+          th.text-center(style='width:22%') Subtotal
+          th(style='width:10%')
+
+        tbody
+        for item in cartList
+          tr
+
+            td(data-th='Product')
+              .row
+                .col-sm-2.hidden-xs
+                  img.img-responsive(src='http://placehold.it/100x100' alt='...')
+                .col-sm-10
+                  h4.nomargin
+                  | #{item.title}
+                  p
+                    | Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet.
+            td(data-th='Price') 
+                    | #{item.price}
+            td(data-th='Quantity')
+              input.form-control.text-center(type='number' value='1')
+            td.text-center(data-th='Subtotal') #{price}
+            td.actions(data-th='')
+              button.btn.btn-info.btn-sm
+                i.fa.fa-refresh
+              button.btn.btn-danger.btn-sm
+                 i.fa.fa-trash-o  
+
+      tfoot
+        tr.visible-xs
+          td.text-center
+            strong Total 1.99
+        tr
+          td
+            a.btn.btn-warning(href='#')
+              i.fa.fa-angle-left
+              |  Continue Shopping
+          td.hidden-xs(colspan='2')
+          td.hidden-xs.text-center
+            strong Total $1.99
+          td
+            a.btn.btn-success.btn-block(href='#')
+              | Checkout 
+              i.fa.fa-angle-right
+
+  container.header
+    h1 Saved for Later
+
+  container
+    table
+      thead
+        tr
+          th(style='width:50%') Product
+          th(style='width:10%') Price
+          th(style='width:8%') Quantity
+          th.text-center(style='width:22%') Subtotal
+          th(style='width:10%')
+
+        tbody
+        for item in saveLaterList
+          tr
+
+            td(data-th='Product')
+              .row
+                .col-sm-2.hidden-xs
+                  img.img-responsive(src='http://placehold.it/100x100' alt='...')
+                .col-sm-10
+                  h4.nomargin
+                  | #{item.title}
+                  p
+                    | Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet.
+            td(data-th='Price') 
+                    | #{item.price}
+            td(data-th='Quantity')
+              input.form-control.text-center(type='number' value='1')
+            td.text-center(data-th='Subtotal') #{price}
+            td.actions(data-th='')
+              button.btn.btn-info.btn-sm
+                i.fa.fa-refresh
+              button.btn.btn-danger.btn-sm
+                 i.fa.fa-trash-o  
+
+      tfoot
+        tr.visible-xs
+          td.text-center
+            strong Total 1.99

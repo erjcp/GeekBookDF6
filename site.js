@@ -11,6 +11,7 @@ app.set('view engine', 'pug');
 //set the path for static files
 app.use(express.static(path.join(__dirname + '/public')));
 app.use('/details', express.static(path.join(__dirname + '/public')));
+app.use('/cart', express.static(path.join(__dirname + '/public')))
 
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
@@ -47,7 +48,33 @@ app.get('/profile', (req, res) => {
 })
 
 app.get('/cart', (req, res) => {
-  res.render('cart');
+  var cartList = [];
+  var saveLaterList = [];
+
+  let sql = `select b.title, b.price, c.customerId, ci.cartType from Book b, Cart c, CartItem ci where (ci.orderId = c.customerId and ci.bookId = b.bookCode)`;
+  let query = db.query(sql, (err, rows, results) => {
+    if (err) {
+      console.log(sql);
+    }
+    for(var i = 0; i < rows.length; i++){
+      var item = {
+      title : rows[i].title,
+      price : rows[i].price,
+      customerId : rows[i].customerId,
+      cartType : rows[i].cartType
+      }
+      if(item.cartType == 1){
+        cartList.push(item);
+      }
+      else{saveLaterList.push(item);}
+        
+      console.log(item);
+    }
+    res.render('cart', {"cartList": cartList, "saveLaterList" : saveLaterList});
+  });
+  for(var j = 0; j < cartList; j++){
+    console.log(cartList[i]);
+  }
 })
 
 app.get('/details/:id', (req, res) => {
