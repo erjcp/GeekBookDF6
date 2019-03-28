@@ -54,7 +54,7 @@ app.get('/details/:id', (req, res) => {
   var bookCode = req.params.id;
   bookCode = bookCode.replace(':','');
 
-  let sql = `select B.bookCode, B.title, B.numCopies, A.authorNum, A.authorLast, A.authorFirst, P.publisherCode, P.publisherName from book B, author A,publisher P, wrote W where (B.publisherCode = P.publisherCode and A.authorNum = W.authorNum and W.bookCode = B.bookCode) and B.bookCode = ${bookCode}`;
+  let sql = `SELECT title, authorFirst, authorLast, genre, publisherName, price, numCopies, summary FROM Book, Wrote, Author, Publisher WHERE Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Book.bookCode = ${bookCode}`;
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
@@ -65,21 +65,14 @@ app.get('/details/:id', (req, res) => {
       title : results[0].title,
       author : results[0].authorFirst +" "+ results[0].authorLast,
       publisher : results[0].publisherName,
-      price : 'test',
-      stock : 'test',
+      price : results[0].price,
+      stock : results[0].numCopies,
       rating : 'test',
-      summary : 'publisher code is ' + results[0].publisherCode
+      summary : results[0].summary
     });
   });
-  
-  console.log("the booKCode is " + bookCode);
-
-
 })
 
-app.listen(5656, () => {
-  console.log('Server started on port 5656 ')
-})
 
 app.post('/', function (req, res){
   var like = req.body.like;
@@ -90,133 +83,11 @@ app.post('/', function (req, res){
     if (err) {
       console.log(sql);
     }
-    
-
     console.log(results);
-
-    console.log(results[0]);
     res.send(results);
   });
 });
 
-
-
-/*var http = require("http");
-var fs = require("fs");
-const port = 6117;
-var mysql = require("mysql");
-var request = require("request");
-var Query = "";
-var pQuery = "";
-var Table = "";
-var completeResult = "";
-var response;
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "website",
-  password: "abc123",
-  database: "geekbook"
-});
-
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected to mySQL server.");
-});
-
-request.post(
-  "localhost",
-  {
-    json: { key: "value" }
-  },
-  function(error, response, body) {
-    if (!error && response.statusCode == 200) {
-      console.log(response);
-    }
-  }
-);
-
-function getS(str) {
-  Table = str.substring(str.indexOf("=") + 1, str.indexOf("&"));
-  pQuery = str.substring(str.lastIndexOf("=") + 1);
-  Query = pQuery + " " + Table;
-  console.log("getS table: " + Table);
-  //console.log("getS Query: " + pQuery);
-  //console.log("getS Result Query: " + Query);
-}
-
-String.prototype.replaceAll = function(str1, str2, ignore) {
-  return this.replace(
-    new RegExp(
-      str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"),
-      ignore ? "gi" : "g"
-    ),
-    typeof str2 == "string" ? str2.replace(/\$/g, "$$$$") : str2
-  );
-};
-
-http.createServer(function (request,response){
-  console.log("url: " + request.url);
-  console.log("method: " + request.method);
-
-  let req_url = request.url.toString();
-
-  if (request.method === "POST") {
-    let body = "";
-    request.on("data", chunk => {
-      body += chunk.toString();
-      getS(body);
-      //console.log(body);
-      pQuery = pQuery.replaceAll("~", "=");
-      console.log("parsed: " + pQuery);
-
-      con.query(pQuery, function(err, result, fields) {
-        if (err) throw err;
-        completeResult = result;
-        console.log(result);
-        globalResponse = response;
-      });
-      //});
-    });
-    request.on("end", () => {
-      console.log("test");
-      setTimeout(function() {
-        var JSONx = JSON.stringify(completeResult);
-        response.write(JSONx);
-        console.log("test2");
-        response.end();
-        console.log("test3");
-      }, 1000);
-    });
-
-  } else if (request.url === '/') {
-    fs.readFile('./index.html',function(err,data){
-      response.writeHead(200,{'Content-Type': 'text/html'});
-      response.write(data);
-      response.end();
-    });
-  }
-  else if(req_url.endsWith(".css")) {
-    let res_url = ".";
-    res_url += request.url.toString();
-    console.log("res_url = " + res_url);
-
-    fs.readFile(res_url, function(err, data){
-      if (err) throw err;
-      response.writeHead(200,{'Content-Type': 'text/css'});
-      response.write(data);
-      response.end();
-    })  
-  } 
-  else if(req_url.endsWith(".html")){
-    let res_url = ".";
-    res_url += request.url.toString();
-    console.log("res_url = " + res_url);
-
-    fs.readFile(res_url, function(err, data){
-      if (err) throw err;
-      response.writeHead(200,{'Content-Type': 'text/html'});
-      response.write(data);
-      response.end();
-    })  
-  } 
-}).listen(port); */
+app.listen(5656, () => {
+  console.log('Server started on port 5656 ')
+})
