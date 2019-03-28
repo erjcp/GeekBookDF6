@@ -85,7 +85,7 @@ app.get('/details/:id', (req, res) => {
   var bookCode = req.params.id;
   bookCode = bookCode.replace(':','');
 
-  let sql = `select B.bookCode, B.title, B.numCopies, A.authorNum, A.authorLast, A.authorFirst, P.publisherCode, P.publisherName from book B, author A,publisher P, wrote W where (B.publisherCode = P.publisherCode and A.authorNum = W.authorNum and W.bookCode = B.bookCode) and B.bookCode = ${bookCode}`;
+  let sql = `SELECT title, authorFirst, authorLast, genre, publisherName, price, numCopies, summary FROM Book, Wrote, Author, Publisher WHERE Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Book.bookCode = ${bookCode}`;
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
@@ -96,21 +96,14 @@ app.get('/details/:id', (req, res) => {
       title : results[0].title,
       author : results[0].authorFirst +" "+ results[0].authorLast,
       publisher : results[0].publisherName,
-      price : 'test',
-      stock : 'test',
+      price : results[0].price,
+      stock : results[0].numCopies,
       rating : 'test',
-      summary : 'publisher code is ' + results[0].publisherCode
+      summary : results[0].summary
     });
   });
-  
-  console.log("the booKCode is " + bookCode);
-
-
 })
 
-app.listen(5656, () => {
-  console.log('Server started on port 5656 ')
-})
 
 app.post('/', function (req, res){
   var like = req.body.like;
@@ -121,11 +114,14 @@ app.post('/', function (req, res){
     if (err) {
       console.log(sql);
     }
-    
-
     console.log(results);
-
-    console.log(results[0]);
     res.send(results);
   });
 });
+<<<<<<< HEAD
+=======
+
+app.listen(5656, () => {
+  console.log('Server started on port 5656 ')
+})
+>>>>>>> d5a09e8d80a5ba96077e8e44c8869f54ec89f480
