@@ -15,7 +15,7 @@ block content
           th(style='width:10%')
 
         tbody
-        for item in cartList
+        each item in cartList
           tr
 
             td(data-th='Product')
@@ -27,33 +27,28 @@ block content
                   | #{item.title}
                   p
                     | Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet.
+                  button.btn.btn-info.btn-sm Save For Later
+                  i.fa.fa-refresh
+                  button.btn.btn-danger.btn-sm Remove
+                  i.fa.fa-trash-o 
             td(data-th='Price') 
                     | #{item.price}
             td(data-th='Quantity')
               input.form-control.text-center(type='number' value='1')
-            td.text-center(data-th='Subtotal') #{price}
-            td.actions(data-th='')
-              button.btn.btn-info.btn-sm
-                i.fa.fa-refresh
-              button.btn.btn-danger.btn-sm
-                 i.fa.fa-trash-o  
-
-      tfoot
-        tr.visible-xs
-          td.text-center
-            strong Total 1.99
-        tr
-          td
-            a.btn.btn-warning(href='#')
-              i.fa.fa-angle-left
-              |  Continue Shopping
-          td.hidden-xs(colspan='2')
-          td.hidden-xs.text-center
-            strong Total $1.99
-          td
-            a.btn.btn-success.btn-block(href='#')
-              | Checkout 
-              i.fa.fa-angle-right
+            td.text-center(data-th='Subtotal') #{item.price}        
+        tfoot
+          tr
+            td
+              a.btn.btn-warning(href='#')
+                i.fa.fa-angle-left
+                |  Continue Shopping
+            td.hidden-xs(colspan='2')
+            td.hidden-xs.text-center
+              strong Total #{cartTotal}
+            td
+              a.btn.btn-success.btn-block(href='#')
+                | Checkout 
+                i.fa.fa-angle-right
 
   container.header
     h1 Saved for Later
@@ -81,18 +76,12 @@ block content
                   | #{item.title}
                   p
                     | Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet.
-            td(data-th='Price') 
+                  button.btn.btn-info.btn-sm Add to Cart
+                  i.fa.fa-refresh
+                  button.btn.btn-danger.btn-sm Remove
+                  i.fa.fa-trash-o
+                  td(data-th='Price') 
                     | #{item.price}
             td(data-th='Quantity')
               input.form-control.text-center(type='number' value='1')
-            td.text-center(data-th='Subtotal') #{price}
-            td.actions(data-th='')
-              button.btn.btn-info.btn-sm
-                i.fa.fa-refresh
-              button.btn.btn-danger.btn-sm
-                 i.fa.fa-trash-o  
-
-      tfoot
-        tr.visible-xs
-          td.text-center
-            strong Total 1.99
+            td.text-center(data-th='Subtotal') #{item.price}
