@@ -10,9 +10,15 @@ document.getElementById("btn-search").addEventListener("click", function () {
 });
 
 
-jQuery(document).on('click','.clickableRow',function(){
-    window.location = $(this).data("href");
-});
+//jQuery(document).on('click','.clickableRow',function(){
+//    window.location = $(this).data("href");
+//});
+
+jQuery( document ).ready(function(){
+    jQuery( ".clickableRow" ).click( function( e ){
+      window.location=$(this).data("href");;
+    });
+  } );
 
 jQuery(document).ready(function($) {
     $(".clickableRow").on("click", function () {
@@ -63,7 +69,7 @@ function populateTable(json, length) {
     } 
 }
 
-function insertRow(rowData, num){
+function insertRow(rowData, i){
     var table = document.getElementById("tableBrowseBody");
     var row = table.insertRow(-1);
     row.className = "clickableRow";
@@ -77,7 +83,19 @@ function insertRow(rowData, num){
     var cell6 = row.insertCell(6);
     var cell7 = row.insertCell(7);
 
-    cell0.innerHTML = num;
+    
+    var button = document.createElement('input');
+
+    // SET INPUT ATTRIBUTE.
+    button.setAttribute('type', 'button');
+    button.setAttribute('value', 'Cart');
+
+    // ADD THE BUTTON's 'onclick' EVENT.
+    button.setAttribute('onclick', 'addToCart(' + rowData.bookCode + ')');
+
+    cell0.appendChild(button);
+
+    //cell0.innerHTML = 'What';
     cell1.innerHTML = rowData.title;
     cell2.innerHTML = rowData.authorFirst + " "+ rowData.authorLast;
     cell3.innerHTML = rowData.genre
@@ -88,9 +106,23 @@ function insertRow(rowData, num){
     else
         {cell6.innerHTML = rowData.Average.toFixed(1)}; // One decimal place
     cell7.innerHTML = rowData.numCopies;
+
 }
 
+function addToCart(code){
+    console.log(code);
+    const xhttp = new XMLHttpRequest();
+    const url = "http://localhost:5656/add" 
 
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader(
+        "Content-type",
+        "application/x-www-form-urlencoded"
+    );
+
+    
+    xhttp.send("code=" + code);
+}
 
 /*
 function displayTable1(partialOrFullTitle) {
