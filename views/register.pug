@@ -1,0 +1,158 @@
+extends layout.pug
+
+block content
+  .main.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 Sign Up
+
+        // register form
+        form
+          div.form-group
+            label(for='userName') Enter User Name:
+            input#userName.form-control(type='text', placeholder='Please enter a user name for this site' userName='userName' required)
+          div.form-group
+            label(for='firstName') First Name:
+            input#firstName.form-control(type='text', placeholder='Please enter your first name' firstName='firstName' required)
+
+          div.form-group
+            label(for='lastName') Last Name:
+            input#lastName.form-control(type='text', placeholder='Please enter your last name' lastName='lastName' required)
+          div.form-group
+            label(for='nickName') NickName:
+            input#nickName.form-control(type='text',placeholder=' Please enter a nickname' nickName='nickName' required)
+          div.form-group
+            label(for='email') Email:
+            input#email.form-control(type='email',  placeholder='name@email.com' name='email' required)
+          div.form-group
+            label(for='pw') Password:
+            input#pw.form-control(type='password', name='password' required)
+          div.form-group
+            label(for='pw2') Confirm Password:
+            input#pw2.form-control(type='password', name='confirmPassword', required)
+            
+          div.form-group
+            label(for='address') Address:
+            input#address.form-control(type='text', placeholder='Please enter your address' address='address' required)
+          div.form-group
+            label(for='city') City:
+            input#city.form-control(type='text',placeholder='Please enter your last city' city='city' required)
+          div.form-group
+            label(for='zip') Zipcode:
+            input#zip.form-control(type='text',placeholder='Please enter your zip' zip='zip' required)
+
+          div.form-group
+            label(for='state') State:
+            input#state.form-control(type='text',placeholder='Please enter your state' state='state' required)
+          
+          .panel.panel-default
+          .panel-heading
+            .checkbox.pull-right
+
+          div.form-group
+          label(for='cardHolderfullName') Card holder Full Name:
+          input#cardHolderfullName.form-control(type='text', placeholder='Please enter your Full Name' cardHolderfullName='cardHolderfullName' required) 
+        
+          .panel-body
+            form(role='form')
+              .form-group
+                label(for='cardNumber')
+                  | CARD NUMBER
+                .input-group
+                  input#cardNumber.form-control(type='text', placeholder='Valid Card Number', required='', autofocus='')
+                  span.input-group-addon
+                  span.glyphicon.glyphicon-lock
+              .row
+                .col-xs-7.col-md-7
+                  .form-group
+                    label(for='expityMonth')
+                      | EXPIRY DATE
+                    .col-xs-6.col-lg-6.pl-ziro
+                      input#expityMonth.form-control(type='text', placeholder='MM', required='')
+                    .col-xs-6.col-lg-6.pl-ziro
+                      input#expityYear.form-control(type='text', placeholder='YY', required='')
+                .col-xs-5.col-md-5.pull-right
+                  .form-group
+                    label(for='cvCode')
+                      | CV CODE
+                    input#cvCode.form-control(type='password', placeholder='CV', required='')
+        ul.nav.nav-pills.nav-stacked
+          li.active
+            a(href='#')
+          br
+          button#btn.btn.btn-primary(type='submit' onClick="getdata1()" style= "height:50px;width:100%!important; margin-bottom:30px; ") Sign up      
+          script.
+              
+              function getInputVal(id) 
+              {
+                let input = document.getElementById(id);
+                //- console.log(input.value)
+                return input.value;
+              }
+              //- var element = document.getElementById('btn');
+              //- element.addEventListener("click", ()=>getdata())
+              //declarations
+              
+              //build object with all the fields
+              function schema() {
+                  var userName = getInputVal("userName")
+                  var email = getInputVal("email");
+                  var password = getInputVal("pw");
+                  var firstName = getInputVal("firstName");
+                  var lastName = getInputVal("lastName");
+                  var nickName = getInputVal("nickName");
+                  var address = getInputVal("address");
+                  var city = getInputVal("city");
+                  var zip = getInputVal("zip");
+                  var state = getInputVal("state");
+                  var cardHolderfullName = getInputVal("cardHolderfullName");
+                  var cardNumber = getInputVal("cardNumber");
+                  var cvCode = getInputVal("cvCode");
+                  var expityMonth = getInputVal("expityMonth");
+                  var expityYear = getInputVal("expityYear");
+              const payload = { 
+
+                       userName,
+                        email,
+                        password,
+                        firstName,
+                        lastName,
+                        nickName,
+                        address,
+                        city,
+                        zip,
+                        state,
+                        cardHolderfullName,
+                        cardNumber,
+                        expityMonth,
+                        expityYear,
+                        cvCode
+                      }
+
+               return payload;
+              }
+
+              //submit the data     // makeTableRequest(data);//,'register');
+              function getdata1() {
+                var data = schema();
+                 makeTableRequest(data);
+                }; 
+              
+              function makeTableRequest(data) 
+                {
+                    const xhttp = new XMLHttpRequest();
+                    const url = "http://localhost:5656/register" 
+
+                    xhttp.open("POST", url, true);
+
+                    //- xhttp.setRequestHeader(
+                    //-     "Content-type",
+                    //-     "application/x-www-form-urlencoded"
+                    //- );
+
+                    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+                    console.log("Sending ", data)
+                    xhttp.send(JSON.stringify(data));
+              
+                  }

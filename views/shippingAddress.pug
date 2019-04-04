@@ -1,0 +1,82 @@
+extends layout.pug
+
+block content
+  .main.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 Add Shipping Address
+
+        // shipping form
+        form
+        div.form-group
+            label(for='address') Address:
+            input#address.form-control(type='text' placeholder='Please enter your address' address='address' required)
+        div.form-group
+            label(for='city') City:
+            input#city.form-control(type='text',placeholder='Please enter your last city' city='city' required)
+
+          
+        div.form-group
+            label(for='zip') Zipcode:
+            input#zip.form-control(type='text',placeholder='Please enter your zip' zip='zip' required)
+
+        div.form-group
+            label(for='state') State:
+            input#state.form-control(type='text',placeholder='Please enter your state' state='state' required)
+
+        button#btn.btn.btn-primary(type='submit' onclick="getdataShipping()" style= "height:50px;width:100%!important; margin-bottom:30px; ") Submit New Shipping Address
+        script.
+            function getInputVal(id) 
+            {
+              let input = document.getElementById(id);
+              //- console.log(input.value)
+              return input.value;
+            }
+
+
+            //- var element = document.getElementById('btn');
+            //- element.addEventListener("click", ()=>getdata())
+            //declarations
+            
+            //build object with all the fields
+            function schema1() 
+            {
+                var address = getInputVal("address");
+                var city = getInputVal("city");
+                var zip = getInputVal("zip");
+                var state = getInputVal("state");
+                
+            const payload = { 
+                     
+                      address,
+                      city,
+                      zip,
+                      state
+                    }
+
+              return payload;
+            }
+              function getdataShipping() {
+                var data = schema1();
+                //makeTableRequest(data);   //,'shippingAddress');
+
+               makeTableRequest(data);
+                };
+
+                function makeTableRequest(data) 
+                {
+                    const xhttp = new XMLHttpRequest();
+                    const url = "http://localhost:5656/shippingAddress" 
+
+                    xhttp.open("POST", url, true);
+
+                    //- xhttp.setRequestHeader(
+                    //-     "Content-type",
+                    //-     "application/x-www-form-urlencoded"
+                    //- );
+
+                    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                    console.log("Sending ", data)
+                    xhttp.send(JSON.stringify(data));
+                  }
+ 

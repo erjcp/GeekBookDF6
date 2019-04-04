@@ -1,0 +1,115 @@
+extends layout.pug
+
+block content
+  .main.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 Edit Account
+
+        // edit account form
+        form
+          div.form-group
+            label(for='email') Edit Email:
+            input#email.form-control(type='email', placeholder='name@email.com' name='email')
+          div.form-group
+            label(for='pw') Edit Password:
+            input#pw.form-control(type='password', name='password')
+
+          div.form-group
+            label(for='firstName') Edit First Name:
+            input#firstName.form-control(type='text', placeholder='Edit your first name' firstName='firstName')
+          div.form-group
+            label(for='lastName') Edit Last Name:
+            input#lastName.form-control(type='text',placeholder='Edit your last name' lastName='lastName')
+          div.form-group
+            label(for='nickName') Edit NickName:
+            input#nickName.form-control(type='text', placeholder=' Edit your nickname' nickName='nickName')
+          
+          h5 Billing address
+          div.form-group
+            label(for='address') Edit Address:
+            input#address.form-control(type='text', placeholder='Edit your address' address='address')
+          div.form-group
+            label(for='city') Edit City:
+            input#city.form-control(type='text', placeholder='Edit your city' city='city' )
+          div.form-group
+            label(for='zip') Edit Zipcode:
+            input#zip.form-control(type='text', placeholder='Edit your zip' zip='zip')
+          div.form-group
+            label(for='state') Edit State:
+            input#state.form-control(type='text', placeholder=' Edit your state' state='state')
+
+          button#btn.btn.btn-primary(type='submit', onClick="getdata()") Update Registration
+          script.
+              setTimeout(5000, updateValue('email', "johnDoe@gmail.com"));
+
+              console.log("running")
+
+              // updates the value of an input field given {id, value}
+              function updateValue (id,value){
+               document.getElementById(id).value = value;
+              }
+
+              //gets an input value using its id
+              function getInputVal(id) {
+                const input = document.getElementById(id);
+                return input.value;
+              }
+
+
+              //- var element = getInputVal('btn');
+              //- element.addEventListener("click", ()=>getdata())
+              //declarations
+              var email = getInputVal("email");
+              var pw = getInputVal("pw");
+              var firstName = getInputVal("firstName");
+              var lastName = getInputVal("lastName");
+              var nickName = getInputVal("nickName");
+              var address = getInputVal("address");
+              var city = getInputVal("city");
+              var zip = getInputVal("zip");
+              var state = getInputVal("state");
+
+              
+              //build object with all the fields
+              function schema(
+                email,
+                pw,
+                firstName,
+                lastName,
+                nickName,
+                address,
+                city,
+                zip,
+                state
+              ) {
+               return { email: email,
+                        pw :pw,
+                        firstName:firstName,
+                        lastName:lastName,
+                        nickName:nickName,
+                        address : address,
+                        city : city,
+                        zip :zip,
+                        state:state}
+              }
+
+              //submit the data
+              function getdata() {
+                var data = schema(
+                  email,
+                  pw,
+                  firstName,
+                  lastName,
+                  nickName,
+                  address,
+                  city,
+                  zip,
+                  state
+                );
+             console.log(data);
+              }
+
+              
+
+

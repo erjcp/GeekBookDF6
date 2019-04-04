@@ -1,0 +1,101 @@
+extends layout.pug
+  
+block content
+  .main.container
+  .row
+    .col-xs-12.col-md-4
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title
+            | ADD NEW CREDIT CARD
+          .checkbox.pull-right
+        
+        div.form-group
+          label(for='cardHolderfullName') Card holder Full Name:
+          input#cardHolderfullName.form-control(type='text', placeholder='Please enter your Full Name' cardHolderfullName='cardHolderfullName' required) 
+        
+        .panel-body
+          form(role='form')
+            .form-group
+              label(for='cardNumber')
+                | CARD NUMBER
+              .input-group
+                input#cardNumber.form-control(type='text', placeholder='Valid Card Number', required='', autofocus='' minlength="16" ,maxlength="16")
+                span.input-group-addon
+                  span.glyphicon.glyphicon-lock
+            .row
+              .col-xs-7.col-md-7
+                .form-group
+                  label(for='expityMonth')
+                    | EXPIRY DATE
+                  .col-xs-6.col-lg-6.pl-ziro
+                    input#expityMonth.form-control(type='text', placeholder='MM', required)
+                  .col-xs-6.col-lg-6.pl-ziro
+                    input#expityYear.form-control(type='text', placeholder='YY', required)
+              .col-xs-5.col-md-5.pull-right
+                .form-group
+                  label(for='cvCode')
+                    | CV CODE
+                  input#cvCode.form-control(type='password', placeholder='CV Code', required='', minlenght="3", maxlength="3")
+      ul.nav.nav-pills.nav-stacked
+        li.active
+          a(href='#')
+      br
+      button.btn.btn-primary(type='submit'     onClick="getdata2()" style= "height:50px;width:100%!important; margin-bottom:30px; ")  Submit New Credit Card
+     
+      script.
+              
+              function getInputVal(id) 
+              {
+                let input = document.getElementById(id);
+                //- console.log(input.value)
+                return input.value;
+              }
+              //- var element = document.getElementById('btn');
+              //- element.addEventListener("click", ()=>getdata())
+              //declarations
+              
+              //build object with all the fields
+              function schema() {
+                  
+                  var cardHolderfullName = getInputVal("cardHolderfullName");
+                  var cardNumber = getInputVal("cardNumber");
+                  var cvCode = getInputVal("cvCode");
+                  var expityMonth = getInputVal("expityMonth");
+                  var expityYear = getInputVal("expityYear");
+              const payload = { 
+                       
+                        cardHolderfullName,
+                        cardNumber,
+                        expityMonth,
+                        expityYear,
+                        cvCode
+                      }
+
+               return payload;
+              }
+
+              //submit the data     // makeTableRequest(data);//,'register');
+              function getdata2() {
+                var data = schema();
+                 makeTableRequest(data);
+                }; 
+              
+              function makeTableRequest(data) 
+                {
+                    const xhttp = new XMLHttpRequest();
+                    const url = "http://localhost:5656/ccform" 
+
+                    xhttp.open("POST", url, true);
+
+                    //- xhttp.setRequestHeader(
+                    //-     "Content-type",
+                    //-     "application/x-www-form-urlencoded"
+                    //- );
+
+                    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+                    console.log("Sending ", data)
+                    xhttp.send(JSON.stringify(data));
+              
+                  }
