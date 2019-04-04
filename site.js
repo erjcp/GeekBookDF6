@@ -1,12 +1,18 @@
 const express = require('express');
 const bodyparser = require('body-parser');
+const cookieparser = require('cookie-parser');
 var mysql = require("mysql");
 var path = require('path');
+var session = require('express-session');
 
 //set express
 const app = express();
 //set pug as view renderer
 app.set('view engine', 'pug');
+//setting up cookies
+app.use(cookieparser());
+
+app.use(session({secret: "What should we set our secret to guys?"}));
 
 //set the path for static files
 app.use(express.static(path.join(__dirname + '/public')));
@@ -28,12 +34,25 @@ db.connect((err) => {
   console.log("Connected to mySQL server.");
 });
 
-
 app.get('/', (req, res) => {
   res.render('index', {
     page: 'browse'
   });
 })
+
+
+app.get('/', function(req, res){
+  if(req.session.page_views){
+    req.session.page_views++;
+ } else {
+    req.session.page_views = 1;
+ }
+});
+
+//sets a simple cookie titled 'name' to contain the value 'express'
+app.get('/', (req, res) => {
+  res.cookie('name', 'express')
+});
 
 app.get('/login', (req, res) => {
   res.render('login');
