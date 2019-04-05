@@ -54,66 +54,27 @@ block content
           .col-6
             .selectRating
               .form-check.form-check-inline
-                input#inlineRadio1.form-check-input(type='radio', name='rating', value='1')
+                input#inlineRadio1.form-check-input.reviewRating(type='radio', name='rating', value='1')
                 label.form-check-label(for='inlineRadio1') 1
               .form-check.form-check-inline
-                input#inlineRadio2.form-check-input(type='radio', name='rating', value='2')
+                input#inlineRadio2.form-check-input.reviewRating(type='radio', name='rating', value='2')
                 label.form-check-label(for='inlineRadio2') 2
               .form-check.form-check-inline
-                input#inlineRadio3.form-check-input(type='radio', name='rating', value='3')
+                input#inlineRadio3.form-check-input.reviewRating(type='radio', name='rating', value='3')
                 label.form-check-label(for='inlineRadio3') 3 
               .form-check.form-check-inline
-                input#inlineRadio2.form-check-input(type='radio', name='rating', value='4')
+                input#inlineRadio2.form-check-input.reviewRating(type='radio', name='rating', value='4')
                 label.form-check-label(for='inlineRadio2') 4
               .form-check.form-check-inline
-                input#inlineRadio3.form-check-input(type='radio', name='rating', value='5')
+                input#inlineRadio3.form-check-input.reviewRating(type='radio', name='rating', value='5')
                 label.form-check-label(for='inlineRadio3') 5
           .col-3
           .col-3
             button#postReview.btn.btn-outline-primary.pushRight(type='submit') Post
         hr
         .row.reviewsList
-          ul.media-list.reviewul
-            li
-              .row
-                .col
-                  a.pull-left(href='#')
-                    img.rounded-circle.profilepic(src='http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png', alt='')
-                    strong.text-success @user1
-              .row
-                .col
-                  h6 Title
-                    span.text-muted.pull-right  - 5
-              .row
-                .col  
-                  span.text-muted 03-20-2019
-              .row
-                .col
-                  .media-body                    
-                    p
-                      | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      | Lorem ipsum dolor 
-                      | adipiscing elit.
-            li
-              .row
-                .col
-                  a.pull-left(href='#')
-                    img.rounded-circle.profilepic(src='http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png', alt='')
-                    strong.text-success @user2
-              .row
-                .col
-                  h6 Title
-                    span.text-muted.pull-right  - 5
-              .row
-                .col  
-                  span.text-muted 03-22-2019
-              .row
-                .col
-                  .media-body                    
-                    p
-                      | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      | Lorem ipsum dolor 
-                      | adipiscing elit.
+          ul#reviewUl.media-list.reviewUl
+            
 
   script(src='js/details/details-script.js')
 

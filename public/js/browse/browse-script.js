@@ -14,7 +14,7 @@ jQuery(document).on('click','.clickableRow',function(){
 
 function makeTableRequest(searchVal) {
     const xhttp = new XMLHttpRequest();
-    const url = "http://localhost:5656/" 
+    const url = window.location.href;
 
     xhttp.open("POST", url, true);
     xhttp.setRequestHeader(
