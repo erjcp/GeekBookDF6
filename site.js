@@ -53,7 +53,7 @@ app.get('/cart', (req, res) => {
   var cartTotal = 0;
   var saveTotal = 0;
 
-  let sql = `select b.title, b.price, c.customerId, ci.cartType, ci.quantity from Book b, Cart c, CartItem ci where (ci.orderId = c.customerId and ci.bookId = b.bookCode and c.customerID = 0000)`;
+  let sql = `select b.title, b.price, c.customerId, ci.bookId, ci.cartType, ci.quantity from Book b, Cart c, CartItem ci where (ci.orderId = c.customerId and ci.bookId = b.bookCode and ci.orderId = 0000)`;
   let query = db.query(sql, (err, rows, results) => {
     if (err) {
       console.log(sql);
@@ -62,7 +62,7 @@ app.get('/cart', (req, res) => {
       var item = {
       title : rows[i].title,
       price : rows[i].price,
-      customerId : rows[i].customerId,
+      bookId : rows[i].bookId,
       cartType : rows[i].cartType,
       quantity : rows[i].quantity
       }
@@ -79,6 +79,8 @@ app.get('/cart', (req, res) => {
   for(var j = 0; j < cartList; j++){
     console.log(cartList[i]);
   }
+
+  console.log("complete cart");
 })
 
 app.get('/details/:id', (req, res) => {
@@ -128,4 +130,37 @@ app.post('/', function (req, res){
     console.log(results[0]);
     res.send(results);
   });
+});
+
+//cart stuff
+  
+
+module.exports = function Cart(oldCart){
+  var cartList = [];
+  var saveLaterList = [];
+  var cartTotal = 0;
+  var saveTotal = 0;
+
+  
+}
+
+app.post('/addCart', function (req, res){
+
+      var id = req.body.itemId;
+      console.log("code is " + id);    
+      console.log(id);
+  
+      let sql = `UPDATE CartItem
+      SET cartType = 1
+      WHERE orderId = '${id}';`;
+  
+      let query = db.query(sql, (err, results) =>{
+        if(err){
+          res.send(results);
+          console.log(id);
+        }
+        
+      });
+    
+
 });
