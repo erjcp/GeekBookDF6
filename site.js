@@ -112,23 +112,60 @@ app.post('/details/:id', function (req, res){
       console.log(sql);
     }
     console.log(results);
-    //res.send(results);
+    res.send(results);
   });
 });
 
 
 app.post('/', function (req, res){
   var like = req.body.like;
-  var col = req.body.col;
-
-  let sql = `select B.bookCode, B.title, B.numCopies, A.authorNum,A.authorLast,A.authorFirst,P.publisherCode,P.publisherName,P.city from book B, author A,publisher P, wrote W where (B.publisherCode = P.publisherCode and A.authorNum = W.authorNum and W.bookCode = B.bookCode) and B.title LIKE '%${like}%'`;
+  var sort = req.body.col;
+  console.log("like is: " + like + " and col is: " + sort);
+  let sql = `SELECT title, authorFirst, authorLast, genre, Publisher.publisherName, price, ROUND(AVG(score),1) as Average, numCopies, Book.bookCode
+  FROM Book, Wrote, Author, Publisher, Review
+  WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode)
+  AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
+  GROUP BY Book.bookCode
+  UNION
+  SELECT title, authorFirst, authorLast, genre, Publisher.publisherName, price, NULL as Average, numCopies, Book.bookCode
+  FROM Book, Wrote, Author, Publisher
+  WHERE NOT exists (SELECT * FROM Review WHERE Book.bookCode = bookId) 
+  AND (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode)
+  AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
+  ORDER BY ${sort};`;
+  
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
     }
+    
+    //delete
+    console.log(sql);
     console.log(results);
+
+    console.log(results[0]);
     res.send(results);
   });
+});
+
+app.post('/:action', function (req, res) {
+  if (req.param('action') === 'add') {
+    console.log("body:")
+    console.log(req.body);
+    var code = req.body.code;
+    console.log("code is: " + code);
+    let sql = `INSERT INTO CartItem
+    VALUES
+    ('0001' ,'${code}', 0, 1);`;
+    
+    let query = db.query(sql, (err, results) => {
+      if (err) {
+        console.log(sql);
+      }
+
+      res.send(results);
+    });
+  }
 });
 
 app.listen(5656, () => {
