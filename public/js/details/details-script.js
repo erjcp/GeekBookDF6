@@ -2,6 +2,11 @@
 // DETAILS FUNTIONALITY
 // ADD USERNAME NICKNAME TO INSERT REVIEW
 
+$(document).ready(function() {
+    //console.log("ON PAGE LOAD!!");
+  makeReviewsRequest();
+ });
+
 document.getElementById("postReview").addEventListener("click", function () {
     var radio = document.getElementsByClassName("reviewRating");
     var heading = "Heading test replace me";
@@ -21,14 +26,12 @@ document.getElementById("postReview").addEventListener("click", function () {
     console.log("THIS IS THE JSON DATA");
     console.log(data);
     
-    
+    makeReviewsRequest();
     //makeReviewInsert();
     insertReview(data, true);
   });
 
-  $(document).ready(function() {
-    makeReviewsRequest();
-   });
+
 
 function makeReviewsRequest() {
     var location = window.location.href;
@@ -42,14 +45,14 @@ function makeReviewsRequest() {
         "Content-type",
         "application/x-www-form-urlencoded"
     );
-    xhttp.send("id=2226");
+    xhttp.send("");
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             var finalQueryResult = xhttp.responseText;
             console.log(finalQueryResult);
             var myJsonObject = JSON.parse(finalQueryResult);
-
+            //console.log("BEFORE POPULATE!");
             //clearTable();
             populateReviews(myJsonObject, myJsonObject.length);     
         };
@@ -120,6 +123,7 @@ function populateReviews(json, length) {
 function insertReview(data, isTop = false){
     var list = document.getElementById("reviewUl");
     var firstItem = list.firstChild;
+    
     var listItem = document.createElement("li");
     var rows = [];
     var colInRows = [];

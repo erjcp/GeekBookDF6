@@ -112,7 +112,7 @@ app.post('/details/:id', function (req, res){
       console.log(sql);
     }
     console.log(results);
-    //res.send(results);
+    res.send(results);
   });
 });
 
