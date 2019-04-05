@@ -4,7 +4,7 @@
   "description": "",
   "main": "site.js",
   "scripts": {
-    "start" :"nodemon ./site.js",
+    "start": "nodemon ./site.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,7 +20,9 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "controller": "^1.0.0",
+    "cookie-parser": "^1.4.4",
     "express": "^4.16.4",
+    "express-session": "^1.15.6",
     "mysql": "^2.16.0",
     "nodemon": "^1.18.10",
     "pug": "^2.0.3"
