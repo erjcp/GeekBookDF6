@@ -121,13 +121,13 @@ app.post('/', function (req, res){
   var like = req.body.like;
   var sort = req.body.col;
   console.log("like is: " + like + " and col is: " + sort);
-  let sql = `SELECT title, authorFirst, authorLast, genre, Publisher.publisherName, price, ROUND(AVG(score),1) as Average, numCopies, Book.bookCode
+  let sql = `SELECT title, ROUND(AVG(score),1) as Average, authorFirst, authorLast, genre, Publisher.publisherName, price, numCopies, Book.bookCode
   FROM Book, Wrote, Author, Publisher, Review
   WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode)
   AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
   GROUP BY Book.bookCode
   UNION
-  SELECT title, authorFirst, authorLast, genre, Publisher.publisherName, price, NULL as Average, numCopies, Book.bookCode
+  SELECT title, NULL as Average, authorFirst, authorLast, genre, Publisher.publisherName, price, numCopies, Book.bookCode
   FROM Book, Wrote, Author, Publisher
   WHERE NOT exists (SELECT * FROM Review WHERE Book.bookCode = bookId) 
   AND (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode)
@@ -141,11 +141,11 @@ app.post('/', function (req, res){
     }
     
     //delete
-    //console.log(sql);
+    console.log(sql);
     console.log(results);
 
-    //console.log(results[0]);
-    //res.send(results);
+    console.log(results[0]);
+    res.send(results);
   });
 });
 
