@@ -13,7 +13,7 @@ block content
           th(style='width:8%') Quantity
           th.text-center(style='width:22%') Subtotal
 
-        tbody
+        tbody#tableCart
         each item in cartList
           tr
 
@@ -26,14 +26,14 @@ block content
                   | #{item.title}
                   p
                     | Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet.
-                  button.btn.btn-info.btn-sm Save For Later
+                  a.button.btn.btn-info.btn-sm(onclick='moveToSave('+item.bookId +')') Save For Later
                   i.fa.fa-refresh
-                  button.btn.btn-danger.btn-sm Remove
+                  a.button.btn.btn-danger.btn-sm(onclick='remove('+item.bookId +')') Remove
                   i.fa.fa-trash-o 
             td(data-th='Price') 
                     | #{item.price}
             td(data-th='Quantity')
-              input.form-control.text-center(type='number' value='1')
+              input.form-control.text-center(type='number')
             td.text-center(data-th='Subtotal') #{item.price}        
         tfoot
           tr
@@ -74,9 +74,9 @@ block content
                   | #{item.title}
                   p
                     | Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet.
-                  a.button.btn.btn-info.btn-sm(onclick='addToCart('+item.bookId +')') Add
+                  a.button.btn.btn-info.btn-sm(onclick='moveToCart('+item.bookId +')') Add
                   i.fa.fa-refresh
-                  button.btn.btn-danger.btn-sm Remove
+                  a.button.btn.btn-danger.btn-sm(onclick='remove('+item+')') Remove
                   i.fa.fa-trash-o
                   td(data-th='Price') 
                     | #{item.price}

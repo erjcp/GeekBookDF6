@@ -133,34 +133,57 @@ app.post('/', function (req, res){
 });
 
 //cart stuff
+
+app.post('/addCart', function (req, res, next){
+  var id = req.body.code;
+  console.log("id is " + id);    
   
 
-module.exports = function Cart(oldCart){
-  var cartList = [];
-  var saveLaterList = [];
-  var cartTotal = 0;
-  var saveTotal = 0;
+  let sql = `UPDATE CartItem
+  SET cartType = 1
+  WHERE bookId = '${id}';`;
 
-  
-}
-
-app.post('/addCart', function (req, res){
-
-      var id = req.body.itemId;
-      console.log("code is " + id);    
-      console.log(id);
-  
-      let sql = `UPDATE CartItem
-      SET cartType = 1
-      WHERE orderId = '${id}';`;
-  
-      let query = db.query(sql, (err, results) =>{
-        if(err){
-          res.send(results);
-          console.log(id);
-        }
-        
-      });
+  let query = db.query(sql, (err, results) =>{
+    if(err){
+      console.log(sql);
+    }    
     
+  });
+});
 
+app.post('/moveSave', function (req, res, next){
+  var id = req.body.code;
+  console.log("id is " + id);    
+  
+
+  let sql = `UPDATE CartItem
+  SET cartType = 0
+  WHERE bookId = '${id}';`;
+
+  let query = db.query(sql, (err, results) =>{
+    if(err){
+      console.log(sql);
+    }    
+
+    res.redirect("/cart");
+  });
+});
+
+app.post('/removeCart', function (req, res, next){
+  
+  console.log("remove beginning");
+  var id = req.body.code;
+  console.log("id is " + id);    
+  
+
+  let sql = `SET type= null
+  WHERE bookId = '${id}' and orderId = 0000;`;
+
+  let query = db.query(sql, (err, results) =>{
+    if(err){
+      console.log(sql);
+    }    
+
+    res.redirect("/cart");
+  });
 });

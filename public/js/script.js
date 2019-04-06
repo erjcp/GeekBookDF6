@@ -77,14 +77,47 @@ function insertRow(rowData, num){
 }
 
 
-
-
-function addToCart(itemId){
-    
-    const xhttp = new XMLHttpRequest();
-    const url = "http://localhost:5656/addCart";
-    xhttp.open("POST", url, true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-data-urlencoded");
-    xhttp.send("itemId=" + itemId);
+function moveToCart(itemId){
     console.log(itemId);
+    const xhttp = new XMLHttpRequest();
+    const url = "http://localhost:5656/addCart" 
+
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader(
+        "Content-type",
+        "application/x-www-form-urlencoded"
+    );
+
+    
+    xhttp.send("code=" + itemId);
+}
+
+function moveToSave(itemId){
+    console.log(itemId);
+    const xhttp = new XMLHttpRequest();
+    const url = "http://localhost:5656/moveSave" 
+
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader(
+        "Content-type",
+        "application/x-www-form-urlencoded"
+    );
+
+    
+    xhttp.send("code=" + itemId);
+}
+
+function remove(itemId){
+    console.log(itemId);
+    const xhttp = new XMLHttpRequest();
+    const url = "http://localhost:5656/removeCart" 
+
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader(
+        "Content-type",
+        "application/x-www-form-urlencoded"
+    );
+
+    
+    xhttp.send("code=" + itemId);
 }
