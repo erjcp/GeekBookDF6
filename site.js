@@ -132,19 +132,20 @@ app.post('/', function (req, res){
   WHERE NOT exists (SELECT * FROM Review WHERE Book.bookCode = bookId) 
   AND (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode)
   AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
-  ORDER BY ${sort};`;
+  ORDER BY ${sort}`;
   
   let query = db.query(sql, (err, results) => {
     if (err) {
+      console.log(err);
       console.log(sql);
     }
     
     //delete
-    console.log(sql);
+    //console.log(sql);
     console.log(results);
 
-    console.log(results[0]);
-    res.send(results);
+    //console.log(results[0]);
+    //res.send(results);
   });
 });
 
