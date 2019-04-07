@@ -1,10 +1,25 @@
 const express = require('express');
 const bodyparser = require('body-parser');
+const cookieparser = require('cookie-parser');
 var mysql = require("mysql");
 var path = require('path');
+var htmlcontroller = require("./controllers/htmlController");
+var config = require("./config");
+var session = require('express-session');
+
+// var path = require("path");
+// require("babel-register")({
+//   presets: ["env"]
+// });
 
 //set express
 const app = express();
+
+//setting up cookies
+app.use(cookieparser());
+
+app.use(session({secret: "DrAgOnFoRcE"}));
+
 //set pug as view renderer
 app.set('view engine', 'pug');
 
@@ -35,12 +50,42 @@ app.get('/', (req, res) => {
   });
 })
 
-app.get('/login', (req, res) => {
-  res.render('login');
-})
+app.get("/login", (req, res) => {
+  console.log("Login Page!");
+  res.render("login");
+});
+
+app.post("/login", (req, res) => 
+{
+    console.log('yo');
+    let email = req.body.email;
+    let password = req.body.password;
+    if (!email || !password)  {
+      res.render('login');
+      return;
+    }
+    let userID = "";
+
+    let sqlQueryString = `SELECT * FROM geekbook.Accounts WHERE email = '${email}' AND pass = '${password}'`;
+    console.log(sqlQueryString);
+    db.query(sqlQueryString,function(err,result){
+      if(err ) throw    console.log('User Not Found with those creditials :(' + err+'\n\n');
+      console.log("Account Information Found: -> User: " + result);
+    });
+
+    config.userID = userID;
+    req.session.email = email;
+    res.cookie('session', email);
+    res.render('index');
+    
+    res.end();
+});
 
 app.get('/logout', (req, res) => {
-  res.render('logout');
+  if (req.session.email){
+    req.session.destroy();
+  }
+  res.render('index');
 })
 
 app.get('/profile', (req, res) => {
