@@ -37,7 +37,7 @@ function makeTableRequest(searchVal, sortVal) {
             clearTable();
             var start = 0;
             var numResults = 2;
-            numPages = myJsonObject.length / numResults;
+            numPages = (myJsonObject.length / numResults) + 0.5; // 0.5 to fix rounding issues
             if(numPages < 1)
             {
                 populateTable(myJsonObject, start, myJsonObject.length);
@@ -49,20 +49,17 @@ function makeTableRequest(searchVal, sortVal) {
              
             var nextButton = document.getElementById('next');
             var prevButton = document.getElementById('prev');
+            var pageText = document.getElementById('pages');
+            console.log(pageText.textContent);
             prevButton.disabled = true; // initially disabled
+
             if(numPages > 1) // enough results for multiple pages
             {   
-                if(myJsonObject.length < (numResults * 2)) // handles a second page with less results
-                {
-                    console.log("less results");
-                    nextButton.setAttribute('onclick', 'changePage(' + (start + numResults) + ',' + myJsonObject.length + ',' + 2 + ',' + numPages + ')');
-                }
-                else
-                {
-                    nextButton.setAttribute('onclick', 'changePage(' + (start + numResults) + ',' + (numResults * 2) + ',' + 2 + ',' + numPages + ')');
-                }
+                pageText.textContent = "Page 1 of " + (numPages | 0);
+                nextButton.setAttribute('onclick', 'changePage(' + numResults + ',' + 2 + ',' + numPages + ')');
             }
             else{
+                pageText.textContent = "Page 1 of 1"
                 nextButton.disabled = true;
             }
         };
@@ -124,9 +121,21 @@ function insertRow(rowData, i){
 
 }
 
-function changePage(start, end, currentPage, totalPages)
+function changePage(numResults, currentPage, totalPages)
 {
+    
+    var pageText = document.getElementById('pages');
+    pageText.textContent = "Page " + currentPage + " of " + (totalPages | 0);
+
     clearTable();
+    var start = (currentPage - 1) * numResults;
+    var end = currentPage * numResults
+
+    if(myJsonObject.length < end) // handles a last page with less results
+    {
+        end = myJsonObject.length;
+    }
+    
     populateTable(myJsonObject, start, end); 
 
     var nextButton = document.getElementById('next');
@@ -136,27 +145,19 @@ function changePage(start, end, currentPage, totalPages)
     {
         prevButton.disabled = true;
         nextButton.disabled = false;
-        nextButton.setAttribute('onclick', 'changePage(' + (end) + ',' + (end + (end - start)) + ',' + (currentPage + 1) + ',' + totalPages + ')');
+        nextButton.setAttribute('onclick', 'changePage(' + numResults + ',' + (currentPage + 1) + ',' + totalPages + ')');
     }
     else if(currentPage < totalPages) // any page in between
     {
         prevButton.disabled = false;
         nextButton.disabled = false;
-
-        if(myJsonObject.length < (end + (end - start))) // handles a last page with less results
-        {
-            nextButton.setAttribute('onclick', 'changePage(' + (end) + ',' + myJsonObject.length + ',' + (currentPage + 1) + ',' + totalPages + ')');
-        }
-        else
-        {
-            nextButton.setAttribute('onclick', 'changePage(' + (end) + ',' + (end + (end - start)) + ',' + (currentPage + 1) + ',' + totalPages + ')');
-        }
-        prevButton.setAttribute('onclick', 'changePage(' + (start - (end - start)) + ',' + (start) + ',' + (currentPage - 1) + ',' + totalPages + ')');
+        nextButton.setAttribute('onclick', 'changePage(' + numResults + ',' + (currentPage + 1) + ',' + totalPages + ')');
+        prevButton.setAttribute('onclick', 'changePage(' + numResults + ',' + (currentPage - 1) + ',' + totalPages + ')');
     }
     else{ // last page
         prevButton.disabled = false;
         nextButton.disabled = true;
-        prevButton.setAttribute('onclick', 'changePage(' + (start - (end - start)) + ',' + (start) + ',' + (currentPage - 1) + ',' + totalPages + ')');
+        prevButton.setAttribute('onclick', 'changePage(' + numResults + ',' + (currentPage - 1) + ',' + totalPages + ')');
     }
 }
 
