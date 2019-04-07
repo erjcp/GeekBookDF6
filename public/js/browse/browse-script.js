@@ -4,6 +4,7 @@ document.getElementById("btn-search").addEventListener("click", function () {
     var searchVal = textBox.value;
     var sortBox = document.getElementById("select-sort");
     var sortVal = sortBox.value;
+    var myJsonObject = null;
     console.log("partial or full title String:" + searchVal);
     //clearLogicOperationDiv();
     makeTableRequest(searchVal, sortVal);
@@ -31,10 +32,39 @@ function makeTableRequest(searchVal, sortVal) {
         if (this.readyState == 4 && this.status == 200) {
             var finalQueryResult = xhttp.responseText;
             console.log(finalQueryResult);
-            var myJsonObject = JSON.parse(finalQueryResult);
+            myJsonObject = JSON.parse(finalQueryResult);
 
             clearTable();
-            populateTable(myJsonObject, myJsonObject.length);     
+            var start = 0;
+            var numResults = 2;
+            numPages = myJsonObject.length / numResults;
+            if(numPages < 1)
+            {
+                populateTable(myJsonObject, start, myJsonObject.length);
+            }
+            else
+            {
+                populateTable(myJsonObject, start, numResults);
+            }
+             
+            var nextButton = document.getElementById('next');
+            var prevButton = document.getElementById('prev');
+            prevButton.disabled = true; // initially disabled
+            if(numPages > 1) // enough results for multiple pages
+            {   
+                if(myJsonObject.length < (numResults * 2)) // handles a second page with less results
+                {
+                    console.log("less results");
+                    nextButton.setAttribute('onclick', 'changePage(' + (start + numResults) + ',' + myJsonObject.length + ',' + 2 + ',' + numPages + ')');
+                }
+                else
+                {
+                    nextButton.setAttribute('onclick', 'changePage(' + (start + numResults) + ',' + (numResults * 2) + ',' + 2 + ',' + numPages + ')');
+                }
+            }
+            else{
+                nextButton.disabled = true;
+            }
         };
     };
 };
@@ -49,8 +79,8 @@ function clearTable() {
     }
 }
 
-function populateTable(json, length) {
-    for (var i = 0; i < length; i++) {
+function populateTable(json, start, end) {
+    for (var i = start; i < end; i++) {
         insertRow(json[i], i)
     } 
 }
@@ -69,7 +99,6 @@ function insertRow(rowData, i){
     var cell6 = row.insertCell(6);
     var cell7 = row.insertCell(7);
 
-    
     var button = document.createElement('input');
 
     // SET INPUT ATTRIBUTE.
@@ -95,7 +124,43 @@ function insertRow(rowData, i){
 
 }
 
-function addToCart(code){
+function changePage(start, end, currentPage, totalPages)
+{
+    clearTable();
+    populateTable(myJsonObject, start, end); 
+
+    var nextButton = document.getElementById('next');
+    var prevButton = document.getElementById('prev');
+    
+    if(currentPage == 1) // first page
+    {
+        prevButton.disabled = true;
+        nextButton.disabled = false;
+        nextButton.setAttribute('onclick', 'changePage(' + (end) + ',' + (end + (end - start)) + ',' + (currentPage + 1) + ',' + totalPages + ')');
+    }
+    else if(currentPage < totalPages) // any page in between
+    {
+        prevButton.disabled = false;
+        nextButton.disabled = false;
+
+        if(myJsonObject.length < (end + (end - start))) // handles a last page with less results
+        {
+            nextButton.setAttribute('onclick', 'changePage(' + (end) + ',' + myJsonObject.length + ',' + (currentPage + 1) + ',' + totalPages + ')');
+        }
+        else
+        {
+            nextButton.setAttribute('onclick', 'changePage(' + (end) + ',' + (end + (end - start)) + ',' + (currentPage + 1) + ',' + totalPages + ')');
+        }
+        prevButton.setAttribute('onclick', 'changePage(' + (start - (end - start)) + ',' + (start) + ',' + (currentPage - 1) + ',' + totalPages + ')');
+    }
+    else{ // last page
+        prevButton.disabled = false;
+        nextButton.disabled = true;
+        prevButton.setAttribute('onclick', 'changePage(' + (start - (end - start)) + ',' + (start) + ',' + (currentPage - 1) + ',' + totalPages + ')');
+    }
+}
+
+function addToCart(code){   
     console.log(code);
     const xhttp = new XMLHttpRequest();
     const url = "http://localhost:5656/add" 
