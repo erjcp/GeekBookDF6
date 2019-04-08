@@ -26,13 +26,13 @@ document.getElementById("postReview").addEventListener("click", function () {
     console.log("THIS IS THE JSON DATA");
     console.log(data);
     
-    makeReviewsRequest();
-    //makeReviewInsert();
+    //makeReviewsRequest();
+    makeReviewInsert(data);
     insertReview(data, true);
   });
 
 
-function makeReviewInsert(){
+function makeReviewInsert(data){
     var location = window.location.href;
     console.log("Location website is: " + location)
     
@@ -44,7 +44,7 @@ function makeReviewInsert(){
         "Content-type",
         "application/x-www-form-urlencoded"
     );
-    xhttp.send("");
+    xhttp.send("request=insert, heading="+data.heading+", nickName="+data.nickName+", reviewDate="+data.reviewDate+", score="+data.score+", review="+data.review);
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
