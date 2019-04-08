@@ -102,11 +102,16 @@ app.get('/details/:id', (req, res) => {
 
 app.post('/details/:id', function (req, res){
   var id = req.params.id;
-  var isInsert = (request = "insert") ? true : false;
   id = id.replace(':','');
+  var isInsert = (req.body.command = "insert") ? true : false;
   
   console.log("this is the book id on post request " +id);
-  let sql = `SELECT title, nickName, reviewDate, score, heading, review FROM Book, Customer, Review WHERE bookCode = ${id} AND bookCode = bookId AND Review.customerId = id ORDER BY title DESC`;
+  if (isInsert){
+    let sql = `SELECT title, nickName, reviewDate, score, heading, review FROM Book, Customer, Review WHERE bookCode = ${id} AND bookCode = bookId AND Review.customerId = id ORDER BY title DESC`;
+  }else{
+    let sql = `SELECT title, nickName, reviewDate, score, heading, review FROM Book, Customer, Review WHERE bookCode = ${id} AND bookCode = bookId AND Review.customerId = id ORDER BY title DESC`;
+  }
+  
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);

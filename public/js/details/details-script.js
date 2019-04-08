@@ -32,8 +32,7 @@ document.getElementById("postReview").addEventListener("click", function () {
   });
 
 
-
-function makeReviewsRequest() {
+function makeReviewInsert(){
     var location = window.location.href;
     console.log("Location website is: " + location)
     
@@ -59,6 +58,33 @@ function makeReviewsRequest() {
     };
 };
 
+
+function makeReviewsRequest() {
+    var location = window.location.href;
+    console.log("Location website is: " + location)
+    
+    const xhttp = new XMLHttpRequest();
+    const url = location;
+
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader(
+        "Content-type",
+        "application/x-www-form-urlencoded"
+    );
+    xhttp.send("request=select");
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var finalQueryResult = xhttp.responseText;
+            console.log(finalQueryResult);
+            var myJsonObject = JSON.parse(finalQueryResult);
+            //console.log("BEFORE POPULATE!");
+            //clearTable();
+            populateReviews(myJsonObject, myJsonObject.length);     
+        };
+    };
+};
+
 function makeReviewsInsert() {
     var location = window.location.href;
     console.log("Location website is: " + location)
@@ -71,7 +97,7 @@ function makeReviewsInsert() {
         "Content-type",
         "application/x-www-form-urlencoded"
     );
-    xhttp.send("id=2226, request=insert");
+    xhttp.send("request=insert");
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
