@@ -78,9 +78,60 @@ app.get("/profile", (req, res) => {
 app.get("/cart", (req, res) => {
   res.render("cart");
 });
+
+
+
+//LOGIN PAGE -------------------------------------------------------------------------------------LOGIN PAGE
+
+app.post("/login", (req, res) => 
+{
+
+   /* 
+    let email = req.body.email;
+    let password = req.body.password; 
+    */
+    const { email, password } = req.body
+
+    if (!email || !password)  {
+      res.render('login');
+      return;
+    } 
+
+    let userQuery = `SELECT * FROM geekbook.Accounts WHERE email = '${email}' AND pass = '${password}'`;
+
+
+    // Returns user or error
+    // User can be empty, checkig below
+    db.query( userQuery, function (err, user){
+      
+
+      // Maybe render an Error page ?
+      if(err) res.render('login')
+
+      // Check if a user got sent back
+      // SQL return { user: [] } when no user was found
+      if(user.length > 0)
+       {
+        console.log("Account Information Found :D : -> User: " + user[0].email);
+
+        res.send({ data: { email: user[0].email, id: user[0].id }})
+      } 
+      else
+      {
+        // No user was found, redirecting to login page
+        res.render('login')
+      }
+    });
+});
+
+
 // REGISTER PAGE-------------------------------------------------------------------REGISTER PAGE
 app.post("/register/", (req, res) =>
 {
+  
+
+
+  
     const { userName, firstName, lastName, nickName, email, password, address, city, zip, state ,cardHolderfullName,cardNumber,cvCode,expityMonth,expityYear} = req.body
 
                 //let bookCode;
@@ -111,8 +162,15 @@ app.post("/register/", (req, res) =>
         console.log("1 Credit card info record inserted");
       });
         res.end();
+
+
+
+
+         
 });
-//LOGIN PAGE -------------------------------------------------------------------------------------LOGIN PAGE
+
+
+/*
 app.post("/login", (req, res) => 
 {
     let email = req.body.email;
@@ -133,9 +191,104 @@ app.post("/login", (req, res) =>
     config.userID = userID;
     res.end();
 });
+*/
 
 
+// EDIT      PROFILE PAGE-------------------------------------------------------------------EDIT PROFILE PAGE
+//app.put( "/editaccount/:email", (req, res) =>{
+
+  app.post( "/editingaccount" , (req, res) =>
+  {
+    const { token, userName, firstName, lastName, nickName, email, password, address, city, zip, state } = req.body
+  
+    let getUserId = `SELECT id FROM geekbook.Accounts WHERE email = '${token}'`;
+   
+    db.query(getUserId , (error, result) => {
+      if(error) throw console.log('Error:' + error);
+  
+      const userId = result[0].id;
+      console.log({ userId })
+  
+      const updateCustomer =  `UPDATE   geekbook.Customer
+                                SET       firstName = '${firstName}', 
+                                          lastName  = '${lastName}',  
+                                          nickName  = '${nickName}'
+                                WHERE   CustId  = '${userId}'`;
+      
+      const updateBillingAddress = `UPDATE  geekbook.BillingAddress
+                                SET     address =  '${address}',
+                                        city =  '${city}',  
+                                        zip  =  '${zip}',
+                                        state  =  '${state}'
+                                WHERE  billingId =  '${userId}'`;
+  
+      const updateAccount =   `UPDATE   geekbook.Accounts
+                                SET       userName = '${userName}',
+                                          email = '${email}',
+                                          pass =  '${password}'
+                                WHERE id = '${userId}'`;
+  
+      db.query(updateBillingAddress, (error, result) => {
+        if(error) console.log("Error updating billing address: "+ error)
+        if(!error) console.log('Updated Billing Address.')
+      })
+  
+      db.query(updateCustomer, (error, result) => {
+        if(error) console.log("Error updating customer: "+ error)
+        if(!error) console.log('Updated Customer.')
+      })
+  
+      db.query(updateAccount, (error, result) => {
+        if(error) console.log("Error updating account: "+ error)
+        if(!error) {
+          console.log('Updated Account.')
+          res.send({ sucess: true, data: { email } })
+        }
+      })
+  
+    });
+  });
+  // --------------------------------------------------------  END EDIT PROFILE
+
+
+
+
+//--------------------------------------------------------------------------SHIPPING ADDRESSS   -------    WORKING 95 %
+app.post("/AddshippingAddress/", (req, res) =>
+{
+    const { token, address, city, zip, state,email,password } = req.body
+
+      let getUserId = `SELECT id FROM geekbook.Accounts WHERE email = '${token}'`;
+
+      db.query(getUserId , (error, result) => 
+      {
+        if(error) throw console.log('Error:' + error);
+    
+        const userId = result[0].id;
+        console.log({ userId })
+      
+             // let sqlShippingAddress =  `insert into geekbook.ShippingAddress(shippingCustomerID, address, city, zip, state   ) values(last_insert_id() ,'${address}','${city}','${zip}','${state}')`;  */ 
+      
+     const sqlADDINGShippingAddress =  ` insert into geekbook.ShippingAddress(shippingCustomerID, address,       city,        zip,      state   )
+                                                                   values(   '${userId}' ,'       ${address}','  ${city}','  ${zip}', '${state}')`; 
+
+      db.query(sqlADDINGShippingAddress,function(err,result){
+        if(err ) throw    console.log('An ERROR HAS OCCURED, the following is the error --' + err+'\n\n');
+        console.log("1 a SHIPPING ADDRESS ----  record inserted");
+      });
+        res.end();
+     //--------------------------------INSERTED NEW SHIPPING ADDRESS
+
+    });
+
+  });
+
+
+
+
+  
 //--------------------------------------------------------------------------SHIPPING ADDRESSS
+/*
 app.post("/shippingAddress/", (req, res) =>
 {
     const {  address, city, zip, state } = req.body
@@ -150,7 +303,62 @@ app.post("/shippingAddress/", (req, res) =>
 });
 
 
+*/
+
 //------------------------------------------------------------------------------ ADD NEW CREDIT CARD 
+
+
+
+//------------------------------------------------------------------------------ ADD NEW CREDIT CARD --- WORKING 95 %
+app.post("/addcard/", (req, res) =>
+{ 
+
+  console.log("IN THE CARD ")
+  
+    const { token,cardHolderfullName,cardNumber,cvCode,expityMonth,expityYear} = req.body
+    
+
+         let getUserId = `SELECT id FROM geekbook.Accounts WHERE email = '${token}'`;
+
+         db.query(getUserId , (error, result) => 
+         {
+           if(error) throw console.log('Error:' + error);
+       
+           const userId = result[0].id;
+           console.log({ userId })
+
+/*
+        let sqlCreditCard =  `insert into geekbook.Card (    cardCustomerID,    cardCustomerName,          cardNum,       securityNum,     expMonth,          expYear) 
+                                                values(    '${userId}' ,     '${cardHolderfullName}','  ${cardNumber}',' ${cvCode}','    ${expityMonth}','   ${expityYear}' )`; 
+*/
+    
+let sqlCreditCard =  `insert into geekbook.Card (      cardCustomerID,             cardCustomerName,         cardNum,       securityNum,     expMonth,               expYear)  
+                                         values(      '${userId}' ,'             ${cardHolderfullName}','   ${cardNumber}','  ${cvCode}','    ${expityMonth}','   ${expityYear}' )`;
+          
+          
+                                                db.query(sqlCreditCard,function(err,result){
+            if(err ) throw    console.log('An ERROR HAS occurred, the following is the error --' + err+'\n\n');
+            console.log("1 Credit card info record ADDED!!");
+          });
+
+
+
+          // this is INSERT FROM THE FIRST INSERT OF CARD
+          /*
+          let sqlCreditCard =  `insert into geekbook.Card (      cardCustomerID,             cardCustomerName,         cardNum,       securityNum,     expMonth,           expYear)  
+                                                       values(      last_insert_id() ,'   ${cardHolderfullName}','${cardNumber}','${cvCode}','    ${expityMonth}','   ${expityYear}' )`; 
+              db.query(sqlCreditCard,function(err,result){
+                if(err ) throw    console.log('An ERROR HAS occurred, the following is the error --' + err+'\n\n');
+                console.log("1 Credit card info record inserted");
+              });  
+*/
+            res.end();
+      });
+});
+
+
+/*
+
 app.post("/ccform/", (req, res) =>
 {
     const { cardHolderfullName,cardNumber,cvCode,expityMonth,expityYear} = req.body
@@ -164,30 +372,7 @@ app.post("/ccform/", (req, res) =>
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
 
 
 //---------------------------------------------------------
@@ -223,16 +408,6 @@ htmlcontroller(app);
 app.listen(5656, () => {
   console.log("Server started on port 5656 ");
 });
-
-
-
-
-
-
-
-
-
-
 
 
 //-------------------------------------------

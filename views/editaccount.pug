@@ -39,76 +39,59 @@ block content
             label(for='state') Edit State:
             input#state.form-control(type='text', placeholder=' Edit your state' state='state')
 
-          button#btn.btn.btn-primary(type='submit', onClick="getdata()") Update Registration
+          button#btn.btn.btn-primary(type='submit', onClick="edit()") Update Registration
           script.
-              setTimeout(5000, updateValue('email', "johnDoe@gmail.com"));
+            function edit() {
 
-              console.log("running")
+                    const userName = document.getElementById("userName").value
+                    const email = document.getElementById("email").value
+                    const password = document.getElementById("password").value
+                    const firstName = document.getElementById("firstName").value
+                    const lastName = document.getElementById("lastName").value
+                    const nickName = document.getElementById("nickName").value
+                    const address = document.getElementById("address").value
+                    const city = document.getElementById("city").value
+                    const zip = document.getElementById("zip").value
+                    const state = document.getElementById("state").value
+                      
 
-              // updates the value of an input field given {id, value}
-              function updateValue (id,value){
-               document.getElementById(id).value = value;
-              }
+                    const token = localStorage.getItem("token");
 
-              //gets an input value using its id
-              function getInputVal(id) {
-                const input = document.getElementById(id);
-                return input.value;
-              }
+                    const data = { 
+                      token,
+                      userName,
+                      email,
+                      password,
+                      firstName,
+                      lastName,
+                      nickName,
+                      address,
+                      city,
+                      zip,
+                      state
+                    }
 
+                    console.log({ data })
+                    const apiURL= "http://localhost:5656"
 
-              //- var element = getInputVal('btn');
-              //- element.addEventListener("click", ()=>getdata())
-              //declarations
-              var email = getInputVal("email");
-              var pw = getInputVal("pw");
-              var firstName = getInputVal("firstName");
-              var lastName = getInputVal("lastName");
-              var nickName = getInputVal("nickName");
-              var address = getInputVal("address");
-              var city = getInputVal("city");
-              var zip = getInputVal("zip");
-              var state = getInputVal("state");
+                    const options = {
+                        method: "POST", 
+                        body: JSON.stringify(data),
+                        headers: { "Content-Type": "application/json" } 
+                    }
 
-              
-              //build object with all the fields
-              function schema(
-                email,
-                pw,
-                firstName,
-                lastName,
-                nickName,
-                address,
-                city,
-                zip,
-                state
-              ) {
-               return { email: email,
-                        pw :pw,
-                        firstName:firstName,
-                        lastName:lastName,
-                        nickName:nickName,
-                        address : address,
-                        city : city,
-                        zip :zip,
-                        state:state}
-              }
+                      fetch(apiURL + "/editingaccount", options)
+                        .then(res => res.json())
+                        .then(res => {
 
-              //submit the data
-              function getdata() {
-                var data = schema(
-                  email,
-                  pw,
-                  firstName,
-                  lastName,
-                  nickName,
-                  address,
-                  city,
-                  zip,
-                  state
-                );
-             console.log(data);
-              }
+                          const { email } = res.data
+
+                          console.log(email)
+                          //- window.localStorage.setItem('token', email)
+
+                        }).catch(error => console.log("Error: ", error))
+                  }
+
 
               
 

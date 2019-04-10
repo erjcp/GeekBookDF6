@@ -41,61 +41,48 @@ block content
         li.active
           a(href='#')
       br
-      button.btn.btn-primary(type='submit'     onClick="getdata2()" style= "height:50px;width:100%!important; margin-bottom:30px; ")  Submit New Credit Card
+      button.btn.btn-primary(type='submit'     onClick="AddCreditCard()" style= "height:50px;width:100%!important; margin-bottom:30px; ")  Submit New Credit Card
      
       script.
-              
-              function getInputVal(id) 
-              {
-                let input = document.getElementById(id);
-                //- console.log(input.value)
-                return input.value;
-              }
-              //- var element = document.getElementById('btn');
-              //- element.addEventListener("click", ()=>getdata())
-              //declarations
-              
-              //build object with all the fields
-              function schema() {
-                  
-                  var cardHolderfullName = getInputVal("cardHolderfullName");
-                  var cardNumber = getInputVal("cardNumber");
-                  var cvCode = getInputVal("cvCode");
-                  var expityMonth = getInputVal("expityMonth");
-                  var expityYear = getInputVal("expityYear");
-              const payload = { 
-                       
-                        cardHolderfullName,
-                        cardNumber,
-                        expityMonth,
-                        expityYear,
-                        cvCode
-                      }
+          function AddCreditCard()
+       {
+            const cardHolderfullName = document.getElementById("cardHolderfullName");
+            const cardNumber = document.getElementById("cardNumber");
+            const expityMonth = document.getElementById("expityMonth");
+            const expityYear = document.getElementById("expityYear");
+            const cvCode = document.getElementById("cvCode");
+          
+            const token = localStorage.getItem("token");
+          
+            const data = { 
+              token,
+              cardHolderfullName,
+              cardNumber,
+              expityMonth,
+              expityYear,
+              cvCode
+            }
 
-               return payload;
-              }
+            console.log({ data })
+            const apiURL= "http://localhost:5656"
 
-              //submit the data     // makeTableRequest(data);//,'register');
-              function getdata2() {
-                var data = schema();
-                 makeTableRequest(data);
-                }; 
-              
-              function makeTableRequest(data) 
-                {
-                    const xhttp = new XMLHttpRequest();
-                    const url = "http://localhost:5656/ccform" 
+            const options = {
+                method: "POST", 
+                body: JSON.stringify(data),
+                headers: { "Content-Type": "application/json" } 
+            }
 
-                    xhttp.open("POST", url, true);
+              fetch(apiURL + "/addcard", options)
+                .then(res => res.json())
+                .then(res => {
 
-                    //- xhttp.setRequestHeader(
-                    //-     "Content-type",
-                    //-     "application/x-www-form-urlencoded"
-                    //- );
+                  const { email } = res.data
 
-                    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                  console.log(email)
+                  //- window.localStorage.setItem('token', email)
 
-                    console.log("Sending ", data)
-                    xhttp.send(JSON.stringify(data));
-              
-                  }
+                }).catch(error => console.log("Error: ", error))
+          }
+
+
+
