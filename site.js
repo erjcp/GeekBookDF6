@@ -156,7 +156,7 @@ app.post('/:action', function (req, res) {
     console.log("code is: " + code);
     let sql = `INSERT INTO CartItem
     VALUES
-    ('0001' ,'${code}', 0, 1);`;
+    ('2' ,'${code}', 0, 1);`;
     
     let query = db.query(sql, (err, results) => {
       if (err) {

@@ -37,9 +37,11 @@ function makeTableRequest(searchVal, sortVal) {
             clearTable();
             var start = 0;
             var numResults = 2;
-            numPages = (myJsonObject.length / numResults) + 0.5; // 0.5 to fix rounding issues
-            if(numPages < 1)
+            numPages = ((myJsonObject.length / numResults) + 0.5) | 0; // 0.5 to fix rounding issues
+            
+            if(numPages <= 1)
             {
+                console.log("initial");
                 populateTable(myJsonObject, start, myJsonObject.length);
             }
             else
@@ -50,12 +52,12 @@ function makeTableRequest(searchVal, sortVal) {
             var nextButton = document.getElementById('next');
             var prevButton = document.getElementById('prev');
             var pageText = document.getElementById('pages');
-            console.log(pageText.textContent);
             prevButton.disabled = true; // initially disabled
 
             if(numPages > 1) // enough results for multiple pages
             {   
-                pageText.textContent = "Page 1 of " + (numPages | 0);
+                nextButton.disabled = false;
+                pageText.textContent = "Page 1 of " + numPages;
                 nextButton.setAttribute('onclick', 'changePage(' + numResults + ',' + 2 + ',' + numPages + ')');
             }
             else{
@@ -125,14 +127,15 @@ function changePage(numResults, currentPage, totalPages)
 {
     
     var pageText = document.getElementById('pages');
-    pageText.textContent = "Page " + currentPage + " of " + (totalPages | 0);
+    pageText.textContent = "Page " + currentPage + " of " + totalPages;
 
     clearTable();
     var start = (currentPage - 1) * numResults;
     var end = currentPage * numResults
 
-    if(myJsonObject.length < end) // handles a last page with less results
+    if(myJsonObject.length < end) // handles pages with less results
     {
+        console.log("less results");
         end = myJsonObject.length;
     }
     
