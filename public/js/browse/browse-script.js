@@ -5,9 +5,22 @@ document.getElementById("btn-search").addEventListener("click", function () {
     var sortBox = document.getElementById("select-sort");
     var sortVal = sortBox.value;
     var myJsonObject = null;
+    var resultBox = document.getElementById("number");
+    var resultNum = resultBox.value;
+    var bestBox = document.getElementById("radio-best");
+    var best
+    if(bestBox.checked)
+    {
+        best = bestBox.value;
+    }
+    else
+    {
+        best = '';
+    }
+    
     console.log("partial or full title String:" + searchVal);
     //clearLogicOperationDiv();
-    makeTableRequest(searchVal, sortVal);
+    makeTableRequest(searchVal, sortVal, resultNum, best);
   });
 
   jQuery(document).on('click','.clickableRow',function(e){
@@ -16,7 +29,7 @@ document.getElementById("btn-search").addEventListener("click", function () {
     }
 });
 
-function makeTableRequest(searchVal, sortVal) {
+function makeTableRequest(searchVal, sortVal, resultNum, best) {
     const xhttp = new XMLHttpRequest();
     const url = "http://localhost:5656/" 
 
@@ -26,7 +39,7 @@ function makeTableRequest(searchVal, sortVal) {
         "application/x-www-form-urlencoded"
     );
 
-    xhttp.send("like=" + searchVal + "&col=" + sortVal );
+    xhttp.send("like=" + searchVal + "&col=" + sortVal + "&id=" + best);
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -36,7 +49,7 @@ function makeTableRequest(searchVal, sortVal) {
 
             clearTable();
             var start = 0;
-            var numResults = 2;
+            var numResults = resultNum;
             numPages = ((myJsonObject.length / numResults) + 0.5) | 0; // 0.5 to fix rounding issues
             
             if(numPages <= 1)
@@ -97,6 +110,7 @@ function insertRow(rowData, i){
     var cell5 = row.insertCell(5);
     var cell6 = row.insertCell(6);
     var cell7 = row.insertCell(7);
+    var cell8 = row.insertCell(8);
 
     var button = document.createElement('input');
 
@@ -109,17 +123,24 @@ function insertRow(rowData, i){
 
     cell0.appendChild(button);
 
-    //cell0.innerHTML = 'What';
-    cell1.innerHTML = rowData.title;
-    cell2.innerHTML = rowData.authorFirst + " "+ rowData.authorLast;
-    cell3.innerHTML = rowData.genre
-    cell4.innerHTML = rowData.publisherName;
-    cell5.innerHTML = "$" + rowData.price.toFixed(2); // Two decimal places
+
+    var img = document.createElement('img');
+    img.src = rowData.cover;
+    img.width = 100;
+    img.length = 100;
+
+    cell1.appendChild(img)
+
+    cell2.innerHTML = rowData.title;
+    cell3.innerHTML = rowData.authorFirst + " "+ rowData.authorLast;
+    cell4.innerHTML = rowData.genre
+    cell5.innerHTML = rowData.publisherName;
+    cell6.innerHTML = "$" + rowData.price.toFixed(2); // Two decimal places
     if(rowData.Average == null)
-        {cell6.innerHTML = "N/A"}
+        {cell7.innerHTML = "N/A"}
     else
-        {cell6.innerHTML = rowData.Average.toFixed(1)}; // One decimal place
-    cell7.innerHTML = rowData.numCopies;
+        {cell7.innerHTML = rowData.Average.toFixed(1)}; // One decimal place
+    cell8.innerHTML = rowData.numCopies;
 
 }
 
