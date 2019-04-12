@@ -154,11 +154,22 @@ app.post('/:action', function (req, res) {
     console.log("body:")
     console.log(req.body);
     var code = req.body.code;
+
+    var user = window.localStorage.getItem('id');
+    console.log(user)
+
+    console.log("code is: " + code);
+    let sql = `INSERT INTO CartItem
+    VALUES
+    (${user} ,'${code}', 0, 1);`;
+
+    /*
     console.log("code is: " + code);
     let sql = `INSERT INTO CartItem
     VALUES
     (1 ,'${code}', 0, 1);`;
-    
+    */
+   
     let query = db.query(sql, (err, results) => {
       if (err) {
         console.log(sql);

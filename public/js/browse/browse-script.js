@@ -24,7 +24,11 @@ document.getElementById("btn-search").addEventListener("click", function () {
   });
 
   $(document).ready(function() {
-    makeTableRequest('', 'title', 10, '');
+    if(document.URL == 'http://localhost:5656/')
+    {
+        makeTableRequest('', 'title', 10, '');
+    }
+        
    });
 
   jQuery(document).on('click','.clickableRow',function(e){
