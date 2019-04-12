@@ -48,37 +48,20 @@ app.get('/profile', (req, res) => {
 })
 
 app.get('/cart', (req, res) => {
-  var cartList = [];
-  var saveLaterList = [];
-  var cartTotal = 0;
-  var saveTotal = 0;
-
+  
   let sql = `select b.title, b.price, c.customerId, ci.bookId, ci.cartType, ci.quantity from Book b, Cart c, CartItem ci where (ci.orderId = c.customerId and ci.bookId = b.bookCode and ci.orderId = 0000)`;
-  let query = db.query(sql, (err, rows, results) => {
+  let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
     }
-    for(var i = 0; i < rows.length; i++){
-      var item = {
-      title : rows[i].title,
-      price : rows[i].price,
-      bookId : rows[i].bookId,
-      cartType : rows[i].cartType,
-      quantity : rows[i].quantity
-      }
-      if(item.cartType == 1){
-        cartList.push(item);
-        cartTotal+= (item.price * item.quantity);
-      }
-      else{saveLaterList.push(item);}
-      saveTotal+= (item.price * item.quantity);  
-      console.log(item);
-    }
-    res.render('cart', {"cartList": cartList, "saveLaterList" : saveLaterList, "cartTotal" : cartTotal, "saveTotal": saveTotal});
+
+    res.render('cart', {
+      title : results[0].title,
+      price : results[0].price,
+      bookId : results[0].bookId,
+      cartType : results[0].cartType,
+      quantity : results[0].quantity});
   });
-  for(var j = 0; j < cartList; j++){
-    console.log(cartList[i]);
-  }
 
   console.log("complete cart");
 })
@@ -134,56 +117,20 @@ app.post('/', function (req, res){
 
 //cart stuff
 
-app.post('/addCart', function (req, res, next){
-  var id = req.body.code;
-  console.log("id is " + id);    
-  
+app.post('/cart', function(req, res){
 
-  let sql = `UPDATE CartItem
-  SET cartType = 1
-  WHERE bookId = '${id}';`;
+  var like = req.body.like;
+  var col = req.body.col;
 
-  let query = db.query(sql, (err, results) =>{
-    if(err){
+  let sql = `select b.title, b.price, c.customerId, ci.bookId, ci.cartType, ci.quantity from Book b, Cart c, CartItem ci where (ci.orderId = c.customerId and ci.bookId = b.bookCode and ci.orderId = 0000)`;
+  let query = db.query(sql, (err, results) => {
+    if (err) {
       console.log(sql);
-    }    
+    }
     
-  });
-});
+    console.log(results);
 
-app.post('/moveSave', function (req, res, next){
-  var id = req.body.code;
-  console.log("id is " + id);    
-  
-
-  let sql = `UPDATE CartItem
-  SET cartType = 0
-  WHERE bookId = '${id}';`;
-
-  let query = db.query(sql, (err, results) =>{
-    if(err){
-      console.log(sql);
-    }    
-
-    res.redirect("/cart");
-  });
-});
-
-app.post('/removeCart', function (req, res, next){
-  
-  console.log("remove beginning");
-  var id = req.body.code;
-  console.log("id is " + id);    
-  
-
-  let sql = `SET type= null
-  WHERE bookId = '${id}' and orderId = 0000;`;
-
-  let query = db.query(sql, (err, results) =>{
-    if(err){
-      console.log(sql);
-    }    
-
-    res.redirect("/cart");
+    res.send(results);
+  console.log("cart post");
   });
 });

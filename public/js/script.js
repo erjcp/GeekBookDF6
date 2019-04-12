@@ -36,13 +36,13 @@ function makeTableRequest(searchVal) {
             console.log(finalQueryResult);
             var myJsonObject = JSON.parse(finalQueryResult);
 
-            clearTable();
+            clear();
             populateTable(myJsonObject, myJsonObject.length);     
         };
     };
 };
 
-function clearTable() {
+function clear() {
     let count = $('#tableBrowseBody tr').length;
     //console.log("count is " + count);
     let i;
@@ -51,7 +51,6 @@ function clearTable() {
         document.getElementById("tableBrowseBody").deleteRow(-1);
     }
 }
-
 function populateTable(json, length) {
     for (var i = 0; i < length; i++) {
         insertRow(json[i], i)
@@ -81,36 +80,6 @@ function moveToCart(itemId){
     console.log(itemId);
     const xhttp = new XMLHttpRequest();
     const url = "http://localhost:5656/addCart" 
-
-    xhttp.open("POST", url, true);
-    xhttp.setRequestHeader(
-        "Content-type",
-        "application/x-www-form-urlencoded"
-    );
-
-    
-    xhttp.send("code=" + itemId);
-}
-
-function moveToSave(itemId){
-    console.log(itemId);
-    const xhttp = new XMLHttpRequest();
-    const url = "http://localhost:5656/moveSave" 
-
-    xhttp.open("POST", url, true);
-    xhttp.setRequestHeader(
-        "Content-type",
-        "application/x-www-form-urlencoded"
-    );
-
-    
-    xhttp.send("code=" + itemId);
-}
-
-function remove(itemId){
-    console.log(itemId);
-    const xhttp = new XMLHttpRequest();
-    const url = "http://localhost:5656/removeCart" 
 
     xhttp.open("POST", url, true);
     xhttp.setRequestHeader(
