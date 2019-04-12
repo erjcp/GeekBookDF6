@@ -23,6 +23,10 @@ document.getElementById("btn-search").addEventListener("click", function () {
     makeTableRequest(searchVal, sortVal, resultNum, best);
   });
 
+  $(document).ready(function() {
+    makeTableRequest('', 'title', 10, '');
+   });
+
   jQuery(document).on('click','.clickableRow',function(e){
     if(e.target.nodeName == "TD"){
         window.location = $(this).data("href");
@@ -114,21 +118,18 @@ function insertRow(rowData, i){
 
     var button = document.createElement('input');
 
-    // SET INPUT ATTRIBUTE.
+    // Add to cart dynamic button creation
     button.setAttribute('type', 'button');
     button.setAttribute('value', 'Cart');
-
-    // ADD THE BUTTON's 'onclick' EVENT.
     button.setAttribute('onclick', 'addToCart(' + rowData.bookCode + ')');
 
     cell0.appendChild(button);
 
-
+    // cover immage logic
     var img = document.createElement('img');
     img.src = rowData.cover;
     img.width = 100;
     img.length = 100;
-
     cell1.appendChild(img)
 
     cell2.innerHTML = rowData.title;
@@ -136,7 +137,7 @@ function insertRow(rowData, i){
     cell4.innerHTML = rowData.genre
     cell5.innerHTML = rowData.publisherName;
     cell6.innerHTML = "$" + rowData.price.toFixed(2); // Two decimal places
-    if(rowData.Average == null)
+    if(rowData.Average == null) // no reviews
         {cell7.innerHTML = "N/A"}
     else
         {cell7.innerHTML = rowData.Average.toFixed(1)}; // One decimal place
@@ -185,8 +186,7 @@ function changePage(numResults, currentPage, totalPages)
     }
 }
 
-function addToCart(code){   
-    console.log(code);
+function addToCart(code){
     const xhttp = new XMLHttpRequest();
     const url = "http://localhost:5656/add" 
 
