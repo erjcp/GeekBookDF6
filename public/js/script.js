@@ -28,24 +28,24 @@
 
 
 
-//function makeTableRequest(data), endpoint)  
-function makeTableRequest(data)
-{
-    {
-        const xhttp = new XMLHttpRequest();
-        const url = "http://localhost:5656/register" 
-        //const url = "http://localhost:5656/" + endpoint; 
+// //function makeTableRequest(data), endpoint)  
+// function makeTableRequest(data)
+// {
+//     {
+//         const xhttp = new XMLHttpRequest();
+//         const url = "http://localhost:5656/register" 
+//         //const url = "http://localhost:5656/" + endpoint; 
 
-        xhttp.open("POST", url, true);
-        //- xhttp.setRequestHeader(
-        //-     "Content-type",
-        //-     "application/x-www-form-urlencoded"
-        //- );
-        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+//         xhttp.open("POST", url, true);
+//         //- xhttp.setRequestHeader(
+//         //-     "Content-type",
+//         //-     "application/x-www-form-urlencoded"
+//         //- );
+//         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-        console.log("Sending ", data)
-        xhttp.send(JSON.stringify(data));
-    }
+//         console.log("Sending ", data)
+//         xhttp.send(JSON.stringify(data));
+//     }
 
 
 

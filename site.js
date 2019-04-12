@@ -1,16 +1,33 @@
-const express = require("express"); //---------------------------CHECKED
-//set express
-const app = express(); //---------------------------CHECKED
-var mysql = require("mysql"); //---------------------------CHECKED
+const express = require("express"); 
+
+const app = express(); 
+var mysql = require("mysql"); 
 var config = require("./config");
+var expressValidator = require('express-validator');
+var expressSession = require("express-session");
 
-var htmlcontroller = require("./controllers/htmlController"); //---CHECKED
+var crypto = require('crypto');
+var rand = require('csprng');
 
-var port = process.env.port || 3007; //---------------------------CHECKED
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+
+
+// const myPlaintextPassword = 's0/\/\P4$$w0rD';
+// const someOtherPlaintextPassword = 'not_bacon';
+/*  var user = mysql.Accounts({    local: {       username: String,        password: String    }  }); */
+//  var db = require('../models');  ///-- DO NOT HAVE MODELS
+
+
+var htmlcontroller = require("./controllers/htmlController"); 
+
+
+var port = process.env.port || 3007; 
 // app.use('/assets', express.static(__dirname + '/public')); // THIS IS FOR CSS CONNECTION
 
 //set pug as view renderer
-app.set("view engine", "pug"); //-------------------------------CHECKED
+app.set("view engine", "pug"); 
 
 const bodyparser = require("body-parser");
 
@@ -26,7 +43,9 @@ app.use(express.static(path.join(__dirname + "/public")));
 app.use("/details", express.static(path.join(__dirname + "/public")));
 
 app.use(bodyparser.urlencoded({ extended: false }));
+app.use(expressValidator());
 app.use(bodyparser.json());
+//app.use(expressSession({ secret: 'masx', saveInitialized: false, resave: false})); // save initialize if true send it to sessionn storage even if un initialized
 
 var db = mysql.createConnection({
   host: "localhost",
@@ -81,15 +100,10 @@ app.get("/cart", (req, res) => {
 
 
 
-//LOGIN PAGE -------------------------------------------------------------------------------------LOGIN PAGE
+//LOGIN PAGE --------------------------------------------------LOGIN PAGE-----------------------------------LOGIN PAGE
 
-app.post("/login", (req, res) => 
-{
-
-   /* 
-    let email = req.body.email;
-    let password = req.body.password; 
-    */
+app.post("/login", (req, res) => {
+                                          
     const { email, password } = req.body
 
     if (!email || !password)  {
@@ -97,52 +111,121 @@ app.post("/login", (req, res) =>
       return;
     } 
 
-    let userQuery = `SELECT * FROM geekbook.Accounts WHERE email = '${email}' AND pass = '${password}'`;
+    let userQuery = `SELECT * FROM geekbook.Accounts WHERE email = '${email}'`;
 
 
     // Returns user or error
     // User can be empty, checkig below
     db.query( userQuery, function (err, user){
-      
-
-      // Maybe render an Error page ?
+          // Maybe render an Error page ?
       if(err) res.render('login')
-
       // Check if a user got sent back
       // SQL return { user: [] } when no user was found
-      if(user.length > 0)
-       {
+      if(user.length > 0) {
         console.log("Account Information Found :D : -> User: " + user[0].email);
 
+        const passwordHash = user[0].pass;
+
+        const hasCorrectPass = bcrypt.compareSync(password, passwordHash)
+  
+       if (hasCorrectPass){
+        console.log({ hasCorrectPass })
         res.send({ data: { email: user[0].email, id: user[0].id }})
-      } 
-      else
-      {
-        // No user was found, redirecting to login page
+       } else{
+        console.log({ hasCorrectPass })
         res.render('login')
+       }
       }
     });
+  })
+
+
+
+/*
+app.post('/user/create', function (req, res) {
+
+  bcrypt.hash(req.body.passwordsignup, saltRounds, function (err,   hash) {
+  //db.User.create({
+   name: req.body.usernamesignup,
+   email: req.body.emailsignup,
+   password: hash
+   }).then(function(data) {
+    if (data) {
+    res.redirect('/home');
+    }
+  });
+ });
 });
+*/
+
+
 
 
 // REGISTER PAGE-------------------------------------------------------------------REGISTER PAGE
 app.post("/register/", (req, res) =>
 {
   
+    const { userName, firstName, lastName, nickName, email, password,confirmationpassword, address, city, zip, state ,cardHolderfullName,cardNumber,cvCode,expityMonth,expityYear} = req.body
 
 
-  
-    const { userName, firstName, lastName, nickName, email, password, address, city, zip, state ,cardHolderfullName,cardNumber,cvCode,expityMonth,expityYear} = req.body
+    console.log({password})
+                                                      /*
+                                                          if (password != confirmationpassword) return res.end();
+                                                          console.log("passwords entered were not equal") 
+                                                          */
+                                                      //   var temp = rand(160, 36);  // I AM THE SALT!!!! 
+                                                      /*
+                                                          var newpass = temp + password;
+                                                          var hashed_password = crypto.createHash('sha512').update(newpass).digest("hex");
+                                                          console.log(hashed_password);
+                                                          */
+                                                      // Encrypt Password
+                                                      //-------------------------- validationof both input textboxes of password
 
-                //let bookCode;
-                let sqlAccount =  `insert into geekbook.Accounts(userName, email, pass)   values('${userName}','${email}','${password}')`; 
-              
-                db.query(sqlAccount,function(err,result){
-                if(err ) throw    console.log('An ERROR HAS OCCURED,INSERTING ACCOUNTS----- the following is the error --' + err+'\n\n');
-                console.log("1 Account Information record inserted");
-              });
+   /*
+    if (password != confirmationpassword) {
+      return res.end();
+      //res.render('/register')
+    
+    }
+    else
+    {*/
 
-              let sqlCustomer =  `insert into geekbook.Customer( CustId, firstName, lastName, nickName)   values( last_insert_id()     ,' ${firstName}','${lastName}','${nickName}')`; 
+      // console.log("About to go into the bcript---- \n\n")
+      // console.log(bcrypt)
+      // console.log("\n\n")
+
+      const hash = bcrypt.hashSync(password, saltRounds)
+
+      
+
+              // bcrypt.hash(password, saltRounds, function(err, hash) {
+
+              //   console.log("Inside ---- the bcript\n\n")
+              //         // Store hash in your password DB.
+              //               let sqlAccount =  `insert into geekbook.Accounts(userName, email, pass)   values('${userName}','${email}','${password}')`; 
+                                                      
+              //                   db.query(sqlAccount,function(err,result){
+              //                   if(err ) throw    console.log('An ERROR HAS OCCURED,INSERTING ACCOUNTS----- the following is the error --' + err+'\n\n');
+              //                   console.log("1 Account Information record inserted");
+              //                 });
+              //       })
+     //   }
+
+   
+
+     
+        let sqlAccount =  `insert into geekbook.Accounts(userName, email, pass)   values('${userName}','${email}','${hash}')`; 
+                                                      
+        db.query(sqlAccount,function(err,result){
+        if(err ) throw    console.log('An ERROR HAS OCCURED,INSERTING ACCOUNTS----- the following is the error --' + err+'\n\n');
+        console.log("1 Account Information record inserted");
+      });
+   
+   
+   
+   
+    let sqlCustomer =  `insert into geekbook.Customer( CustId, firstName, lastName, nickName)   values( last_insert_id()     ,' ${firstName}','${lastName}','${nickName}')`; 
               db.query(sqlCustomer,function(err,result){
                 if(err ) throw    console.log('An ERROR HAS occurred, inserting customer , the following is the error --' + err+'\n\n');
                 console.log("1 Customer address record inserted");
@@ -156,46 +239,23 @@ app.post("/register/", (req, res) =>
                         });
      
         let sqlCreditCard =  `insert into geekbook.card (cardId,             cardCustomerName,         cardNum,       securityNum,     expMonth,           expYear) 
-                                                  values(last_insert_id() ,'   ${cardHolderfullName}','${cardNumber}','${cvCode}','    ${expityMonth}','   ${expityYear}' )`; 
-      db.query(sqlCreditCard,function(err,result){
-        if(err ) throw    console.log('An ERROR HAS occurred, the following is the error --' + err+'\n\n');
-        console.log("1 Credit card info record inserted");
-      });
-        res.end();
-
-
-
-
+                                                          values(last_insert_id() ,'   ${cardHolderfullName}','${cardNumber}','${cvCode}','    ${expityMonth}','   ${expityYear}' )`; 
+              db.query(sqlCreditCard,function(err,result){
+                if(err ) throw    console.log('An ERROR HAS occurred, the following is the error --' + err+'\n\n');
+                console.log("1 Credit card info record inserted");
+              });
+   
+          res.end();
          
-});
-
-
-/*
-app.post("/login", (req, res) => 
-{
-    let email = req.body.email;
-    let password = req.body.password;
-
-    if (!email || !password)  {
-      res.render('login');
-      return;
-    }
-    let userID = "";
-
-    let sqlQueryString = `SELECT * FROM geekbook.Accounts WHERE email = ${email} AND pass = ${password}`;
-    db.query(sqlQueryString,function(err,result){
-      if(err ) throw    console.log('User Not Found with those creditials :(' + err+'\n\n');
-      console.log("Account Information Found :D : -> User: " + result);
     });
 
-    config.userID = userID;
-    res.end();
-});
-*/
 
 
-// EDIT      PROFILE PAGE-------------------------------------------------------------------EDIT PROFILE PAGE
-//app.put( "/editaccount/:email", (req, res) =>{
+
+
+
+
+//------------ EDIT--------------- EDIT   EDIT     EDIT         EDIT        EDIT    PROFILE PAGE-------------------------------------------------------------------EDIT PROFILE PAGE
 
   app.post( "/editingaccount" , (req, res) =>
   {
@@ -373,6 +433,48 @@ app.post("/ccform/", (req, res) =>
 
 
 */
+
+
+app.post("/logout", (req, res) => 
+{
+ 
+
+
+
+        res.render('index')
+  
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //---------------------------------------------------------
