@@ -103,27 +103,30 @@ app.get('/details/:id', (req, res) => {
 app.post('/details/:id', function (req, res){
   var id = req.params.id;
   id = id.replace(':','');
-  var isInsert = (req.body.command = "insert") ? true : false;
+  var isInsert = (req.body.request == "insert") ? true : false;
   var heading, score, nickName, date, review;
+  var sql;
   if(isInsert){
     heading = req.body.heading;
     score = req.body.score;
     nickName = req.body.nickName;
     date = req.body.date;
     review = req.body.review;
+
+    console.log("DATE IS:"+date);
   }
-  
   console.log("this is the book id on post request " +id);
   if (isInsert){
-    let sql = `INSERT INTO Review VALUES ('${id}' ,'0005', '${score}', '${heading}', '${review}', '${date}');`;
+    sql = `INSERT INTO Review VALUES ('${id}' ,'0002', '${score}', '${heading}', '${review}', '${date}');`;
   }else{
-    let sql = `SELECT title, nickName, reviewDate, score, heading, review FROM Book, Customer, Review WHERE bookCode = ${id} AND bookCode = bookId AND Review.customerId = id ORDER BY title DESC`;
+    sql = `SELECT title, nickName, reviewDate, score, heading, review FROM Book, Customer, Review WHERE bookCode = ${id} AND bookCode = bookId AND Review.customerId = id ORDER BY reviewDate ASC`;
   }
   
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
     }
+    console.log(sql);
     console.log(results);
     res.send(results);
   });

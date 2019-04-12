@@ -44,12 +44,12 @@ function makeReviewInsert(data){
         "Content-type",
         "application/x-www-form-urlencoded"
     );
-    xhttp.send("request=insert, heading="+data.heading+", nickName="+data.nickName+", reviewDate="+data.reviewDate+", score="+data.score+", review="+data.review);
+    xhttp.send("request=insert&heading="+data.heading+"&nickName="+data.nickName+"&date="+data.reviewDate+"&score="+data.score+"&review="+data.review);
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             var finalQueryResult = xhttp.responseText;
-            console.log(finalQueryResult);
+            console.log("result is:"+finalQueryResult+"|");
             var myJsonObject = JSON.parse(finalQueryResult);
             //console.log("BEFORE POPULATE!");
             //clearTable();
@@ -85,6 +85,7 @@ function makeReviewsRequest() {
     };
 };
 
+
 function makeReviewsInsert() {
     var location = window.location.href;
     console.log("Location website is: " + location)
@@ -111,33 +112,6 @@ function makeReviewsInsert() {
     };
 };
 
-
-
-function makeReviewsRequest() {
-    var location = window.location.href;
-    console.log("Location website is: " + location)
-    
-    const xhttp = new XMLHttpRequest();
-    const url = location;
-
-    xhttp.open("POST", url, true);
-    xhttp.setRequestHeader(
-        "Content-type",
-        "application/x-www-form-urlencoded"
-    );
-    xhttp.send("id=2226, request=select");
-
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var finalQueryResult = xhttp.responseText;
-            console.log(finalQueryResult);
-            var myJsonObject = JSON.parse(finalQueryResult);
-
-            //clearTable();
-            populateReviews(myJsonObject, myJsonObject.length);     
-        };
-    };
-};
 
 
 function populateReviews(json, length) {
