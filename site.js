@@ -130,12 +130,12 @@ app.get('/details/:id', (req, res) => {
   var bookCode = req.params.id;
   bookCode = bookCode.replace(':','');
 
-  let sql = `SELECT title, ROUND(AVG(score),1) as Average, authorFirst, authorLast, genre, publisherName, price, numCopies, summary, bio 
+  let sql = `SELECT title, ROUND(AVG(score),1) as Average, authorFirst, authorLast, genre, publisherName, price, numCopies, summary, bio, cover
   FROM Book, Wrote, Author, Publisher, Review
   WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode) AND Book.bookCode = ${bookCode}
   GROUP BY Book.bookCode
   UNION
-  SELECT title, NULL as Average, authorFirst, authorLast, genre, publisherName, price, numCopies, summary, bio 
+  SELECT title, NULL as Average, authorFirst, authorLast, genre, publisherName, price, numCopies, summary, bio, cover
   FROM Book, Wrote, Author, Publisher 
   WHERE NOT exists (SELECT * FROM Review WHERE Book.bookCode = bookId) 
   AND (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode) AND Book.bookCode = ${bookCode};`;
@@ -154,8 +154,10 @@ app.get('/details/:id', (req, res) => {
       price : results[0].price,
       stock : results[0].numCopies,
       summary : results[0].summary,
-      bio : results[0].bio
+      bio : results[0].bio,
+      cover : results[0].cover
     });
+    
   });
 })
 

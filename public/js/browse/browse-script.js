@@ -34,6 +34,7 @@ $(document).ready(function() {
    });
 
 function makeTableRequest(searchVal, sortVal, resultNum, best) {
+    console.log("wow");
     const xhttp = new XMLHttpRequest();
     const url = "http://localhost:5656/" 
 
