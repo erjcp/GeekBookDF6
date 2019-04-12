@@ -57,7 +57,6 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => 
 {
-    console.log('yo');
     let email = req.body.email;
     let password = req.body.password;
     if (!email || !password)  {
@@ -82,10 +81,15 @@ app.post("/login", (req, res) =>
 });
 
 app.get('/logout', (req, res) => {
-  if (req.session.email){
-    req.session.destroy();
-  }
   res.render('index');
+})
+
+app.post('/logout', (req, res) => {
+  console.log('yo');  
+  if (req.session.email){
+      console.log("wow");
+      delete req.session.email;
+    }
 })
 
 app.get('/profile', (req, res) => {
@@ -126,21 +130,31 @@ app.get('/details/:id', (req, res) => {
   var bookCode = req.params.id;
   bookCode = bookCode.replace(':','');
 
-  let sql = `SELECT title, authorFirst, authorLast, genre, publisherName, price, numCopies, summary FROM Book, Wrote, Author, Publisher WHERE Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Book.bookCode = ${bookCode}`;
+  let sql = `SELECT title, ROUND(AVG(score),1) as Average, authorFirst, authorLast, genre, publisherName, price, numCopies, summary, bio 
+  FROM Book, Wrote, Author, Publisher, Review
+  WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode) AND Book.bookCode = ${bookCode}
+  GROUP BY Book.bookCode
+  UNION
+  SELECT title, NULL as Average, authorFirst, authorLast, genre, publisherName, price, numCopies, summary, bio 
+  FROM Book, Wrote, Author, Publisher 
+  WHERE NOT exists (SELECT * FROM Review WHERE Book.bookCode = bookId) 
+  AND (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode) AND Book.bookCode = ${bookCode};`;
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
+      console.log(err);
     }
     console.log(results);
 
     res.render('details', {
       title : results[0].title,
+      average : results[0].Average,
       author : results[0].authorFirst +" "+ results[0].authorLast,
       publisher : results[0].publisherName,
       price : results[0].price,
       stock : results[0].numCopies,
-      rating : 'test',
-      summary : results[0].summary
+      summary : results[0].summary,
+      bio : results[0].bio
     });
   });
 })
@@ -165,17 +179,18 @@ app.post('/details/:id', function (req, res){
 app.post('/', function (req, res){
   var like = req.body.like;
   var sort = req.body.col;
+  var best = req.body.id;
   console.log("like is: " + like + " and col is: " + sort);
-  let sql = `SELECT title, authorFirst, authorLast, genre, Publisher.publisherName, price, ROUND(AVG(score),1) as Average, numCopies, Book.bookCode
+  let sql = `SELECT title, authorFirst, authorLast, genre, Publisher.publisherName, price, ROUND(AVG(score),1) as Average, numCopies, Book.bookCode, pubDate, best, cover
   FROM Book, Wrote, Author, Publisher, Review
-  WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode)
+  WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode ${best})
   AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
   GROUP BY Book.bookCode
   UNION
-  SELECT title, authorFirst, authorLast, genre, Publisher.publisherName, price, NULL as Average, numCopies, Book.bookCode
+  SELECT title, authorFirst, authorLast, genre, Publisher.publisherName, price, NULL as Average, numCopies, Book.bookCode, pubDate, best, cover
   FROM Book, Wrote, Author, Publisher
   WHERE NOT exists (SELECT * FROM Review WHERE Book.bookCode = bookId) 
-  AND (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode)
+  AND (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode ${best})
   AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
   ORDER BY ${sort};`;
   
@@ -201,7 +216,7 @@ app.post('/:action', function (req, res) {
     console.log("code is: " + code);
     let sql = `INSERT INTO CartItem
     VALUES
-    ('0001' ,'${code}', 0, 1);`;
+    (1 ,'${code}', 0, 1);`;
     
     let query = db.query(sql, (err, results) => {
       if (err) {
