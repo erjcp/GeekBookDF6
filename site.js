@@ -125,6 +125,7 @@ app.post('/details/:id', function (req, res){
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
+      res.send(err);
     }
     console.log(sql);
     console.log(results);

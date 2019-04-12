@@ -86,33 +86,6 @@ function makeReviewsRequest() {
 };
 
 
-function makeReviewsInsert() {
-    var location = window.location.href;
-    console.log("Location website is: " + location)
-    
-    const xhttp = new XMLHttpRequest();
-    const url = location;
-
-    xhttp.open("POST", url, true);
-    xhttp.setRequestHeader(
-        "Content-type",
-        "application/x-www-form-urlencoded"
-    );
-    xhttp.send("request=insert");
-
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var finalQueryResult = xhttp.responseText;
-            console.log(finalQueryResult);
-            var myJsonObject = JSON.parse(finalQueryResult);
-
-            //clearTable();
-            populateReviews(myJsonObject, myJsonObject.length);     
-        };
-    };
-};
-
-
 
 function populateReviews(json, length) {
     for (var i = 0; i < length; i++) {
