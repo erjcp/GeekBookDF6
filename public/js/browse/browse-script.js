@@ -30,7 +30,14 @@ document.getElementById("btn-search").addEventListener("click", function () {
 });
 
 $(document).ready(function() {
-    makeTableRequest('', 'title', 10, '');
+    if(document.URL == "http://localhost:5656/")
+    {
+        makeTableRequest('', 'title', 10, '');
+    }
+    else if(document.URL == "http://localhost:5656/author"){
+        makeTableRequest('rowling', 'title', 10, '');
+    }
+    
    });
 
 function makeTableRequest(searchVal, sortVal, resultNum, best) {

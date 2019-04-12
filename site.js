@@ -50,6 +50,12 @@ app.get('/', (req, res) => {
   });
 })
 
+app.get('/author', (req, res) => {
+  res.render('index', {
+    page: 'browse'
+  });
+})
+
 app.get("/login", (req, res) => {
   console.log("Login Page!");
   res.render("login");
@@ -215,10 +221,17 @@ app.post('/:action', function (req, res) {
     console.log("body:")
     console.log(req.body);
     var code = req.body.code;
+    var user = window.localStorage.getItem('id');
     console.log("code is: " + code);
+
     let sql = `INSERT INTO CartItem
     VALUES
-    (1 ,'${code}', 0, 1);`;
+    ('${user}' ,'${code}', 0, 1);`;
+
+    // -------hardcoded user---------
+    // let sql = `INSERT INTO CartItem
+    // VALUES
+    // (1 ,'${code}', 0, 1);`;
     
     let query = db.query(sql, (err, results) => {
       if (err) {
