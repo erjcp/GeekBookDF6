@@ -1,6 +1,8 @@
 // DETAILS FUNTIONALITY
 // ADD USERNAME NICKNAME TO INSERT REVIEW
 
+currentAuthor = author;
+
 document.getElementById("postReview").addEventListener("click", function () {
     var radio = document.getElementsByClassName("reviewRating");
     var heading = "Heading test replace me";

@@ -9,7 +9,7 @@ block content
       .col-4
         img(src=cover, width = 350, length = 350, alt='Front Cover')
         a.nav-link(href=cover)
-              | Click to view Full Size Cover
+              | Click to View Full Size Cover
        
       .col-8
         form
@@ -30,7 +30,7 @@ block content
                   label Price
                   input.form-control(type='text', placeholder='$'+ price.toFixed(2), Disabled='')
                 .form-group
-                  label In Stock
+                  label Copies In Stock
                   input.form-control(type='text', placeholder=stock, Disabled='')
                 .form-group
                   if average
@@ -43,13 +43,13 @@ block content
               .col-12
                 .form-group
                   label Summary
-                  textarea.form-control(placeholder=summary, Disabled='')
+                  textarea.form-control(style='resize:none', type = 'text', placeholder=summary, Disabled='')
 
             .row
               .col-12
                 .form-group
-                  labelb Author Biography
-                  textarea.form-control(placeholder=bio, Disabled='')
+                  label Author Biography
+                  textarea.form-control(style='resize:none', type = 'text', placeholder=bio, Disabled='')
 
 
             a.nav-link(href='/author')
