@@ -122,6 +122,9 @@ app.post('/', function (req, res){
 
 app.post('/cart', function(req, res){
 
+  var like = req.body.like;
+  var col = req.body.col;
+
   let sql = `select b.cover, b.title, b.price, ci.bookId, ci.cartType, ci.quantity 
   from Book b, CartItem ci 
   where (ci.orderId = 1 and ci.bookId = b.bookCode)`;
@@ -135,43 +138,4 @@ app.post('/cart', function(req, res){
     res.send(results);
   console.log("cart post");
   });
-});
-
-app.post('/updateCart', function(req, res){
-
-  var orderId = req.body.orderId;
-  var bookId = req.body.bookId;
-  var cartType = req.body.cartType;
-  var quantity = req.body.quantity;
-
-  let sql = `INSERT INTO CartItem 
-  VALUES (${orderId} ,'${bookId}', '${cartType}', '${quantity}');`;
-  let query = db.query(sql, (err, results) => {
-    if (err) {
-      console.log(sql);
-    }
-
-    res.send(results);
-  });
-
-  console.log("update cart");
-});
-
-app.post('/clearCart', function(req, res){
-
-  var orderId = req.body.orderId;
-  var bookId = req.body.bookId;
-  var cartType = req.body.cartType;
-  var quantity = req.body.quantity;
-
-  let sql = `DELETE FROM cartItem [WHERE cartItem.orderId = 1];`;
-  let query = db.query(sql, (err, results) => {
-    if (err) {
-      console.log(sql);
-    }
-
-    res.send(results);
-  });
-
-  console.log("clear cart");
 });
