@@ -11,12 +11,21 @@ jQuery(document).ready(function() {
     const xhttp = new XMLHttpRequest();
     const url = "http://localhost:5656/cart";
 
+<<<<<<< HEAD
+=======
+    id = window.localStorage.getItem('userId');
+
+>>>>>>> New-New-Browsing
     xhttp.open("POST", url, true);
     xhttp.setRequestHeader(
         "Content-type",
         "application/x-www-form-urlencoded"
     );
+<<<<<<< HEAD
     xhttp.send("");
+=======
+    xhttp.send("id=" + id);
+>>>>>>> New-New-Browsing
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -249,7 +258,11 @@ function currencyFormat(num) {
   }
 
   function updateCart(){
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> New-New-Browsing
     clearCart();
     for (var i = 0; i < length; i++) {
         updateCart(i, 1);
@@ -297,7 +310,11 @@ function currencyFormat(num) {
         "application/x-www-form-urlencoded"
     );
 
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> New-New-Browsing
     xhttp.send("orderId=" + orderId + "bookId=" + bookId + "cartType=" + cartType + "quantity=" + quantity);
   }
 

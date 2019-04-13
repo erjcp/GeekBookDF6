@@ -52,3 +52,38 @@
 	
 }
 
+.pushRight{
+    float: right;
+}
+.selectRating{
+    padding: 6px;
+}
+.reviewFooter{
+    margin-top: 10px;
+}
+
+.reviewsList{
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.reviewul{
+    padding: 0px;
+}
+
+.profilepic{
+    height: auto;
+    width: 40px;
+    margin-right: 10px;
+}
+
+.media-list li {
+    border-bottom:1px dashed #efefef;
+    margin-bottom:25px;
+}
+
+h6{
+    display: inline-block;
+}
+ul {
+    list-style-type: none;
+  }
