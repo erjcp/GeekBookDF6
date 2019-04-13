@@ -28,7 +28,7 @@ block content
               .col-6
                 .form-group
                   label Price
-                  input.form-control(type='text', placeholder='$'+ price, Disabled='')
+                  input.form-control(type='text', placeholder='$'+ price.toFixed(2), Disabled='')
                 .form-group
                   label In Stock
                   input.form-control(type='text', placeholder=stock, Disabled='')
