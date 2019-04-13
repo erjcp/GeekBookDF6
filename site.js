@@ -138,4 +138,46 @@ app.post('/cart', function(req, res){
     res.send(results);
   console.log("cart post");
   });
+<<<<<<< HEAD
+=======
+});
+
+app.post('/updateCart', function(req, res){
+
+  var orderId = req.body.orderId;
+  var bookId = req.body.bookId;
+  var cartType = req.body.cartType;
+  var quantity = req.body.quantity;
+
+  let sql = `INSERT INTO CartItem 
+  VALUES (${orderId} ,'${bookId}', '${cartType}', '${quantity}');`;
+  let query = db.query(sql, (err, results) => {
+    if (err) {
+      console.log(sql);
+    }
+
+    res.send(results);
+  });
+
+  console.log("update cart");
+});
+
+app.post('/clearCart', function(req, res){
+
+  var orderId = req.body.orderId;
+  var bookId = req.body.bookId;
+  var cartType = req.body.cartType;
+  var quantity = req.body.quantity;
+
+  let sql = `DELETE FROM cartItem [WHERE cartItem.orderId = 1];`;
+  let query = db.query(sql, (err, results) => {
+    if (err) {
+      console.log(sql);
+    }
+
+    res.send(results);
+  });
+
+  console.log("clear cart");
+>>>>>>> parent of a07bb3c... trying to merge
 });
