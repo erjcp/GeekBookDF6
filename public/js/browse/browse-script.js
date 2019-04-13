@@ -63,8 +63,11 @@ function makeTableRequest(searchVal, sortVal, resultNum, best) {
             clearTable();
             var start = 0;
             var numResults = resultNum;
-            numPages = ((myJsonObject.length / numResults) + 0.5) | 0; // 0.5 to fix rounding issues
-            
+            numPages = ((myJsonObject.length / numResults) + 0.9) | 0; // 0.9 to fix rounding issues
+            console.log(numResults);
+            console.log(numPages);
+
+
             if(numPages <= 1)
             {
                 console.log("initial");
@@ -146,10 +149,10 @@ function insertRow(rowData, i){
     cell4.innerHTML = rowData.genre
     cell5.innerHTML = rowData.publisherName;
     cell6.innerHTML = "$" + rowData.price.toFixed(2); // Two decimal places
-    if(rowData.Average == null) // no reviews
+    if(rowData.average == null) // no reviews
         {cell7.innerHTML = "N/A"}
     else
-        {cell7.innerHTML = rowData.Average.toFixed(1)}; // One decimal place
+        {cell7.innerHTML = rowData.average.toFixed(1)}; // One decimal place
     cell8.innerHTML = rowData.numCopies;
 
 }
@@ -200,7 +203,7 @@ function addToCart(code){
     const url = "http://localhost:5656/add" 
 
     id = window.localStorage.getItem('userId');
-    
+
     console.log("sending post: " + id)
 
     xhttp.open("POST", url, true);

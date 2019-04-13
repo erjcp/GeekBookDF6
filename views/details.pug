@@ -66,28 +66,36 @@ block content
         .row
           .col-12
             .writeReview
-              textarea#input-review.form-control(placeholder="Write a review...")
+              input#input-title-review.form-control(placeholder="Write a title...", oninput="updateButton(this.value)")
+        .row
+          .col-12
+            .writeReview
+              textarea#input-review.form-control(placeholder="Write a comment...", oninput="updateButton(this.value)")
         .row.reviewFooter
           .col-6
             .selectRating
               .form-check.form-check-inline
-                input#inlineRadio1.form-check-input.reviewRating(type='radio', name='rating', value='1')
+                input#inlineRadio1.form-check-input.reviewRating(type='radio', name='rating', value='1', oninput="updateButton(this.value)")
                 label.form-check-label(for='inlineRadio1') 1
               .form-check.form-check-inline
-                input#inlineRadio2.form-check-input.reviewRating(type='radio', name='rating', value='2')
+                input#inlineRadio2.form-check-input.reviewRating(type='radio', name='rating', value='2', oninput="updateButton(this.value)")
                 label.form-check-label(for='inlineRadio2') 2
               .form-check.form-check-inline
-                input#inlineRadio3.form-check-input.reviewRating(type='radio', name='rating', value='3')
+                input#inlineRadio3.form-check-input.reviewRating(type='radio', name='rating', value='3', oninput="updateButton(this.value)")
                 label.form-check-label(for='inlineRadio3') 3 
               .form-check.form-check-inline
-                input#inlineRadio2.form-check-input.reviewRating(type='radio', name='rating', value='4')
+                input#inlineRadio2.form-check-input.reviewRating(type='radio', name='rating', value='4', oninput="updateButton(this.value)")
                 label.form-check-label(for='inlineRadio2') 4
               .form-check.form-check-inline
-                input#inlineRadio3.form-check-input.reviewRating(type='radio', name='rating', value='5')
+                input#inlineRadio3.form-check-input.reviewRating(type='radio', name='rating', value='5', oninput="updateButton(this.value)")
                 label.form-check-label(for='inlineRadio3') 5
           .col-3
           .col-3
             button#postReview.btn.btn-outline-primary.pushRight(type='submit') Post
+        .row
+          .col-12
+            .writeReview
+              #alertMessage.alert.alertEdit.alert-danger(role='alert')
         hr
         .row.reviewsList
           ul#reviewUl.media-list.reviewUl

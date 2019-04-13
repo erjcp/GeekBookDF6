@@ -5,6 +5,7 @@ html
     title BookStore - #{title}
     link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
     link(rel='stylesheet', type='text/css', href='css/bookstyle.css')
+    link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.8.1/css/all.css', integrity='sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf', crossorigin='anonymous')
 
   body
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
@@ -17,18 +18,17 @@ html
             a.nav-link(href='/')
               | Browse 
               span.sr-only (current)
+
           li.nav-item
-            a.nav-link(href='cart', id='nav-shoppingCart') Shopping Cart
+            a.nav-link(href='cart', id='nav-shoppingCart', onclick="return changePage('cart')") Shopping Cart
           li.nav-item.dropdown
             a#navbarDropdownMenuLink.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
               | Profile
             .dropdown-menu(aria-labelledby='navbarDropdownMenuLink')
-              a.dropdown-item(href='login') Log in
-              a.dropdown-item(href='register') Create Account
-              a.dropdown-item(href='editaccount') Edit Account
-              a.dropdown-item(href='ccform') Add New Credit Card
-              a.dropdown-item(href='shippingAddress') Add New Shipping Address
-              a.dropdown-item(href='logout') Log out
+              a.dropdown-item(href='login', onclick="return changePage('login')") Log in
+              a.dropdown-item(href='profile', onclick="return changePage('profile')") Edit Profile
+              form(method='POST' action='/logout')
+                a.dropdown-item(href='logout', onclick="return changePage('logout')") Log out
 
     script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js', integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo', crossorigin='anonymous')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js', integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1', crossorigin='anonymous')
@@ -37,5 +37,3 @@ html
 
     .container
       block content
-
-
