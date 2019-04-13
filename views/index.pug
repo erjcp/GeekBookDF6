@@ -10,11 +10,17 @@ block content
         option(value='title') Titles A-Z
         option(value='authorLast') Authors A-Z
         option(value='Average DESC') Reviews Hi-Lo
+        option(value='Average ASC') Reviews Lo-Hi
         option(value='price') Price Lo-Hi
+        option(value='pubDate DESC') Date New-Old
+        option(value='pubDate ASC') Date Old-New
+      input#radio-best(type="checkbox", value = 'AND best = 1', style='margin-left: 6px')
+      | Only Display Best Sellers
   table#tableBrowse.table
     thead.thead-dark
       tr
         th(scope='col') Cart
+        th(scope='col') Cover
         th(scope='col') Title
         th(scope='col') Author
         th(scope='col') Genre
@@ -24,5 +30,13 @@ block content
         th(scope='col') Availability
     tbody#tableBrowseBody
   div#test
+  p#pages Page 0 of 0
+  button#prev.btn.btn-outline-success.my-2.my-sm-0 Prev
+  button#next.btn.btn-outline-success.my-2.my-sm-0(style='margin-right: 6px') Next  
+  p(style= 'display: inline') Display: 
+    select#number(style='margin-left: 6px')
+      option(value=10) 10 Results
+      option(value=20) 20 Results
+ 
 
   script(src='js/browse/browse-script.js')
