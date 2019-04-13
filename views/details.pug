@@ -1,0 +1,99 @@
+extends layout.pug
+
+block content
+  container.header
+    h1 Details
+  
+  container
+    .row
+      .col-4
+        img(src=cover, width = 350, length = 350, alt='Front Cover')
+        a.nav-link(href=cover, onclick = 'morebyAuthor('+author+')')
+              | Click to View Full Size Cover
+       
+      .col-8
+        form
+          fieldset
+            .row
+              .col-6
+                .form-group
+                  label Title
+                  input.form-control(type='text', placeholder=title, Disabled='')
+                .form-group
+                  label Author
+                  input.form-control(type='text', placeholder=author, Disabled='')
+                .form-group
+                  label Publisher
+                  input.form-control(type='text', placeholder=publisher, Disabled='')
+              .col-6
+                .form-group
+                  label Price
+                  input.form-control(type='text', placeholder='$'+ price.toFixed(2), Disabled='')
+                .form-group
+                  label Copies In Stock
+                  input.form-control(type='text', placeholder=stock, Disabled='')
+                .form-group
+                  if average
+                    label Rating
+                    input.form-control(type='text', placeholder=average + '/5 Stars', Disabled='')
+                  else 
+                    label Rating
+                    input.form-control(type='text', placeholder='N/A', Disabled='')
+            .row
+              .col-12
+                .form-group
+                  label Summary
+                  textarea.form-control(style='resize:none', type = 'text', placeholder=summary, Disabled='')
+
+            .row
+              .col-12
+                .form-group
+                  label Author Biography
+                  textarea.form-control(style='resize:none', type = 'text', placeholder=bio, Disabled='')
+
+
+            a.nav-link(href='/author')
+              | More by This Author
+            button.btn.btn-primary.d-none(type='submit') Submit
+            
+  
+  container
+    .row
+      .col-12
+        h4 Reviews
+    .row
+      .col-8
+        .row
+          .col-12
+            .writeReview
+              textarea#input-review.form-control(placeholder="Write a review...")
+        .row.reviewFooter
+          .col-6
+            .selectRating
+              .form-check.form-check-inline
+                input#inlineRadio1.form-check-input.reviewRating(type='radio', name='rating', value='1')
+                label.form-check-label(for='inlineRadio1') 1
+              .form-check.form-check-inline
+                input#inlineRadio2.form-check-input.reviewRating(type='radio', name='rating', value='2')
+                label.form-check-label(for='inlineRadio2') 2
+              .form-check.form-check-inline
+                input#inlineRadio3.form-check-input.reviewRating(type='radio', name='rating', value='3')
+                label.form-check-label(for='inlineRadio3') 3 
+              .form-check.form-check-inline
+                input#inlineRadio2.form-check-input.reviewRating(type='radio', name='rating', value='4')
+                label.form-check-label(for='inlineRadio2') 4
+              .form-check.form-check-inline
+                input#inlineRadio3.form-check-input.reviewRating(type='radio', name='rating', value='5')
+                label.form-check-label(for='inlineRadio3') 5
+          .col-3
+          .col-3
+            button#postReview.btn.btn-outline-primary.pushRight(type='submit') Post
+        hr
+        .row.reviewsList
+          ul#reviewUl.media-list.reviewUl
+            
+
+  script(src='js/details/details-script.js')
+  script(src='js/browse/browse-script.js')
+
+            

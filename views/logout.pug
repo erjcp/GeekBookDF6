@@ -1,0 +1,27 @@
+extends layout.pug
+
+block content
+  .main.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 THANK YOU FOR YOUR VISIT
+        br
+
+        form(method='POST' action='/logout')
+          
+          div.form-group
+            label(for='') 
+            br
+            button.btn.btn-primary(type='submit' onClick='logout()') LOG OUT
+
+          div.form-group
+          label(for='logout') 
+
+      script.
+
+          function logout() {
+             const apiURL = "http://localhost:5656"
+              localStorage.removeItem('token');
+              localStorage.removeItem('userId');
+              window.location.href = apiURL;
+          }

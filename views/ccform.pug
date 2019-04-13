@@ -1,0 +1,85 @@
+extends layout.pug
+  
+block content
+  .main.container
+  .row
+    .col-xs-12.col-md-4
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title
+            | ADD NEW CREDIT CARD
+          .checkbox.pull-right
+        
+        div.form-group
+          label(for='cardHolderfullName') Card holder Full Name:
+          input#cardHolderfullName.form-control(type='text', placeholder='Please enter your Full Name' cardHolderfullName='cardHolderfullName' required) 
+        
+        .panel-body
+          form(role='form')
+            .form-group
+              label(for='cardNumber')
+                | CARD NUMBER
+              .input-group
+                input#cardNumber.form-control(type='text', placeholder='Valid Card Number', required='', autofocus='' minlength="16" ,maxlength="16")
+                span.input-group-addon
+                  span.glyphicon.glyphicon-lock
+            .row
+              .col-xs-7.col-md-7
+                .form-group
+                  label(for='expityMonth')
+                    | EXPIRY DATE
+                  .col-xs-6.col-lg-6.pl-ziro
+                    input#expityMonth.form-control(type='text', placeholder='MM', required)
+                  .col-xs-6.col-lg-6.pl-ziro
+                    input#expityYear.form-control(type='text', placeholder='YY', required)
+              .col-xs-5.col-md-5.pull-right
+                .form-group
+                  label(for='cvCode')
+                    | CV CODE
+                  input#cvCode.form-control(type='password', placeholder='CV Code', required='', minlenght="3", maxlength="3")
+      ul.nav.nav-pills.nav-stacked
+        li.active
+          a(href='#')
+      br
+      button.btn.btn-primary(type='submit'     onClick="AddCreditCard()" style= "height:50px;width:100%!important; margin-bottom:30px; ")  Submit New Credit Card
+     
+      script.
+          function AddCreditCard()
+       {
+            const cardHolderfullName = document.getElementById("cardHolderfullName");
+            const cardNumber = document.getElementById("cardNumber");
+            const expityMonth = document.getElementById("expityMonth");
+            const expityYear = document.getElementById("expityYear");
+            const cvCode = document.getElementById("cvCode");
+          
+            const token = localStorage.getItem("token");
+          
+            const data = { 
+              token,
+              cardHolderfullName,
+              cardNumber,
+              expityMonth,
+              expityYear,
+              cvCode
+            }
+
+            console.log({ data })
+            const apiURL= "http://localhost:5656"
+
+            const options = {
+                method: "POST", 
+                body: JSON.stringify(data),
+                headers: { "Content-Type": "application/json" } 
+            }
+
+              fetch(apiURL + "/addcard", options)
+                .then(res => res.json())
+                .then(res => {
+
+                  const { email } = res.data
+
+                  console.log(email)
+                  //- window.localStorage.setItem('token', email)
+
+                }).catch(error => console.log("Error: ", error))
+          }
