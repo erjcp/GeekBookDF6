@@ -7,9 +7,7 @@ block content
   container
     .row
       .col-4
-        img(src=cover, width = 350, length = 350, alt='Front Cover')
-        a.nav-link(href=cover)
-              | Click to view Full Size Cover
+        img(src='https://upload.wikimedia.org/wikipedia/en/a/a0/Cien_a%C3%B1os_de_soledad_%28book_cover%2C_1967%29.jpg', alt='Italian Trulli')
        
       .col-8
         form
@@ -28,72 +26,16 @@ block content
               .col-6
                 .form-group
                   label Price
-                  input.form-control(type='text', placeholder='$'+ price.toFixed(2), Disabled='')
+                  input.form-control(type='text', placeholder=price, Disabled='')
                 .form-group
                   label In Stock
                   input.form-control(type='text', placeholder=stock, Disabled='')
                 .form-group
-                  if average
-                    label Rating
-                    input.form-control(type='text', placeholder=average + '/5 Stars', Disabled='')
-                  else 
-                    label Rating
-                    input.form-control(type='text', placeholder='N/A', Disabled='')
+                  label Rating
+                  input.form-control(type='text', placeholder=rating, Disabled='')
             .row
               .col-12
                 .form-group
                   label Summary
                   textarea.form-control(placeholder=summary, Disabled='')
-
-            .row
-              .col-12
-                .form-group
-                  labelb Author Biography
-                  textarea.form-control(placeholder=bio, Disabled='')
-
-
-            a.nav-link(href='/author')
-              | More by This Author
             button.btn.btn-primary.d-none(type='submit') Submit
-            
-  
-  container
-    .row
-      .col-12
-        h4 Reviews
-    .row
-      .col-8
-        .row
-          .col-12
-            .writeReview
-              textarea#input-review.form-control(placeholder="Write a review...")
-        .row.reviewFooter
-          .col-6
-            .selectRating
-              .form-check.form-check-inline
-                input#inlineRadio1.form-check-input.reviewRating(type='radio', name='rating', value='1')
-                label.form-check-label(for='inlineRadio1') 1
-              .form-check.form-check-inline
-                input#inlineRadio2.form-check-input.reviewRating(type='radio', name='rating', value='2')
-                label.form-check-label(for='inlineRadio2') 2
-              .form-check.form-check-inline
-                input#inlineRadio3.form-check-input.reviewRating(type='radio', name='rating', value='3')
-                label.form-check-label(for='inlineRadio3') 3 
-              .form-check.form-check-inline
-                input#inlineRadio2.form-check-input.reviewRating(type='radio', name='rating', value='4')
-                label.form-check-label(for='inlineRadio2') 4
-              .form-check.form-check-inline
-                input#inlineRadio3.form-check-input.reviewRating(type='radio', name='rating', value='5')
-                label.form-check-label(for='inlineRadio3') 5
-          .col-3
-          .col-3
-            button#postReview.btn.btn-outline-primary.pushRight(type='submit') Post
-        hr
-        .row.reviewsList
-          ul#reviewUl.media-list.reviewUl
-            
-
-  script(src='js/details/details-script.js')
-  script(src='js/browse/browse-script.js')
-
-            

@@ -1,6 +1,12 @@
+document.getElementById("btn-search").addEventListener("click", function () {
+  var textBox = document.getElementById("input-search");
+  var searchVal = textBox.value;
+  console.log("partial or full title String:" + searchVal);
+  //clearLogicOperationDiv();
+  makeTableRequest(searchVal);
+});
 
 
-<<<<<<< HEAD
 jQuery(document).on('click','.clickableRow',function(){
     window.location = $(this).data("href");
 });
@@ -84,5 +90,3 @@ function moveToCart(itemId){
     
     xhttp.send("code=" + itemId);
 }
-=======
->>>>>>> New-New-Browsing
