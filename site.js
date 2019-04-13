@@ -125,33 +125,25 @@ app.get('/profile', (req, res) => {
 })
 
 app.get('/cart', (req, res) => {
-  var cartList = [];
-  var saveLaterList = [];
-
-  let sql = `select b.title, b.price, c.customerId, ci.cartType from Book b, Cart c, CartItem ci where (ci.orderId = c.customerId and ci.bookId = b.bookCode)`;
-  let query = db.query(sql, (err, rows, results) => {
+  
+  let sql = `select b.cover, b.title, b.price, ci.bookId, ci.cartType, ci.quantity 
+  from Book b, CartItem ci 
+  where (ci.orderId = 1 and ci.bookId = b.bookCode)`;
+  let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
     }
-    for(var i = 0; i < rows.length; i++){
-      var item = {
-      title : rows[i].title,
-      price : rows[i].price,
-      customerId : rows[i].customerId,
-      cartType : rows[i].cartType
-      }
-      if(item.cartType == 1){
-        cartList.push(item);
-      }
-      else{saveLaterList.push(item);}
-        
-      console.log(item);
-    }
-    res.render('cart', {"cartList": cartList, "saveLaterList" : saveLaterList});
+
+    res.render('cart', {
+      cover: results[0].cover,
+      title : results[0].title,
+      price : results[0].price,
+      bookId : results[0].bookId,
+      cartType : results[0].cartType,
+      quantity : results[0].quantity});
   });
-  for(var j = 0; j < cartList; j++){
-    console.log(cartList[i]);
-  }
+
+  console.log("complete cart");
 })
 
 app.get('/details/:id', (req, res) => {
@@ -238,7 +230,25 @@ app.post('/', function (req, res){
   });
 });
 
+app.post('/cart', function(req, res){
 
+  var like = req.body.like;
+  var col = req.body.col;
+
+  let sql = `select b.cover, b.title, b.price, ci.bookId, ci.cartType, ci.quantity 
+  from Book b, CartItem ci 
+  where (ci.orderId = 1 and ci.bookId = b.bookCode)`;
+  let query = db.query(sql, (err, results) => {
+    if (err) {
+      console.log(sql);
+    }
+    
+    console.log(results);
+
+    res.send(results);
+  console.log("cart post");
+  });
+});
 
 app.listen(5656, () => {
   console.log('Server started on port 5656 ')
@@ -585,12 +595,7 @@ app.post("/ccform/", (req, res) =>
 
 app.post("/logout", (req, res) => 
 {
-
-
-
-
       res.render('index')
-
 });
 
 // keep this last to not interfere
