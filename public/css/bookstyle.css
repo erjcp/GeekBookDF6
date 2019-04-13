@@ -61,7 +61,10 @@
 .reviewFooter{
     margin-top: 10px;
 }
-
+.alertEdit{
+    margin-top: 20px;
+    display: none;
+}
 .reviewsList{
     padding-right: 15px;
     padding-left: 15px;
