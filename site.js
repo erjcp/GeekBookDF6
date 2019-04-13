@@ -132,7 +132,7 @@ app.get('/cart', (req, res) => {
 
   let sql = `select b.cover, b.title, b.price, ci.bookId, ci.cartType, ci.quantity 
   from Book b, CartItem ci 
-  where (ci.orderId = ${id} and ci.bookId = b.bookCode)`;
+  where (ci.orderId = 1 and ci.bookId = b.bookCode)`;
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
