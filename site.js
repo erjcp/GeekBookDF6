@@ -37,6 +37,8 @@ require("babel-register")({
 });
 */
 
+var currentAuthor;
+
 //setting up cookies
 app.use(cookieparser());
 
@@ -217,6 +219,9 @@ app.get('/details/:id', (req, res) => {
       bio : results[0].bio,
       cover : results[0].cover
     });
+
+    currentAuthor = results[0].authorFirst + " "+ results[0].authorLast;
+    console.log(currentAuthor);
     
   });
 })
