@@ -51,6 +51,12 @@ app.use('/details', express.static(path.join(__dirname + '/public')));
 app.use('/cart', express.static(path.join(__dirname + '/public')));
 app.use('/register', express.static(path.join(__dirname + '/public')));
 app.use('/login', express.static(path.join(__dirname + '/public')));
+app.use('/ccform', express.static(path.join(__dirname + '/public')));
+app.use('/editaccount', express.static(path.join(__dirname + '/public')));
+app.use('/logout', express.static(path.join(__dirname + '/public')));
+app.use('/profile', express.static(path.join(__dirname + '/public')));
+app.use('/register', express.static(path.join(__dirname + '/public')));
+app.use('/shippingAddress', express.static(path.join(__dirname + '/public')));
 
 app.use(bodyparser.urlencoded({ extended: false }));
 
@@ -92,33 +98,6 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
-/* OLD LOGIN I GUESS
-app.post("/login", (req, res) => 
-{
-    let email = req.body.email;
-    let password = req.body.password;
-    if (!email || !password)  {
-      res.render('login');
-      return;
-    }
-    let userID = "";
-
-    let sqlQueryString = `SELECT * FROM geekbook.Accounts WHERE email = '${email}' AND pass = '${password}'`;
-    console.log(sqlQueryString);
-    db.query(sqlQueryString,function(err,result){
-      if(err ) throw    console.log('User Not Found with those creditials :(' + err+'\n\n');
-      console.log("Account Information Found: -> User: " + result);
-    });
-
-    config.userID = userID;
-    req.session.email = email;
-    res.cookie('session', email);
-    res.render('index');
-    
-    res.end();
-});
-*/ 
-
 app.get("/editaccount", (req, res) => {
   res.render("editaccount");
 });
@@ -127,23 +106,15 @@ app.get("/register", (req, res) => {
   console.log("Im Here! Register Page");
   res.render("register");
 });
+
 app.get("/shippingAddress", (req, res) => {
   res.render("shippingAddress");
 });
 
 app.get('/logout', (req, res) => {
-  res.render('index');
+  res.render('logout');
 })
 
-/* OLD LOGOUT
-app.post('/logout', (req, res) => {
-  console.log('yo');  
-  if (req.session.email){
-      console.log("wow");
-      delete req.session.email;
-    }
-})
-*/ 
 
 app.get("/ccform", (req, res) => {
   res.render("ccform");
