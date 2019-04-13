@@ -187,25 +187,31 @@ app.get('/details/:id', (req, res) => {
   var bookCode = req.params.id;
   bookCode = bookCode.replace(':','');
 
-  let sql = `SELECT title, ROUND(AVG(score),1) as Average, authorFirst, authorLast, genre, publisherName, price, numCopies, summary, bio, cover
-  FROM Book, Wrote, Author, Publisher, Review
-  WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode) AND Book.bookCode = ${bookCode}
-  GROUP BY Book.bookCode
-  UNION
-  SELECT title, NULL as Average, authorFirst, authorLast, genre, publisherName, price, numCopies, summary, bio, cover
-  FROM Book, Wrote, Author, Publisher 
-  WHERE NOT exists (SELECT * FROM Review WHERE Book.bookCode = bookId) 
-  AND (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode) AND Book.bookCode = ${bookCode};`;
+  let sql = `SELECT A.authorFirst, A.authorLast, A.bio, B.title, B.Genre, B.price, B.numCopies, B.cover, B.summary, P.publisherName, R.average
+  FROM Book as B
+  LEFT JOIN Wrote as W ON W.bookCode=B.bookCode
+  LEFT JOIN Author as A ON A.authorNum=W.authorNum
+  LEFT JOIN Publisher as P ON P.publisherCode = B.publisherCode
+  LEFT JOIN (
+    SELECT bookId as bookCode, ROUND(AVG(score),1) as average
+    FROM Review
+      GROUP BY bookId
+    ) as R
+  ON R.bookCode = B.bookCode
+  WHERE B.bookCode = '${bookCode}'`;
+  console.log("HEY IM HERE");
+
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
       console.log(err);
     }
+    console.log(sql);
     console.log(results);
 
     res.render('details', {
       title : results[0].title,
-      average : results[0].Average,
+      average : results[0].average,
       author : results[0].authorFirst +" "+ results[0].authorLast,
       publisher : results[0].publisherName,
       price : results[0].price,
@@ -257,6 +263,20 @@ app.post('/', function (req, res){
   var sort = req.body.col;
   var best = req.body.id;
   console.log("like is: " + like + " and col is: " + sort);
+  let sql = `SELECT B.bookCode, B.title, A.authorFirst, A.authorLast, B.Genre, B.price, B.price, B.numCopies, B.bookCode, B.pubDate, B.best, B.cover, P.publisherName, R.average
+  FROM Book as B
+  LEFT JOIN Wrote as W ON W.bookCode=B.bookCode
+  LEFT JOIN Author as A ON A.authorNum=W.authorNum
+  LEFT JOIN Publisher as P ON P.publisherCode = B.publisherCode
+  LEFT JOIN (
+    SELECT bookId as bookCode, ROUND(AVG(score),1) as average
+    FROM Review
+      GROUP BY bookId
+    ) as R
+  ON R.bookCode = B.bookCode
+  WHERE (B.title LIKE '%${like}%' OR A.authorLast LIKE '%${like}%' OR A.authorFirst LIKE '%${like}%' OR B.genre LIKE '%${like}%' OR P.publisherName LIKE '%${like}%')
+  ORDER BY ${sort}`;
+/*
   let sql = `SELECT title, authorFirst, authorLast, genre, Publisher.publisherName, price, ROUND(AVG(score),1) as Average, numCopies, Book.bookCode, pubDate, best, cover
   FROM Book, Wrote, Author, Publisher, Review
   WHERE (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode AND Review.bookId = Book.bookCode ${best})
@@ -268,7 +288,7 @@ app.post('/', function (req, res){
   WHERE NOT exists (SELECT * FROM Review WHERE Book.bookCode = bookId) 
   AND (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode ${best})
   AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
-  ORDER BY ${sort}`;
+  ORDER BY ${sort}`;*/
   
   let query = db.query(sql, (err, results) => {
     if (err) {
@@ -284,7 +304,6 @@ app.post('/', function (req, res){
     res.send(results);
   });
 });
-
 
 
 app.listen(5656, () => {

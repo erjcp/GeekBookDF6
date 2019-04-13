@@ -1,8 +1,8 @@
 // DETAILS FUNTIONALITY
 // ADD USERNAME NICKNAME TO INSERT REVIEW
 var userId = 2;
-
-var score
+/*
+var score;
 console.log(average);
 if (average== undefined)
 {
@@ -11,23 +11,7 @@ if (average== undefined)
 else
 {
     score = average + ' out of 5 Stars';
-}
-
-document.getElementById("postReview").addEventListener("click", function () {
-    var radio = document.getElementsByClassName("reviewRating");
-    var heading = "Heading test replace me";
-    var nickName = "Nickname test replace me";
-    var reviewDate = new Date().toISOString().slice(0, 19);
-    var score = 1;
-    var review = document.getElementById("input-review").value;
-
-    var i;
-    for (i = 0; i < radio.length; i++) {
-        if (radio[i].checked){
-            score = radio[i].value;
-        }
-    }
-}
+}*/
 
 $(document).ready(function() {
     //console.log("ON PAGE LOAD!!");
@@ -146,7 +130,7 @@ function makeReviewsRequest() {
             var finalQueryResult = xhttp.responseText;
             console.log(finalQueryResult);
             var myJsonObject = JSON.parse(finalQueryResult);
-            //console.log("BEFORE POPULATE!");
+            console.log("BEFORE POPULATE!");
             //clearTable();
             populateReviews(myJsonObject, myJsonObject.length);     
         };

@@ -18,8 +18,15 @@
   },
   "homepage": "https://github.com/perezex29/GeekBookDF6#readme",
   "dependencies": {
+    "babel-register": "^6.26.0",
+    "bcrypt": "^3.0.5",
     "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.4",
+    "csprng": "^0.1.2",
     "express": "^4.16.4",
+    "express-session": "^1.16.1",
+    "express-validator": "^5.3.1",
+    "mysql": "^2.16.0",
     "nodemon": "^1.18.10",
     "pug": "^2.0.3"
   }
