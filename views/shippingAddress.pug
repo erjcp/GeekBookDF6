@@ -26,7 +26,11 @@ block content
 
         button#btn.btn.btn-primary(type='submit' onclick="addShipping()" style= "height:50px;width:100%!important; margin-bottom:30px; ") Submit New Shipping Address
         script.
-           function addShipping() {                
+           function addShipping() {           
+
+                const apiURL = "http://localhost:5656"     
+
+
                 const address = document.getElementById("address").value
                 const city = document.getElementById("city").value
                 const zip = document.getElementById("zip").value
@@ -44,7 +48,7 @@ block content
                 }
 
                 console.log({ data })
-                const apiURL= "http://localhost:5656"
+               // const apiURL= "http://localhost:5656"
 
                 const options = {
                     method: "POST", 
@@ -62,6 +66,8 @@ block content
                       //- window.localStorage.setItem('token', email)
 
                     }).catch(error => console.log("Error: ", error))
+
+                  window.location.href = apiURL;
               }
  
             /*

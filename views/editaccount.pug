@@ -39,60 +39,51 @@ block content
             label(for='state') Edit State:
             input#state.form-control(type='text', placeholder=' Edit your state' state='state')
 
-          button#btn.btn.btn-primary(type='submit', onClick="edit()") Update Registration
+       
+          button#btn.btn.btn-primary(type='submit' onclick="editAccount()" style= "height:50px;width:100%!important; margin-bottom:30px; ") UPDATE REGISTRATIONN
           script.
-            function edit() {
+                  function editAccount() {           
 
-                    const userName = document.getElementById("userName").value
-                    const email = document.getElementById("email").value
-                    const password = document.getElementById("password").value
-                    const firstName = document.getElementById("firstName").value
-                    const lastName = document.getElementById("lastName").value
-                    const nickName = document.getElementById("nickName").value
-                    const address = document.getElementById("address").value
-                    const city = document.getElementById("city").value
-                    const zip = document.getElementById("zip").value
-                    const state = document.getElementById("state").value
-                      
+                 
 
-                    const token = localStorage.getItem("token");
+               
+                const email = document.getElementById("email").value
+                const password = document.getElementById("pw").value
+                const firstName = document.getElementById("firstName").value
+                const lastName = document.getElementById("lastName").value
+                const nickName = document.getElementById("nickName").value
+                const address = document.getElementById("address").value
+                const city = document.getElementById("city").value
+                const zip = document.getElementById("zip").value
+                const state = document.getElementById("state").value
+                  
 
-                    const data = { 
-                      token,
-                      userName,
-                      email,
-                      password,
-                      firstName,
-                      lastName,
-                      nickName,
-                      address,
-                      city,
-                      zip,
-                      state
-                    }
+                const token = localStorage.getItem("token");
 
-                    console.log({ data })
-                    const apiURL= "http://localhost:5656"
+                const data = { token,   email, password, firstName,  lastName, nickName,
+                               address,   city,  zip, state
+                                                      }
 
-                    const options = {
-                        method: "POST", 
-                        body: JSON.stringify(data),
-                        headers: { "Content-Type": "application/json" } 
-                    }
+                console.log({ data })
+                const apiURL= "http://localhost:5656"
 
-                      fetch(apiURL + "/editingaccount", options)
-                        .then(res => res.json())
-                        .then(res => {
+                const options = {
+                    method: "POST", 
+                    body: JSON.stringify(data),
+                    headers: { "Content-Type": "application/json" } 
+                }
+   
+                  fetch(apiURL + "/editUpdateAccount", options)
+                    .then(res => res.json())
+                    .then(res => {
 
-                          const { email } = res.data
+                      const { email } = res.data
 
-                          console.log(email)
-                          //- window.localStorage.setItem('token', email)
+                      console.log(email)
+                      //- window.localStorage.setItem('token', email)
 
-                        }).catch(error => console.log("Error: ", error))
-                  }
+                    }).catch(error => console.log("Error: ", error))
 
-
-              
-
+                  window.location.href = apiURL;
+              }
 

@@ -5,6 +5,7 @@ var mysql = require("mysql");
 var config = require("./config");
 var expressValidator = require('express-validator');
 var expressSession = require("express-session");
+var valid = require('card-validator');
 
 var crypto = require('crypto');
 var rand = require('csprng');
@@ -103,7 +104,7 @@ app.get("/cart", (req, res) => {
 //LOGIN PAGE --------------------------------------------------LOGIN PAGE-----------------------------------LOGIN PAGE
 
 app.post("/login", (req, res) => {
-                                          
+    //-- create constants for input from textboxes                                      
     const { email, password } = req.body
 
     if (!email || !password)  {
@@ -112,7 +113,6 @@ app.post("/login", (req, res) => {
     } 
 
     let userQuery = `SELECT * FROM geekbook.Accounts WHERE email = '${email}'`;
-
 
     // Returns user or error
     // User can be empty, checkig below
@@ -139,115 +139,65 @@ app.post("/login", (req, res) => {
     });
   })
 
-
-
-/*
-app.post('/user/create', function (req, res) {
-
-  bcrypt.hash(req.body.passwordsignup, saltRounds, function (err,   hash) {
-  //db.User.create({
-   name: req.body.usernamesignup,
-   email: req.body.emailsignup,
-   password: hash
-   }).then(function(data) {
-    if (data) {
-    res.redirect('/home');
-    }
-  });
- });
-});
-*/
-
-
-
-
 // REGISTER PAGE-------------------------------------------------------------------REGISTER PAGE
 app.post("/register/", (req, res) =>
-{
-  
+{ 
+   //-- create constants for input from textboxes
     const { userName, firstName, lastName, nickName, email, password,confirmationpassword, address, city, zip, state ,cardHolderfullName,cardNumber,cvCode,expityMonth,expityYear} = req.body
-
-
     console.log({password})
-                                                      /*
-                                                          if (password != confirmationpassword) return res.end();
-                                                          console.log("passwords entered were not equal") 
-                                                          */
-                                                      //   var temp = rand(160, 36);  // I AM THE SALT!!!! 
-                                                      /*
-                                                          var newpass = temp + password;
-                                                          var hashed_password = crypto.createHash('sha512').update(newpass).digest("hex");
-                                                          console.log(hashed_password);
-                                                          */
-                                                      // Encrypt Password
-                                                      //-------------------------- validationof both input textboxes of password
-
-   /*
+                               
+    var hash;
+   
     if (password != confirmationpassword) {
-      return res.end();
-      //res.render('/register')
+      //return res.end();
+      res.render('/register/')
     
     }
     else
-    {*/
+    {
 
-      // console.log("About to go into the bcript---- \n\n")
-      // console.log(bcrypt)
-      // console.log("\n\n")
+        hash = bcrypt.hashSync(password, saltRounds)
 
-      const hash = bcrypt.hashSync(password, saltRounds)
+    }
+       let sqlAccount =  `insert into geekbook.Accounts(userName, email, pass)   values('${userName}','${email}','${hash}')`; 
+                db.query(sqlAccount,function(err,result){
+                if(err ) throw    console.log('An ERROR HAS OCCURED,INSERTING ACCOUNTS----- the following is the error --' + err+'\n\n');
+                console.log("1 Account Information record inserted");
+                });
 
-      
-
-              // bcrypt.hash(password, saltRounds, function(err, hash) {
-
-              //   console.log("Inside ---- the bcript\n\n")
-              //         // Store hash in your password DB.
-              //               let sqlAccount =  `insert into geekbook.Accounts(userName, email, pass)   values('${userName}','${email}','${password}')`; 
-                                                      
-              //                   db.query(sqlAccount,function(err,result){
-              //                   if(err ) throw    console.log('An ERROR HAS OCCURED,INSERTING ACCOUNTS----- the following is the error --' + err+'\n\n');
-              //                   console.log("1 Account Information record inserted");
-              //                 });
-              //       })
-     //   }
-
-   
-
-     
-        let sqlAccount =  `insert into geekbook.Accounts(userName, email, pass)   values('${userName}','${email}','${hash}')`; 
-                                                      
-        db.query(sqlAccount,function(err,result){
-        if(err ) throw    console.log('An ERROR HAS OCCURED,INSERTING ACCOUNTS----- the following is the error --' + err+'\n\n');
-        console.log("1 Account Information record inserted");
-      });
-   
-   
-   
-   
     let sqlCustomer =  `insert into geekbook.Customer( CustId, firstName, lastName, nickName)   values( last_insert_id()     ,' ${firstName}','${lastName}','${nickName}')`; 
-              db.query(sqlCustomer,function(err,result){
+                db.query(sqlCustomer,function(err,result){
                 if(err ) throw    console.log('An ERROR HAS occurred, inserting customer , the following is the error --' + err+'\n\n');
                 console.log("1 Customer address record inserted");
-              });
+                });
 
-                let sqlBillingAddress =  `insert into geekbook.BillingAddress(billingId, address, city, zip, state   ) 
+    let sqlBillingAddress =  `insert into geekbook.BillingAddress(billingId, address, city, zip, state   ) 
                                                 values(last_insert_id() ,'   ${address}','${city}','${zip}','${state}')`; 
                 db.query(sqlBillingAddress,function(err,result){
                           if(err ) throw    console.log('An ERROR HAS occurred, the following is the error --' + err+'\n\n');
                           console.log("1 billing address record inserted");
                         });
      
-        let sqlCreditCard =  `insert into geekbook.card (cardId,             cardCustomerName,         cardNum,       securityNum,     expMonth,           expYear) 
-                                                          values(last_insert_id() ,'   ${cardHolderfullName}','${cardNumber}','${cvCode}','    ${expityMonth}','   ${expityYear}' )`; 
+    let sqlCreditCard =  `insert into geekbook.card (cardId,             cardCustomerName,         cardNum,       securityNum,     expMonth,           expYear) 
+                                                      values(last_insert_id() ,'   ${cardHolderfullName}','${cardNumber}','${cvCode}','    ${expityMonth}','   ${expityYear}' )`; 
               db.query(sqlCreditCard,function(err,result){
-                if(err ) throw    console.log('An ERROR HAS occurred, the following is the error --' + err+'\n\n');
-                console.log("1 Credit card info record inserted");
+              if(err ) throw    console.log('An ERROR HAS occurred, the following is the error --' + err+'\n\n');
+              console.log("1 Credit card info record inserted");
               });
-   
+              
           res.end();
-         
+            
+          res.render('index');
+        
+           
     });
+
+
+
+
+
+
+
 
 
 
@@ -257,56 +207,70 @@ app.post("/register/", (req, res) =>
 
 //------------ EDIT--------------- EDIT   EDIT     EDIT         EDIT        EDIT    PROFILE PAGE-------------------------------------------------------------------EDIT PROFILE PAGE
 
-  app.post( "/editingaccount" , (req, res) =>
-  {
+  app.post( "/editUpdateAccount/" , (req, res) =>
+  {  console.log('ADDING  AN UPDATED ACCOUNT INFORMATION  -------\n\n\n')
+    //-- create constants for input from textboxes
     const { token, userName, firstName, lastName, nickName, email, password, address, city, zip, state } = req.body
-  
+    
+    // selects ID from accounts table using a token
     let getUserId = `SELECT id FROM geekbook.Accounts WHERE email = '${token}'`;
+
+    console.log('IN EDITINGACCOUNT SITE.JS -- HOPING THIS WORKS  \n\n')
+
    
     db.query(getUserId , (error, result) => {
-      if(error) throw console.log('Error:' + error);
-  
-      const userId = result[0].id;
-      console.log({ userId })
-  
-      const updateCustomer =  `UPDATE   geekbook.Customer
-                                SET       firstName = '${firstName}', 
-                                          lastName  = '${lastName}',  
-                                          nickName  = '${nickName}'
-                                WHERE   CustId  = '${userId}'`;
-      
-      const updateBillingAddress = `UPDATE  geekbook.BillingAddress
-                                SET     address =  '${address}',
-                                        city =  '${city}',  
-                                        zip  =  '${zip}',
-                                        state  =  '${state}'
-                                WHERE  billingId =  '${userId}'`;
-  
-      const updateAccount =   `UPDATE   geekbook.Accounts
-                                SET       userName = '${userName}',
-                                          email = '${email}',
-                                          pass =  '${password}'
-                                WHERE id = '${userId}'`;
-  
-      db.query(updateBillingAddress, (error, result) => {
-        if(error) console.log("Error updating billing address: "+ error)
-        if(!error) console.log('Updated Billing Address.')
-      })
-  
-      db.query(updateCustomer, (error, result) => {
-        if(error) console.log("Error updating customer: "+ error)
-        if(!error) console.log('Updated Customer.')
-      })
-  
-      db.query(updateAccount, (error, result) => {
-        if(error) console.log("Error updating account: "+ error)
-        if(!error) {
-          console.log('Updated Account.')
-          res.send({ sucess: true, data: { email } })
-        }
-      })
-  
-    });
+
+                  if(error) throw console.log('Error:' + error);
+              
+                  const userId = result[0].id;
+                  console.log({ userId })
+
+
+                            //-------------------------------- UPDATE ACCOUNTS
+                            let updateAccount =   `UPDATE   geekbook.Accounts
+                            SET       userName = '${userName}',
+                                      email = '${email}',
+                                      pass =  '${password}'
+                            WHERE id = '${userId}'`;
+                      //---------------------------- UPDATE CUSTOMER
+                            let updateCustomer =  `UPDATE   geekbook.Customer
+                                        SET       firstName = '${firstName}', 
+                                                  lastName  = '${lastName}',  
+                                                  nickName  = '${nickName}'
+                                        WHERE   CustId  = '${userId}'`;
+                        //-------------------------------UPDATE BILLING ADDRESS
+                            let updateBillingAddress = `UPDATE  geekbook.BillingAddress
+                                                      SET     address =  '${address}',
+                                                              city =  '${city}',  
+                                                              zip  =  '${zip}',
+                                                              state  =  '${state}'
+                                                      WHERE  billingId =  '${userId}'`;
+                        
+                        
+                        
+
+                            db.query(updateAccount, (error, result) => {
+                              if(error) console.log("Error updating account: "+ error)
+                              if(!error) {
+                                console.log('Updated Account.')
+                                // res.send({ sucess: true, data: { email } })
+                              }
+                            })
+
+
+                            db.query(updateCustomer, (error, result) => {
+                              if(error) console.log("Error updating customer: "+ error)
+                              if(!error) console.log('Updated Customer.')
+                            })
+
+                            db.query(updateBillingAddress, (error, result) => {
+                            if(error) console.log("Error updating billing address: "+ error)
+                            if(!error) console.log('Updated Billing Address.')
+                          })
+                
+         });
+         res.end();
+
   });
   // --------------------------------------------------------  END EDIT PROFILE
 
@@ -315,38 +279,36 @@ app.post("/register/", (req, res) =>
 
 //--------------------------------------------------------------------------SHIPPING ADDRESSS   -------    WORKING 95 %
 app.post("/AddshippingAddress/", (req, res) =>
-{
-    const { token, address, city, zip, state,email,password } = req.body
+          {
+              //-- create constants for input from textboxes
+              const { token, address, city, zip, state} = req.body
+              let userId
 
-      let getUserId = `SELECT id FROM geekbook.Accounts WHERE email = '${token}'`;
+                // selects ID from accounts table using a token  which is used to insert new address 
+                let getUserId = `SELECT id FROM geekbook.Accounts WHERE email = '${token}'`;
 
-      db.query(getUserId , (error, result) => 
-      {
-        if(error) throw console.log('Error:' + error);
-    
-        const userId = result[0].id;
-        console.log({ userId })
-      
-             // let sqlShippingAddress =  `insert into geekbook.ShippingAddress(shippingCustomerID, address, city, zip, state   ) values(last_insert_id() ,'${address}','${city}','${zip}','${state}')`;  */ 
-      
-     const sqlADDINGShippingAddress =  ` insert into geekbook.ShippingAddress(shippingCustomerID, address,       city,        zip,      state   )
-                                                                   values(   '${userId}' ,'       ${address}','  ${city}','  ${zip}', '${state}')`; 
+              console.log('ABOUT TO INSERT THE ID-------\n')
+              console.log(getUserId +'\n\n\n')
 
-      db.query(sqlADDINGShippingAddress,function(err,result){
-        if(err ) throw    console.log('An ERROR HAS OCCURED, the following is the error --' + err+'\n\n');
-        console.log("1 a SHIPPING ADDRESS ----  record inserted");
-      });
-        res.end();
-     //--------------------------------INSERTED NEW SHIPPING ADDRESS
+              db.query(getUserId , (error, result) => 
+              {
+                if(error) throw console.log('Error:--we have an errof in Adding new Address' + error + '\n\n');
+                  const userId = result[0].id;
+                  console.log('PASSED RESULT VAULE of  '+ { userId } +'    TO  --userId  --\n')
 
-    });
+                  //console.log({ userId })
 
+                  const sqlADDINGShippingAddress = `insert into geekbook.ShippingAddress(shippingCustomerID, address,       city,        zip,      state   )
+                  values(   '${userId}' ,'   ${address}','  ${city}','  ${zip}', '${state}')`; 
+
+                  db.query(sqlADDINGShippingAddress,function(err,result){
+                  if(err ) throw    console.log('An ERROR HAS OCCURED, the following is the error --' + err+'\n\n');
+                  console.log("1 a SHIPPING ADDRESS ----  record inserted");
+                  });
+            });
+       res.send();
   });
 
-
-
-
-  
 //--------------------------------------------------------------------------SHIPPING ADDRESSS
 /*
 app.post("/shippingAddress/", (req, res) =>
@@ -366,85 +328,87 @@ app.post("/shippingAddress/", (req, res) =>
 */
 
 //------------------------------------------------------------------------------ ADD NEW CREDIT CARD 
-
-
-
 //------------------------------------------------------------------------------ ADD NEW CREDIT CARD --- WORKING 95 %
 app.post("/addcard/", (req, res) =>
 { 
-
-  console.log("IN THE CARD ")
-  
+  console.log("IN THE CARD --- ")
+     //-- create constants for input from textboxes
     const { token,cardHolderfullName,cardNumber,cvCode,expityMonth,expityYear} = req.body
-    
+/*
+      ccardnumber = cardNumber.replace(/\s+/g, '');
+      var sixteenDigits = /^\d{16}$/;
+      if(!sixteenDigits.test(cardNumber))
+      {
+          console.log("Credit Card Number Not Valid");
+          return false;
+      }
 
-         let getUserId = `SELECT id FROM geekbook.Accounts WHERE email = '${token}'`;
+      //validate expiration date
+      var today;
+      var futureDate;
 
+
+
+      
+  // Validating Expiry Date
+  
+  var splitDate = expirydate.split('/');
+  if (splitDate.length > 1) 
+  {
+    var month= splitDate[0];
+    var year = splitDate[1];
+    today = new Date();
+    dayToTest = new Date();
+    dayToTest.setFullYear(year, month, 1);
+    dayToTest.setFullYear
+
+
+    if (dayToTest < today) 
+    {
+      console.log("Expiration Date is not valid");
+      return false;
+    }
+  } 
+  else 
+  {
+    console.log("Expiration Date is not valid");
+    return false;
+  }
+
+  // Validate Security Code
+  securitycode = securitycode.replace(/\s+/g, '');
+  var threeDigits = /^\d{3}$/;
+  if (!threeDigits.test(securitycode))
+  {
+    console.log("Security Code Not Valid");
+    return false;
+  }
+  return true;
+  */
+
+         // selects ID from accounts table using a token which is used to make inserts
+        let getUserId = `SELECT id FROM geekbook.Accounts WHERE email = '${token}'`;
          db.query(getUserId , (error, result) => 
          {
-           if(error) throw console.log('Error:' + error);
-       
-           const userId = result[0].id;
-           console.log({ userId })
-
-/*
-        let sqlCreditCard =  `insert into geekbook.Card (    cardCustomerID,    cardCustomerName,          cardNum,       securityNum,     expMonth,          expYear) 
-                                                values(    '${userId}' ,     '${cardHolderfullName}','  ${cardNumber}',' ${cvCode}','    ${expityMonth}','   ${expityYear}' )`; 
-*/
-    
-let sqlCreditCard =  `insert into geekbook.Card (      cardCustomerID,             cardCustomerName,         cardNum,       securityNum,     expMonth,               expYear)  
-                                         values(      '${userId}' ,'             ${cardHolderfullName}','   ${cardNumber}','  ${cvCode}','    ${expityMonth}','   ${expityYear}' )`;
-          
-          
-                                                db.query(sqlCreditCard,function(err,result){
-            if(err ) throw    console.log('An ERROR HAS occurred, the following is the error --' + err+'\n\n');
-            console.log("1 Credit card info record ADDED!!");
+            if(error) throw console.log('Error:' + error);
+            const userId = result[0].id;
+            
+            let sqlCreditCard =  `insert into geekbook.Card (cardCustomerID,   cardCustomerName,       cardNum,       securityNum,   expMonth,         expYear)  
+                                                      values('${userId}' ,'  ${cardHolderfullName}','${cardNumber}','${cvCode}','  ${expityMonth}',' ${expityYear}' )`;
+                            db.query(sqlCreditCard,function(err,result){
+                            if(err ) throw    console.log('An ERROR HAS occurred, the following is the error --' + err+'\n\n');
+                            console.log("1 Credit card info record ADDED!!");
           });
-
-
-
-          // this is INSERT FROM THE FIRST INSERT OF CARD
-          /*
-          let sqlCreditCard =  `insert into geekbook.Card (      cardCustomerID,             cardCustomerName,         cardNum,       securityNum,     expMonth,           expYear)  
-                                                       values(      last_insert_id() ,'   ${cardHolderfullName}','${cardNumber}','${cvCode}','    ${expityMonth}','   ${expityYear}' )`; 
-              db.query(sqlCreditCard,function(err,result){
-                if(err ) throw    console.log('An ERROR HAS occurred, the following is the error --' + err+'\n\n');
-                console.log("1 Credit card info record inserted");
-              });  
-*/
-            res.end();
+              res.end();
       });
 });
 
-
-/*
-
-app.post("/ccform/", (req, res) =>
-{
-    const { cardHolderfullName,cardNumber,cvCode,expityMonth,expityYear} = req.body
-      let sqlCreditCard =  `insert into geekbook.card (    cardCustomerID,             cardCustomerName,         cardNum,       securityNum,     expMonth,           expYear) 
-                                                values(    last_insert_id(),'   ${cardHolderfullName}','${cardNumber}','${cvCode}','    ${expityMonth}','   ${expityYear}' )`; 
-     db.query(sqlCreditCard,function(err,result){
-        if(err ) throw    console.log('An ERROR HAS occurred, the following is the error --' + err+'\n\n');
-        console.log("1 Credit card info record inserted");
-      });
-        res.end();
-});
-
-
-*/
-
-
+//----------------------------------------------------------LOG OUT
 app.post("/logout", (req, res) => 
 {
- 
-
-
-
-        res.render('index')
-  
+         res.render('index')
 });
-
+//------------------------------------------------------------ END OF PROFILE ---------------------------------------------------------
 
 
 

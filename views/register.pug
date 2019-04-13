@@ -59,7 +59,7 @@ block content
                 label(for='cardNumber')
                   | CARD NUMBER
                 .input-group
-                  input#cardNumber.form-control(type='text', placeholder='Valid Card Number', required='', autofocus='')
+                  input#cardNumber.form-control(type='number', placeholder='Valid Card Number', required='', autofocus='')
                   span.input-group-addon
                   span.glyphicon.glyphicon-lock
               .row
@@ -70,7 +70,7 @@ block content
                     .col-xs-6.col-lg-6.pl-ziro
                       input#expityMonth.form-control(type='text', placeholder='MM', required='')
                     .col-xs-6.col-lg-6.pl-ziro
-                      input#expityYear.form-control(type='text', placeholder='YY', required='')
+                      input#expityYear.form-control(type='text', placeholder='YYYY', required='')
                 .col-xs-5.col-md-5.pull-right
                   .form-group
                     label(for='cvCode')
@@ -83,6 +83,9 @@ block content
           button#btn.btn.btn-primary(type='submit' onClick="register()" style= "height:50px;width:100%!important; margin-bottom:30px; ") Sign up      
           script.
               function register(){
+
+                  const apiURL = "http://localhost:5656"
+
                   const userName = document.getElementById('userName').value
                   const email = document.getElementById("email").value
                   var password = document.getElementById("pw").value
@@ -116,6 +119,12 @@ block content
                   .then(res => res.json())
                   .then(res => {
                     window.location.href = 'http://localhost:5656/'
-                    })                
+                    })      
+                     window.location.href = apiURL;          
 
                 }
+           
+
+
+
+              

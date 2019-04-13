@@ -19,11 +19,10 @@ block content
             .form-group
               label(for='cardNumber')
                 | CARD NUMBER
-            .input-group
+              .input-group
                 input#cardNumber.form-control(type='text', placeholder='Valid Card Number', required='', autofocus='' minlength="16" ,maxlength="16")
                 span.input-group-addon
-                span.glyphicon.glyphicon-lock
-            
+                  span.glyphicon.glyphicon-lock
             .row
               .col-xs-7.col-md-7
                 .form-group
@@ -37,7 +36,7 @@ block content
                 .form-group
                   label(for='cvCode')
                     | CV CODE
-                  input#cvCode.form-control(type='text', placeholder='CV Code', required=''")
+                  input#cvCode.form-control(type='password', placeholder='CV Code', required='', minlenght="3", maxlength="3")
       ul.nav.nav-pills.nav-stacked
         li.active
           a(href='#')
