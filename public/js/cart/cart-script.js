@@ -11,12 +11,14 @@ jQuery(document).ready(function() {
     const xhttp = new XMLHttpRequest();
     const url = "http://localhost:5656/cart";
 
+    id = window.localStorage.getItem('userId');
+
     xhttp.open("POST", url, true);
     xhttp.setRequestHeader(
         "Content-type",
         "application/x-www-form-urlencoded"
     );
-    xhttp.send("");
+    xhttp.send("id=" + id);
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -247,3 +249,63 @@ function changeQuantity(num, key, type){
 function currencyFormat(num) {
     return '$' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   }
+
+  function updateCart(){
+
+    clearCart();
+    for (var i = 0; i < length; i++) {
+        updateCart(i, 1);
+    } 
+    for (var i = 0; i < length; i++) {
+        updateCart(i, 0);
+    } 
+    console.log("updateCart");
+  }
+
+  function clearCart(){
+    const xhttp = new XMLHttpRequest();
+    const url = "http://localhost:5656/clearCart" 
+
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader(
+        "Content-type",
+        "application/x-www-form-urlencoded"
+    );
+
+
+  }
+
+  function updateCart1(i, type){
+    const xhttp = new XMLHttpRequest();
+    const url = "http://localhost:5656/updateCart" 
+
+    var cartItem;
+
+    if(type === 1){
+        cartItem = cartList[i];
+    }
+    else{
+        cartItem = saveList[i];
+    }
+
+    var orderId = cartItem.orderId;
+    var bookId = cartItem.bookId;
+    var cartType = cartItem.cartType;
+    var quantity = cartItem.quantity;
+
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader(
+        "Content-type",
+        "application/x-www-form-urlencoded"
+    );
+
+
+    xhttp.send("orderId=" + orderId + "bookId=" + bookId + "cartType=" + cartType + "quantity=" + quantity);
+  }
+
+  document.getElementById("btn-warning").addEventListener("click", function () {
+    updateCart();
+  });
+  document.getElementById("btn-success").addEventListener("click", function () {
+    updateCart();
+  });

@@ -200,6 +200,7 @@ function addToCart(code){
     const url = "http://localhost:5656/add" 
 
     id = window.localStorage.getItem('userId');
+    
     console.log("sending post: " + id)
 
     xhttp.open("POST", url, true);

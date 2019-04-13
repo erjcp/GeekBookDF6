@@ -146,6 +146,44 @@ app.get('/cart', (req, res) => {
   console.log("complete cart");
 })
 
+app.post('/updateCart', function(req, res){
+
+  var orderId = req.body.orderId;
+  var bookId = req.body.bookId;
+  var cartType = req.body.cartType;
+  var quantity = req.body.quantity;
+
+  let sql = `INSERT INTO CartItem VALUES (${orderId} ,'${bookId}', '${cartType}', '${quantity}');`;
+  let query = db.query(sql, (err, results) => {
+    if (err) {
+      console.log(sql);
+    }
+
+    res.send(results);
+  });
+
+  console.log("update cart");
+});
+
+app.post('/clearCart', function(req, res){
+
+  var orderId = req.body.orderId;
+  var bookId = req.body.bookId;
+  var cartType = req.body.cartType;
+  var quantity = req.body.quantity;
+
+  let sql = `DELETE FROM cartItem [WHERE cartItem.orderId = 1];`;
+  let query = db.query(sql, (err, results) => {
+    if (err) {
+      console.log(sql);
+    }
+
+    res.send(results);
+  });
+
+  console.log("clear cart");
+});
+
 app.get('/details/:id', (req, res) => {
   var bookCode = req.params.id;
   bookCode = bookCode.replace(':','');
@@ -234,10 +272,11 @@ app.post('/cart', function(req, res){
 
   var like = req.body.like;
   var col = req.body.col;
+  var user = req.body.id;
 
   let sql = `select b.cover, b.title, b.price, ci.bookId, ci.cartType, ci.quantity 
   from Book b, CartItem ci 
-  where (ci.orderId = 1 and ci.bookId = b.bookCode)`;
+  where (ci.orderId = ${user} and ci.bookId = b.bookCode)`;
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
@@ -609,7 +648,7 @@ app.post('/:action', function (req, res) {
 
     let sql = `INSERT INTO CartItem
     VALUES
-    (${user} ,'${code}', 0, 1);`;
+    (${user} ,'${code}', 1, 1);`;
 
     // -------hardcoded user---------
     // let sql = `INSERT INTO CartItem
