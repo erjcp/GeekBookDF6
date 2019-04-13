@@ -49,13 +49,16 @@ app.get('/profile', (req, res) => {
 
 app.get('/cart', (req, res) => {
   
-  let sql = `select b.title, b.price, c.customerId, ci.bookId, ci.cartType, ci.quantity from Book b, Cart c, CartItem ci where (ci.orderId = c.customerId and ci.bookId = b.bookCode and ci.orderId = 0000)`;
+  let sql = `select b.cover, b.title, b.price, ci.bookId, ci.cartType, ci.quantity 
+  from Book b, CartItem ci 
+  where (ci.orderId = 1 and ci.bookId = b.bookCode)`;
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);
     }
 
     res.render('cart', {
+      cover: results[0].cover,
       title : results[0].title,
       price : results[0].price,
       bookId : results[0].bookId,
@@ -122,7 +125,9 @@ app.post('/cart', function(req, res){
   var like = req.body.like;
   var col = req.body.col;
 
-  let sql = `select b.title, b.price, c.customerId, ci.bookId, ci.cartType, ci.quantity from Book b, Cart c, CartItem ci where (ci.orderId = c.customerId and ci.bookId = b.bookCode and ci.orderId = 0000)`;
+  let sql = `select b.cover, b.title, b.price, ci.bookId, ci.cartType, ci.quantity 
+  from Book b, CartItem ci 
+  where (ci.orderId = 1 and ci.bookId = b.bookCode)`;
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(sql);

@@ -43,6 +43,7 @@ function populateCart(json, length){
 function insertItem(cartItem){
 
     var item = {
+        cover: cartItem.cover,
         title : cartItem.title,
         price : cartItem.price,
         bookId : cartItem.bookId,
@@ -144,7 +145,8 @@ function loadCart1(body, arr, type){
         imageDiv.className = "left";
         imageDiv.style = "width:20%";
         var image = document.createElement("img");
-        image.src = "http://placehold.it/100x100";
+        image.style = "width:100px;height:100px;";
+        image.src = arr[j].cover;
         imageDiv.appendChild(image);
         productDiv.appendChild(imageDiv);
         cell.appendChild(productDiv);
