@@ -224,30 +224,75 @@ app.get('/details/:id', (req, res) => {
   });
 })
 
-app.post('/details/:id', function (req, res){
-  var id = req.params.id;
-  id = id.replace(':','');
-  var isInsert = (req.body.request == "insert") ? true : false;
-  var heading, score, nickName, date, review;
-  var sql;
-  if(isInsert){
-    heading = req.body.heading;
-    score = req.body.score;
-    nickName = req.body.nickName;
-    date = req.body.date;
-    review = req.body.review;
+const INSERT = "1";
+const SELECT = "2";
+const UPDATEHR = "3";
+const UPDATES = "4";
+const UPDATEHSR = "5";
+const ERROR = "-1";
 
-    console.log("DATE IS:"+date);
+app.post('/details/:id', function (req, res){
+  console.log("HERE! req: ");
+  var requestType = req.body.request;
+  var heading, score, customerId, date, review;
+  var sql;
+  
+  var bookCode = req.params.id;
+  bookCode = bookCode.replace(':','');
+
+  heading = req.body.heading;
+  score = req.body.score;
+  review = req.body.review;
+  customerId = req.body.customerId;
+  date = req.body.date;
+  //console.log("HERE! req: "+requestType);
+
+  switch(requestType) {
+    case INSERT:
+      // INSERTS
+      if(score == ""){
+        sql = `INSERT INTO Review (bookId, customerId, heading, review, reviewDate) VALUES ('${bookCode}' ,'${customerId}', '${heading}', '${review}', '${date}')`;
+      }else if(heading ==""){
+        sql = `INSERT INTO Review (bookId, customerId, score, reviewDate) VALUES ('${bookCode}' ,'${customerId}', '${score}', '${date}')`;
+      }else{
+        sql = `INSERT INTO Review (bookId, customerId, score, heading, review, reviewDate) VALUES ('${bookCode}' ,'${customerId}', '${score}', '${heading}', '${review}', '${date}')`;
+      }
+      
+      break;
+    case SELECT:
+      // SELECTS ALL REVIEWS AND VIEWING INFO
+      sql = `SELECT title, nickName, reviewDate, score, heading, review, customerId FROM Book, Customer, Review WHERE bookCode = ${bookCode} AND bookCode = bookId AND Review.customerId = CustId ORDER BY reviewDate ASC`;
+      break;
+      case UPDATEHR:
+      // UPDATED HEADING AND REVIEW
+      sql = `UPDATE Review SET heading = '${heading}', review= '${review}', reviewDate= '${date}' WHERE customerId = '${customerId}' AND bookId = '${bookCode}'`;
+      break;
+    case UPDATES:
+      // code block
+      sql = `UPDATE Review SET score= '${score}', reviewDate= '${date}' WHERE customerId = '${customerId}' AND bookId = '${bookCode}'`;
+      break;
+    case UPDATEHSR:
+      // code block
+      sql = `UPDATE Review SET heading = '${heading}', review= '${review}', score= '${score}', reviewDate= '${date}' WHERE customerId = '${customerId}' AND bookId = '${bookCode}'`;
+      break;
+    default:
+      // code block
+      sql = ``;
   }
-  console.log("this is the book id on post request " +id);
+
+ 
+/*
+  console.log("this is the book id on post request " + bookCode);
   if (isInsert){
-    sql = `INSERT INTO Review VALUES ('${id}' ,'0002', '${score}', '${heading}', '${review}', '${date}');`;
+    sql = `INSERT INTO Review VALUES ('${bookCode}' ,'${customerId}', '${score}', '${heading}', '${review}', '${date}')`;
   }else{
-    sql = `SELECT title, nickName, reviewDate, score, heading, review, customerId FROM Book, Customer, Review WHERE bookCode = ${id} AND bookCode = bookId AND Review.customerId = CustId ORDER BY reviewDate ASC`;
+    sql = `SELECT title, nickName, reviewDate, score, heading, review, customerId FROM Book, Customer, Review WHERE bookCode = ${bookCode} AND bookCode = bookId AND Review.customerId = CustId ORDER BY reviewDate ASC`;
   }
+  */
   
   let query = db.query(sql, (err, results) => {
     if (err) {
+      console.log(err)
       console.log(sql);
       res.send(err);
     }
@@ -255,6 +300,7 @@ app.post('/details/:id', function (req, res){
     console.log(results);
     res.send(results);
   });
+
 });
 
 
