@@ -1,17 +1,6 @@
 // DETAILS FUNTIONALITY
 // ADD USERNAME NICKNAME TO INSERT REVIEW
 var userId = 2;
-/*
-var score;
-console.log(average);
-if (average== undefined)
-{
-    score = 'N/A';
-}
-else
-{
-    score = average + ' out of 5 Stars';
-}*/
 
 $(document).ready(function() {
     //console.log("ON PAGE LOAD!!");
