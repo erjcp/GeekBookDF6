@@ -1,19 +1,23 @@
 const express = require('express');
+
+//set express
+const app = express();
 const bodyparser = require('body-parser');
 const cookieparser = require('cookie-parser');
 var mysql = require("mysql");
 var path = require('path');
-var htmlcontroller = require("./controllers/htmlController");
+
 var config = require("./config");
-var session = require('express-session');
+var expressValidator = require('express-validator');
+var expressSession = require('express-session');
+
 
 // var path = require("path");
 // require("babel-register")({
 //   presets: ["env"]
 // });
 
-//set express
-const app = express();
+
 
 // jorge stuff
 var crypto = require('crypto');
@@ -22,17 +26,21 @@ var rand = require('csprng');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+var htmlcontroller = require("./controllers/htmlController"); 
+
 var port = process.env.port || 3007; 
 
+/*
 var path = require("path");
 require("babel-register")({
   presets: ["env"]
 });
+*/
 
 //setting up cookies
 app.use(cookieparser());
 
-app.use(session({secret: "DrAgOnFoRcE"}));
+//app.use(session({secret: "DrAgOnFoRcE"}));
 
 //set pug as view renderer
 app.set('view engine', 'pug');
@@ -40,7 +48,9 @@ app.set('view engine', 'pug');
 //set the path for static files
 app.use(express.static(path.join(__dirname + '/public')));
 app.use('/details', express.static(path.join(__dirname + '/public')));
-app.use('/cart', express.static(path.join(__dirname + '/public')))
+app.use('/cart', express.static(path.join(__dirname + '/public')));
+app.use('/register', express.static(path.join(__dirname + '/public')));
+app.use('/login', express.static(path.join(__dirname + '/public')));
 
 app.use(bodyparser.urlencoded({ extended: false }));
 
@@ -69,6 +79,7 @@ app.get('/', (req, res) => {
     page: 'browse'
   });
 })
+
 
 app.get('/author', (req, res) => {
   res.render('index', {
@@ -256,32 +267,7 @@ app.post('/', function (req, res){
   });
 });
 
-app.post('/:action', function (req, res) {
-  if (req.param('action') === 'add') {
-    console.log("body:")
-    console.log(req.body);
-    var code = req.body.code;
-    var user = window.localStorage.getItem('id');
-    console.log("code is: " + code);
 
-    let sql = `INSERT INTO CartItem
-    VALUES
-    ('${user}' ,'${code}', 0, 1);`;
-
-    // -------hardcoded user---------
-    // let sql = `INSERT INTO CartItem
-    // VALUES
-    // (1 ,'${code}', 0, 1);`;
-    
-    let query = db.query(sql, (err, results) => {
-      if (err) {
-        console.log(sql);
-      }
-
-      res.send(results);
-    });
-  }
-});
 
 app.listen(5656, () => {
   console.log('Server started on port 5656 ')
@@ -290,7 +276,8 @@ app.listen(5656, () => {
 //LOGIN PAGE --------------------------------------------------LOGIN PAGE-----------------------------------LOGIN PAGE
 
 app.post("/login", (req, res) => {
-                                          
+   
+  console.log("login POST");
   const { email, password } = req.body
 
   if (!email || !password)  {
@@ -310,6 +297,8 @@ app.post("/login", (req, res) => {
     // SQL return { user: [] } when no user was found
     if(user.length > 0) {
       console.log("Account Information Found :D : -> User: " + user[0].email);
+
+      console.log(user[0].pass);
 
       const passwordHash = user[0].pass;
 
@@ -349,8 +338,8 @@ bcrypt.hash(req.body.passwordsignup, saltRounds, function (err,   hash) {
 
 
 // REGISTER PAGE-------------------------------------------------------------------REGISTER PAGE
-app.post("/register/", (req, res) =>
-{
+app.post("/register/", function(req, res) {
+
 
   const { userName, firstName, lastName, nickName, email, password,confirmationpassword, address, city, zip, state ,cardHolderfullName,cardNumber,cvCode,expityMonth,expityYear} = req.body
 
@@ -435,6 +424,7 @@ app.post("/register/", (req, res) =>
         res.end();
        
   });
+
 
 
 
@@ -630,4 +620,32 @@ app.post("/logout", (req, res) =>
 
       res.render('index')
 
+});
+
+// keep this last to not interfere
+app.post('/:action', function (req, res) {
+  if (req.param('action') === 'add') {
+    console.log("adding")
+    var code = req.body.code;
+    var user = req.body.id;
+    console.log("code is: " + code);
+    console.log("id is "+ user);
+
+    let sql = `INSERT INTO CartItem
+    VALUES
+    (${user} ,'${code}', 0, 1);`;
+
+    // -------hardcoded user---------
+    // let sql = `INSERT INTO CartItem
+    // VALUES
+    // (1 ,'${code}', 0, 1);`;
+    
+    let query = db.query(sql, (err, results) => {
+      if (err) {
+        console.log(sql);
+      }
+
+      res.send(results);
+    });
+  }
 });

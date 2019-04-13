@@ -198,6 +198,9 @@ function addToCart(code){
     const xhttp = new XMLHttpRequest();
     const url = "http://localhost:5656/add" 
 
+    id = window.localStorage.getItem('userId');
+    console.log("sending post: " + id)
+
     xhttp.open("POST", url, true);
     xhttp.setRequestHeader(
         "Content-type",
@@ -205,5 +208,5 @@ function addToCart(code){
     );
 
     
-    xhttp.send("code=" + code);
+    xhttp.send("code=" + code + "&id=" + id);
 }
