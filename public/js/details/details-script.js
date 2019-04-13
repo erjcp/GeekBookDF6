@@ -1,17 +1,6 @@
 // DETAILS FUNTIONALITY
 // ADD USERNAME NICKNAME TO INSERT REVIEW
 
-var score
-console.log(average);
-if (average== undefined)
-{
-    score = 'N/A';
-}
-else
-{
-    score = average + ' out of 5 Stars';
-}
-
 document.getElementById("postReview").addEventListener("click", function () {
     var radio = document.getElementsByClassName("reviewRating");
     var heading = "Heading test replace me";

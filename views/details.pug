@@ -8,6 +8,8 @@ block content
     .row
       .col-4
         img(src=cover, width = 350, length = 350, alt='Front Cover')
+        a.nav-link(href=cover)
+              | Click to view Full Size Cover
        
       .col-8
         form
@@ -26,7 +28,7 @@ block content
               .col-6
                 .form-group
                   label Price
-                  input.form-control(type='text', placeholder='$'+ price, Disabled='')
+                  input.form-control(type='text', placeholder='$'+ price.toFixed(2), Disabled='')
                 .form-group
                   label In Stock
                   input.form-control(type='text', placeholder=stock, Disabled='')
