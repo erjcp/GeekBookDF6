@@ -1,6 +1,6 @@
 // DETAILS FUNTIONALITY
 // ADD USERNAME NICKNAME TO INSERT REVIEW
-var userId = '0002';
+var userId = 2;
 
 
 $(document).ready(function() {
@@ -11,12 +11,13 @@ $(document).ready(function() {
 
 document.getElementById("postReview").addEventListener("click", function () {
     var disabled = document.getElementById("input-title-review").hasAttribute("Disabled");
+    var validData = true;
     if(!disabled){
         var radio = document.getElementsByClassName("reviewRating");
         var heading = document.getElementById("input-title-review").value;
         var nickName = "Nickname test replace me";
         var reviewDate = new Date().toISOString().slice(0, 19);
-        var score = 1;
+        var score = "";
         var review = document.getElementById("input-review").value;
     
         var i;
@@ -27,13 +28,23 @@ document.getElementById("postReview").addEventListener("click", function () {
         }
     
         var data = {heading: heading, nickName: nickName, reviewDate: reviewDate, score: score, heading: heading, review: review};
+        
         console.log("THIS IS THE JSON DATA");
         console.log(data);
-        
-        //makeReviewsRequest();
-        makeReviewInsert(data);   
-        clearForm(); 
-        //insertReview(data, true);
+
+        for (var key in data){
+            if(data[key] == ""){
+                validData = false;
+            }
+        }
+
+        if (validData){
+            makeReviewInsert(data);   
+            clearForm(); 
+            hideMessage();
+        }else{
+            showMessage("Please fill in all fields and select a score to post review!");
+        }
     } else {
         showMessage("You have already posted a review for this book!");
     }
@@ -46,6 +57,11 @@ function showMessage(message){
     var alert = document.getElementById('alertMessage');
     alert.innerHTML = message;
     alert.style.display = "block";
+}
+
+function hideMessage(){
+    var alert = document.getElementById('alertMessage');
+    alert.style.display = "none";
 }
 
 function makeReviewInsert(data){
@@ -135,6 +151,7 @@ function populateReviews(json, length) {
 }
 
 function insertReview(data, isTop = false){
+    console.log()
     if(data.customerId == userId){
         disableReviews();
     }
