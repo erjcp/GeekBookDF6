@@ -66,7 +66,7 @@ app.get('/cart', (req, res) => {
       quantity : results[0].quantity});
   });
 
-  console.log("complete cart");
+  console.log("cart get");
 })
 
 app.get('/details/:id', (req, res) => {
