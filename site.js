@@ -314,7 +314,8 @@ app.post('/', function (req, res){
   var sort = req.body.col;
   var best = req.body.id;
   console.log("like is: " + like + " and col is: " + sort);
-  let sql = `SELECT B.bookCode, B.title, A.authorFirst, A.authorLast, B.Genre, B.price, B.price, B.numCopies, B.bookCode, B.pubDate, B.best, B.cover, P.publisherName, R.average
+  
+  let sql = `SELECT B.bookCode, B.title, A.authorFirst, A.authorLast, B.genre, B.price, B.price, B.numCopies, B.bookCode, B.pubDate, B.best, B.cover, P.publisherName, R.average
   FROM Book as B
   LEFT JOIN Wrote as W ON W.bookCode=B.bookCode
   LEFT JOIN Author as A ON A.authorNum=W.authorNum
@@ -325,8 +326,9 @@ app.post('/', function (req, res){
       GROUP BY bookId
     ) as R
   ON R.bookCode = B.bookCode
-  WHERE (B.title LIKE '%${like}%' OR A.authorLast LIKE '%${like}%' OR A.authorFirst LIKE '%${like}%' OR B.genre LIKE '%${like}%' OR P.publisherName LIKE '%${like}%')
+  WHERE (B.title LIKE '%${like}%' OR A.authorLast LIKE '%${like}%' OR A.authorFirst LIKE '%${like}%' OR B.genre LIKE '%${like}%' OR P.publisherName LIKE '%${like}%') ${best}
   ORDER BY ${sort}`;
+  
 /*
   let sql = `SELECT title, authorFirst, authorLast, genre, Publisher.publisherName, price, ROUND(AVG(score),1) as Average, numCopies, Book.bookCode, pubDate, best, cover
   FROM Book, Wrote, Author, Publisher, Review
@@ -339,8 +341,8 @@ app.post('/', function (req, res){
   WHERE NOT exists (SELECT * FROM Review WHERE Book.bookCode = bookId) 
   AND (Book.bookCode = Wrote.bookCode AND Author.authorNum = Wrote.authorNum AND Book.publisherCode = Publisher.publisherCode ${best})
   AND (Book.title LIKE '%${like}%' OR Author.authorLast LIKE '%${like}%' OR Author.authorFirst LIKE '%${like}%' OR genre LIKE '%${like}%' OR publisherName LIKE '%${like}%')
-  ORDER BY ${sort}`;*/
-  
+  ORDER BY ${sort}`;
+  */
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(err);
@@ -677,9 +679,9 @@ console.log("IN THE CARD ")
                                               values(    '${userId}' ,     '${cardHolderfullName}','  ${cardNumber}',' ${cvCode}','    ${expityMonth}','   ${expityYear}' )`; 
 */
   
-let sqlCreditCard =  `insert into geekbook.Card (      cardCustomerID,             cardCustomerName,         cardNum,       securityNum,     expMonth,               expYear)  
+let sqlCreditCard =  `insert into geekbook.Card (       cardCustomerName,         cardNum,       securityNum,     expMonth,               expYear)  
                                        values(      '${userId}' ,'             ${cardHolderfullName}','   ${cardNumber}','  ${cvCode}','    ${expityMonth}','   ${expityYear}' )`;
-        
+                                      
         
                                               db.query(sqlCreditCard,function(err,result){
           if(err ) throw    console.log('An ERROR HAS occurred, the following is the error --' + err+'\n\n');

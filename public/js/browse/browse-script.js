@@ -149,10 +149,10 @@ function insertRow(rowData, i){
     cell4.innerHTML = rowData.genre
     cell5.innerHTML = rowData.publisherName;
     cell6.innerHTML = "$" + rowData.price.toFixed(2); // Two decimal places
-    if(rowData.Average == null) // no reviews
+    if(rowData.average == null) // no reviews
         {cell7.innerHTML = "N/A"}
     else
-        {cell7.innerHTML = rowData.Average.toFixed(1)}; // One decimal place
+        {cell7.innerHTML = rowData.average.toFixed(1)}; // One decimal place
     cell8.innerHTML = rowData.numCopies;
 
 }
