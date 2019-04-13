@@ -31,8 +31,12 @@ block content
                   label In Stock
                   input.form-control(type='text', placeholder=stock, Disabled='')
                 .form-group
-                  label Rating
-                  input.form-control(type='text', placeholder=average, Disabled='')
+                  if average
+                    label Rating
+                    input.form-control(type='text', placeholder=average + '/5 Stars', Disabled='')
+                  else 
+                    label Rating
+                    input.form-control(type='text', placeholder='N/A', Disabled='')
             .row
               .col-12
                 .form-group
@@ -46,9 +50,8 @@ block content
                   textarea.form-control(placeholder=bio, Disabled='')
 
 
-            button(href='/', onclick='makeTableRequest("", "title", 10, "")') More by this Author
             a.nav-link(href='/author')
-              | Browse 
+              | More by This Author
             button.btn.btn-primary.d-none(type='submit') Submit
             
   

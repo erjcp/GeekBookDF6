@@ -9,6 +9,7 @@ document.getElementById("btn-search").addEventListener("click", function () {
     var resultNum = resultBox.value;
     var bestBox = document.getElementById("radio-best");
     var best
+    var author = 'rowling'
     if(bestBox.checked)
     {
         best = bestBox.value;
@@ -35,7 +36,7 @@ $(document).ready(function() {
         makeTableRequest('', 'title', 10, '');
     }
     else if(document.URL == "http://localhost:5656/author"){
-        makeTableRequest('rowling', 'title', 10, '');
+        makeTableRequest('', 'title', 10, '');
     }
     
    });
