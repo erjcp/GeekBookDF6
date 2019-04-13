@@ -119,7 +119,7 @@ app.post('/details/:id', function (req, res){
   if (isInsert){
     sql = `INSERT INTO Review VALUES ('${id}' ,'0002', '${score}', '${heading}', '${review}', '${date}');`;
   }else{
-    sql = `SELECT title, nickName, reviewDate, score, heading, review FROM Book, Customer, Review WHERE bookCode = ${id} AND bookCode = bookId AND Review.customerId = id ORDER BY reviewDate ASC`;
+    sql = `SELECT title, nickName, reviewDate, score, heading, review, customerId FROM Book, Customer, Review WHERE bookCode = ${id} AND bookCode = bookId AND Review.customerId = id ORDER BY reviewDate ASC`;
   }
   
   let query = db.query(sql, (err, results) => {

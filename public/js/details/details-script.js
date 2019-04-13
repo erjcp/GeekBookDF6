@@ -1,38 +1,55 @@
-
 // DETAILS FUNTIONALITY
 // ADD USERNAME NICKNAME TO INSERT REVIEW
+var userId = '0002';
+
 
 $(document).ready(function() {
     //console.log("ON PAGE LOAD!!");
   makeReviewsRequest();
  });
 
-document.getElementById("postReview").addEventListener("click", function () {
-    var radio = document.getElementsByClassName("reviewRating");
-    var heading = "Heading test replace me";
-    var nickName = "Nickname test replace me";
-    var reviewDate = new Date().toISOString().slice(0, 19);
-    var score = 1;
-    var review = document.getElementById("input-review").value;
 
-    var i;
-    for (i = 0; i < radio.length; i++) {
-        if (radio[i].checked){
-            score = radio[i].value;
+document.getElementById("postReview").addEventListener("click", function () {
+    var disabled = document.getElementById("input-title-review").hasAttribute("Disabled");
+    if(!disabled){
+        var radio = document.getElementsByClassName("reviewRating");
+        var heading = document.getElementById("input-title-review").value;
+        var nickName = "Nickname test replace me";
+        var reviewDate = new Date().toISOString().slice(0, 19);
+        var score = 1;
+        var review = document.getElementById("input-review").value;
+    
+        var i;
+        for (i = 0; i < radio.length; i++) {
+            if (radio[i].checked){
+                score = radio[i].value;
+            }
         }
+    
+        var data = {heading: heading, nickName: nickName, reviewDate: reviewDate, score: score, heading: heading, review: review};
+        console.log("THIS IS THE JSON DATA");
+        console.log(data);
+        
+        //makeReviewsRequest();
+        makeReviewInsert(data);   
+        clearForm(); 
+        //insertReview(data, true);
+    } else {
+        showMessage("You have already posted a review for this book!");
     }
 
-    var data = {heading: heading, nickName: nickName, reviewDate: reviewDate, score: score, heading: heading, review: review};
-    console.log("THIS IS THE JSON DATA");
-    console.log(data);
-    
-    //makeReviewsRequest();
-    makeReviewInsert(data);
-    insertReview(data, true);
+
   });
 
 
+function showMessage(message){
+    var alert = document.getElementById('alertMessage');
+    alert.innerHTML = message;
+    alert.style.display = "block";
+}
+
 function makeReviewInsert(data){
+    var result;
     var location = window.location.href;
     console.log("Location website is: " + location)
     
@@ -51,9 +68,18 @@ function makeReviewInsert(data){
             var finalQueryResult = xhttp.responseText;
             console.log("result is:"+finalQueryResult+"|");
             var myJsonObject = JSON.parse(finalQueryResult);
+            console.log("paresed result is:"+myJsonObject+"|");
+            if (typeof myJsonObject.errno !== 'undefined'){
+                disableReviews();
+                showMessage("You have already posted a review for this book!");
+            }
+            if (myJsonObject.affectedRows == 1){
+                insertReview(data, true); 
+                disableReviews();
+            }
             //console.log("BEFORE POPULATE!");
             //clearTable();
-            populateReviews(myJsonObject, myJsonObject.length);     
+            //populateReviews(myJsonObject, myJsonObject.length);     
         };
     };
 };
@@ -85,7 +111,22 @@ function makeReviewsRequest() {
     };
 };
 
+function clearForm(){
+    var title = document.getElementById('input-title-review');
+    var body = document.getElementById('input-review');
 
+    title.value = "";
+    body.value = "";
+}
+
+function disableReviews(){
+    var title = document.getElementById('input-title-review');
+    var body = document.getElementById('input-review');
+
+    clearForm();
+    title.setAttribute("Disabled", "");
+    body.setAttribute("Disabled", "");
+}
 
 function populateReviews(json, length) {
     for (var i = 0; i < length; i++) {
@@ -94,6 +135,9 @@ function populateReviews(json, length) {
 }
 
 function insertReview(data, isTop = false){
+    if(data.customerId == userId){
+        disableReviews();
+    }
     var list = document.getElementById("reviewUl");
     var firstItem = list.firstChild;
     

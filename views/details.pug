@@ -49,6 +49,10 @@ block content
         .row
           .col-12
             .writeReview
+              input#input-title-review.form-control(placeholder="Title your review...")
+        .row
+          .col-12
+            .writeReview
               textarea#input-review.form-control(placeholder="Write a review...")
         .row.reviewFooter
           .col-6
@@ -71,6 +75,10 @@ block content
           .col-3
           .col-3
             button#postReview.btn.btn-outline-primary.pushRight(type='submit') Post
+        .row
+          .col-12
+            .writeReview
+              #alertMessage.alert.alert-danger.alertEdit(role='alert')
         hr
         .row.reviewsList
           ul#reviewUl.media-list.reviewUl
